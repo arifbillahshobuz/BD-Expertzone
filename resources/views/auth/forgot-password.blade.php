@@ -1,3 +1,30 @@
+{{-- <x-guest-layout>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    </div>
+
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form>
+        @csrf
+
+        <!-- Email Address -->
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+                autofocus />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <x-primary-button>
+                {{ __('Email Password Reset Link') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout> --}}
+
 @extends('layouts.guest')
 @section('auth-content')
     <div class="col-md-6">
@@ -11,7 +38,7 @@
                 <h2 class="logo-title" data-setting="app_name">SocialV</h2>
             </a>
             <p class="mt-3 font-size-16">Welcome to socialV, a platform to connect with<br /> the social world</p>
-            <form class="mt-5" method="POST" action="{{ route('login') }}">
+            <form class="mt-5" method="POST" action="{{ route('password.email') }}">
                 @csrf
                 <div class="form-group text-start">
                     <h6 class="form-label fw-bold">Enter Email Address</h6>
@@ -22,8 +49,8 @@
                     @endif
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign
-                    in</button>
+                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">Email Password Reset
+                    Link</button>
                 <h6 class="mt-5">Don't Reset Password ? <a href="{{ route('login') }}">Login</a></h6>
             </form>
         </div>

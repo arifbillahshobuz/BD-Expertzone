@@ -1,4 +1,3 @@
-
 @extends('layouts.guest')
 @section('auth-content')
     <div class="col-md-6">
@@ -24,7 +23,7 @@
                 </div>
 
                 <div class="form-group text-start">
-                    <h6 class="form-label fw-bold">Your Password</h6>
+                    <h6 class="form-label fw-bold">Enter Your Password</h6>
                     <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
                         placeholder="Password" name="password">
                     @if ($errors->has('password'))
@@ -37,7 +36,7 @@
                         <input type="checkbox" class="form-check-input" name="remember">
                         <h6 class="form-check-label fw-bold">Remember Me</h6>
                     </div>
-                    <a href="pages-recoverpw.html" class="font-italic">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="font-italic">Forgot Password?</a>
                 </div>
                 <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign
                     in</button>
