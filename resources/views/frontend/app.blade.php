@@ -1,6 +1,6 @@
 @extends('frontend.layout.layout')
 @section('title')
-    korim chacha
+    Home
 @endsection
 @section('content')
 <div class="row gx-4">

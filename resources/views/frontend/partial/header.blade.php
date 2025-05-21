@@ -22,44 +22,6 @@
                                         <span class="nav-text">Home</span>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse" href="#blogData" role="button" aria-expanded="false" aria-controls="blogData">
-                                        <span class="nav-text">Blog</span>
-                                    </a>
-                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="blogData">
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/blog-grid.html">Blog Grid</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/blog-list.html">Blog List</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/blog-detail.html">Blog Detail</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse" href="#storeData" role="button" aria-expanded="false" aria-controls="storeData">
-                                        <span class="nav-text">Store</span>
-                                    </a>
-                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/store-category-grid.html">Category Grid</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/store-category-list.html">Category List</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link nav-link " href="dashboard/store-detail.html">Store Detail</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link nav-link " href="dashboard/product-detail.html">Product Detail</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="dashboard/store-checkout.html">Checkout</a>
-                                        </li>
-                                    </ul>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -206,70 +168,6 @@
                 </div>
             </div>
             <ul class="navbar-nav navbar-list">
-                <li class="nav-item dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="mail-drop" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="material-symbols-outlined position-relative">shopping_bag
-                    <span class="bg-primary text-white shopping-badge">3</span>
-                  </span>
-                        <span class="mobile-text d-none ms-3">Shopping Cart</span>
-                    </a>
-                    <div class="sub-drop dropdown-menu header-notification" aria-labelledby="mail-drop">
-                        <div class="card shadow m-0">
-                            <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                <div class="header-title">
-                                    <h5 class="fw-semibold">Shopping Cart</h5>
-                                </div>
-                            </div>
-                            <div class="card-body p-0 rounded-0">
-                                <div class="item-header-scroll">
-                                    <a href="javascript:void(0);" class="text-body">
-                                        <div class="thread d-flex justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-45 rounded align-top" src="{{asset('frontend/')}}/assets/images/store/06.jpg" alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6 class="font-size-14">Casual Shoe</h6>
-                                                    <span class="font-size-14 fw-semibold">$75.00</span>
-                                                </div>
-                                            </div>
-                                            <span class="material-symbols-outlined">close</span>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="text-body">
-                                        <div class="thread d-flex justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-45 rounded align-top" src="{{asset('frontend/')}}/assets/images/store/02.jpg" alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6 class="font-size-14">Harsh Reality book</h6>
-                                                    <span class="font-size-14 fw-semibold">$25.00</span>
-                                                </div>
-                                            </div>
-                                            <span class="material-symbols-outlined">close</span>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);" class="text-body">
-                                        <div class="thread d-flex justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-45 rounded align-top" src="{{asset('frontend/')}}/assets/images/store/01.jpg" alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6 class="font-size-14">The Raze night book</h6>
-                                                    <span class="font-size-14 fw-semibold">$15.00</span>
-                                                </div>
-                                            </div>
-                                            <span class="material-symbols-outlined">close</span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="m-5 mt-4">
-                                    <div class="d-flex align-items-center justify-content-between mb-3">
-                                        <h6 class="font-size-14 fw-bolder">Subtotal:</h6>
-                                        <span class="font-size-14 fw-semibold text-primary">$115.00</span>
-                                    </div>
-                                    <button type="button" class="btn btn-primary fw-500 w-100">View All Products</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
                 <li class="nav-item d-lg-none">
                     <div class="iq-search-bar device-search">
                         <form action="#" class="searchbox open-modal-search ">
