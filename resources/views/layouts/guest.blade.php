@@ -9,7 +9,7 @@
     @include('frontend.partial.style')
 </head>
 
-<body class="">
+<body  style="overflow-y: auto;">
     <!-- loader Start -->
     <div id="loading">
         <div id="loading-center">
