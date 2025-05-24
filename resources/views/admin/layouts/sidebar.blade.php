@@ -71,7 +71,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link "
-                       href="">
+                       href="{{ route('admin.designation.index') }}">
                         <span
                             class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
                             <i class="ti ti-home sidebar-icon"></i>
@@ -164,7 +164,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 
-                    <a href="{{route('admin.profile.index')}}" class="dropdown-item">{{ __('Profile') }}</a>
+                    <a href="" class="dropdown-item">{{ __('Profile') }}</a>
                     <div class="dropdown-divider"></div>
                     <a href="" class="dropdown-item">{{ __('Settings') }}</a>
                     <form method="POST" action="{{ route('logout') }}">
