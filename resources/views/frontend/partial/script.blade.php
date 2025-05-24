@@ -33,6 +33,7 @@
 <!--ecommerce Script -->
 <script src="{{asset('frontend/')}}/assets/js/ecommerce.js"></script>
 
-<script src="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/zuck.min.js"></script>
+{{--<script src="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/zuck.min.js"></script>--}}
+<script src="https://cdn.jsdelivr.net/npm/zuck.js/dist/zuck.min.js"></script>
 <script src="{{asset('frontend/')}}/assets/vendor/zuck.js-master/demo/script.js"></script>
 <script src="{{asset('frontend/')}}/assets/js/zuck.js"></script>

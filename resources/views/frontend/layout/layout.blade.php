@@ -7,10 +7,28 @@
     <title>@yield('title')</title>
     @yield('page-style')
     <!-- Config Options -->
-    {{--
+
     <meta name="setting_options"
-        content='{&quot;saveLocal&quot;:&quot;sessionStorage&quot;,&quot;storeKey&quot;:&quot;socialV&quot;,&quot;setting&quot;:{&quot;theme_scheme_direction&quot;:{&quot;value&quot;:&quot;ltr&quot;},&quot;theme_scheme&quot;:{&quot;value&quot;:&quot;light&quot;},&quot;theme_color&quot;:{&quot;colors&quot;:{&quot;--{{prefix}}primary&quot;:&quot;#50b5ff&quot;,&quot;--{{prefix}}info&quot;:&quot;#d592ff&quot;},&quot;value&quot;:&quot;theme-color-default&quot;},&quot;sidebar_type&quot;:{&quot;value&quot;:[]},&quot;sidebar_menu_style&quot;:{&quot;value&quot;:&quot;navs-rounded-all&quot;},&quot;footer&quot;:{&quot;value&quot;:&quot;default&quot;}}}'>
-    --}}
+          content='{
+    "saveLocal":"sessionStorage",
+    "storeKey":"socialV",
+    "setting":{
+      "theme_scheme_direction":{"value":"ltr"},
+      "theme_scheme":{"value":"light"},
+      "theme_color":{
+        "colors":{
+          "--customprimary":"#50b5ff",
+          "--custominfo":"#d592ff"
+        },
+        "value":"theme-color-default"
+      },
+      "sidebar_type":{"value":[]},
+      "sidebar_menu_style":{"value":"navs-rounded-all"},
+      "footer":{"value":"default"}
+    }
+  }'>
+
+
     <!-- End Config Options -->
     @include('frontend.partial.style')
     @yield('page-script')
