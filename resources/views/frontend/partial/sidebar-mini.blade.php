@@ -18,7 +18,7 @@
                                 </svg>
                             </a>
                             <input type="text" class="text search-input form-control bg-light-subtle"
-                                   placeholder="Search for people or groups...">
+                                   placeholder="Search for people ...">
                         </form>
                     </div>
                 </div>
