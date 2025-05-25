@@ -16,18 +16,10 @@
                 @csrf
                 <div class=" form-group text-start">
                     <h6 class="form-label fw-bold">Name</h6>
-                    <input type="text" class="form-control mb-0 {{ $errors->has('first_name') ? 'is-invalid' : '' }}"
-                        placeholder="Enter First Name" value="{{ old('first_name') }}" name="first_name">
-                    @if ($errors->has('first_name'))
-                        <span class="text-danger">{{ $errors->first('first_name') }}</span>
-                    @endif
-                </div>
-                <div class=" form-group text-start">
-                    <h6 class="form-label fw-bold">Last Name</h6>
-                    <input type="text" class="form-control mb-0 {{ $errors->has('last_name') ? 'is-invalid' : '' }}"
-                        placeholder="Enter Last Name" value="{{ old('last_name') }}" name="last_name">
-                    @if ($errors->has('last_name'))
-                        <span class="text-danger">{{ $errors->first('last_name') }}</span>
+                    <input type="text" class="form-control mb-0 {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                        placeholder="Full Name" value="{{ old('name') }}" name="name">
+                    @if ($errors->has('name'))
+                        <span class="text-danger">{{ $errors->first('name') }}</span>
                     @endif
                 </div>
 
@@ -48,12 +40,29 @@
                         <span class="text-danger">{{ $errors->first('phone') }}</span>
                     @endif
                 </div>
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold">Designation</h6>
+                    <select name="designation_id" id="designation" class="form-select {{ $errors->has('designation_id') ? 'is-invalid' : '' }}">
+                        <option value="">Select Designation</option>
+                        @foreach ($designations as $designation)
+                            <option value="{{ $designation->id }}" >
+                                {{ $designation->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('designation_id')
+                    <div class="invalid-feedback d-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+
+                </div>
 
                 <div class="form-group text-start">
                     <h6 class="form-label fw-bold">Password</h6>
                     <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
                         placeholder="Password" name="password">
-                     Show error
+
                     @if ($errors->has('password'))
                         <span class="text-danger">{{ $errors->first('password') }}</span>
                     @endif
@@ -64,7 +73,6 @@
                     <input type="password"
                         class="form-control mb-0 {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}"
                         placeholder="Password Confirmation" name="password_confirmation">
-                     Show error
                     @if ($errors->has('password_confirmation'))
                         <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
                     @endif

@@ -22,6 +22,7 @@
     <link href="{{ asset('assets/admin/css/tabler-vendors.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/admin/css/demo.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/admin/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/admin/css/iziToast.min.css') }}" rel="stylesheet" />
 
     @stack('styles')
 
@@ -54,6 +55,7 @@
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 <script src="{{ asset('assets/admin/js/bootstrap-tagsinput.min.js') }}"></script>
 <script src="{{ asset('assets/frontend/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/admin/js/iziToast.min.js') }}"></script>
 
 <!-- Tabler Core -->
 <script src="{{ asset('assets/admin/js/tabler.min.js') }}" defer></script>
@@ -65,6 +67,37 @@
 <script src="{{ asset('assets/admin/js/default/admin.js') }}"></script>
 
 @stack('scripts')
+
+@if($errors->any())
+    @foreach ($errors->all() as $error)
+        <script>
+            iziToast.show({
+                message: '{{ $error }}',
+                color: 'red',
+                position: 'topRight',
+            });
+        </script>
+    @endforeach
+@endif
+@if(session('success'))
+    <script>
+        iziToast.show({
+            message: '{{ session("success") }}',
+            color: 'green',
+            position: 'topRight',
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        iziToast.show({
+            message: '{{ session("error") }}',
+            color: 'red',
+            position: 'topRight',
+        });
+    </script>
+@endif
 
 </body>
 

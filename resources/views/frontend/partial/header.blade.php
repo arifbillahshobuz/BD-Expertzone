@@ -609,7 +609,11 @@
                                 <div class="d-flex align-items-center iq-sub-card">
                                     <span class="material-symbols-outlined"> login </span>
                                     <div class="ms-3">
-                                        <a href="dashboard/sign-in.html" class="mb-0 h6"> Sign out </a>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <a href="javascript:;" onclick="event.preventDefault(); this.closest('form').submit();"
+                                               class="mb-0 h6">{{ __('Sign out') }}</a>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
