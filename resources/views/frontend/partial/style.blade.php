@@ -15,7 +15,8 @@
 
 <!-- zuck -->
 <!-- lib styles -->
-<link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/zuck.min.css">
+{{--<link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/zuck.min.css">--}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zuck.js/dist/zuck.min.css">
 <!-- lib skins -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/skins/snapssenger.min.css">
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/skins/facesnap.css">

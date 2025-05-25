@@ -22,6 +22,26 @@
                                         <span class="nav-text">Home</span>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse" href="#storeData" role="button" aria-expanded="false" aria-controls="storeData">
+                                        <span class="nav-text">Spatial job</span>
+                                    </a>
+                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
+                                        <li class="nav-item">
+                                            <a class="nav-link " href="../dashboard/store-category-list.html">Category List</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse" href="#storeData" role="button" aria-expanded="false" aria-controls="storeData">
+                                        <span class="nav-text">Government job</span>
+                                    </a>
+                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
+                                        <li class="nav-item">
+                                            <a class="nav-link " href="../dashboard/store-category-list.html">Category List</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -574,42 +594,27 @@
                                         <a href="app/profile-edit.html" class="mb-0 h6"> Edit Profile </a>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <span class="material-symbols-outlined"> manage_accounts </span>
-                                    <div class="ms-3">
-                                        <a href="app/account-setting.html" class="mb-0 h6"> Account settings </a>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <span class="material-symbols-outlined"> lock </span>
-                                    <div class="ms-3">
-                                        <a href="app/privacy-setting.html" class="mb-0 h6"> Privacy Settings </a>
-                                    </div>
-                                </div>
+{{--                                <div class="d-flex align-items-center iq-sub-card border-0">--}}
+{{--                                    <span class="material-symbols-outlined"> manage_accounts </span>--}}
+{{--                                    <div class="ms-3">--}}
+{{--                                        <a href="app/account-setting.html" class="mb-0 h6"> Account settings </a>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="d-flex align-items-center iq-sub-card border-0">--}}
+{{--                                    <span class="material-symbols-outlined"> lock </span>--}}
+{{--                                    <div class="ms-3">--}}
+{{--                                        <a href="app/privacy-setting.html" class="mb-0 h6"> Privacy Settings </a>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <div class="d-flex align-items-center iq-sub-card">
                                     <span class="material-symbols-outlined"> login </span>
                                     <div class="ms-3">
-                                        <a href="dashboard/sign-in.html" class="mb-0 h6"> Sign out </a>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <a href="javascript:;" onclick="event.preventDefault(); this.closest('form').submit();"
+                                               class="mb-0 h6">{{ __('Sign out') }}</a>
+                                        </form>
                                     </div>
-                                </div>
-                                <div class=" iq-sub-card">
-                                    <h5>Chat Settings</h5>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <i class="material-symbols-outlined text-success md-14"> circle </i>
-                                    <div class="ms-3"> Online </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <i class="material-symbols-outlined text-warning md-14"> circle </i>
-                                    <div class="ms-3"> Away </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <i class="material-symbols-outlined text-danger md-14"> circle </i>
-                                    <div class="ms-3"> Disconnected </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <i class="material-symbols-outlined text-gray md-14"> circle </i>
-                                    <div class="ms-3"> Invisible </div>
                                 </div>
                             </div>
                         </div>
