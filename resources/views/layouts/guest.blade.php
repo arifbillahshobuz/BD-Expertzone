@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>SocialV | Responsive Bootstrap 5 Admin Dashboard Template</title>
-    @include('frontend.partial.style')
+    @include('user-interface.partial.style')
 </head>
 
 <body style="overflow-y: auto;">
@@ -34,21 +34,24 @@
                                          class="signin-img img-fluid mb-5 rounded-3 swiper-lazy" alt="image">
                                     <div class="swiper-lazy-preloader"></div>
                                     <h2 class="mb-3 text-white fw-semibold">Together Is Better</h2>
-                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader will be<br> distracted by the readable content.</p>
+                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader
+                                        will be<br> distracted by the readable content.</p>
                                 </li>
                                 <li class="swiper-slide">
                                     <img data-src="{{ asset('frontend/assets/images/login/2.jpg') }}"
                                          class="signin-img img-fluid mb-5 rounded-3 swiper-lazy" alt="image">
                                     <div class="swiper-lazy-preloader"></div>
                                     <h2 class="mb-3 text-white fw-semibold">Power UP Your Friendship</h2>
-                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader will be<br> distracted by the readable content.</p>
+                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader
+                                        will be<br> distracted by the readable content.</p>
                                 </li>
                                 <li class="swiper-slide">
                                     <img data-src="{{ asset('frontend/assets/images/login/1.jpg') }}"
                                          class="signin-img img-fluid mb-5 rounded-3 swiper-lazy" alt="image">
                                     <div class="swiper-lazy-preloader"></div>
                                     <h2 class="mb-3 text-white fw-semibold">Connect with the World</h2>
-                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader will be<br> distracted by the readable content.</p>
+                                    <p class="font-size-16 text-white mb-0">It is a long established fact that a reader
+                                        will be<br> distracted by the readable content.</p>
                                 </li>
                             </ul>
                             <div class="swiper-pagination"></div>
@@ -61,7 +64,7 @@
     </section>
 </div>
 
-@include('frontend.partial.script')
+@include('user-interface.partial.script')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         new Swiper('.swiper-general', {
@@ -77,9 +80,9 @@
             },
             spaceBetween: 16,
             breakpoints: {
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1 },
-                1024: { slidesPerView: 1 },
+                640: {slidesPerView: 1},
+                768: {slidesPerView: 1},
+                1024: {slidesPerView: 1},
             },
         });
     });

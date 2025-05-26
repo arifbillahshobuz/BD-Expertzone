@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use League\Config\Exception\ValidationException;
 
 class RegisteredUserController extends Controller
 {
@@ -30,25 +31,29 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request,): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'string', 'max:20'],
-            'designation_id' => ['required', 'exists:designations,id'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'designation_id' => $request->designation_id,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'phone' => ['required', 'string', 'max:20'],
+                'designation_id' => ['required', 'exists:designations,id'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'designation_id' => $request->input('designation_id'),
+                'password' => Hash::make($request->input('password')),
+            ]);
+            event(new Registered($user));
+            Auth::login($user);
+            return redirect(route('admin.dashboard', absolute: false));
+        }  catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create designation.');
+        }
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('admin.dashboard', absolute: false));
     }
 }
