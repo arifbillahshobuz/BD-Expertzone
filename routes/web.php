@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('/', [UserController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__ . '/auth.php';
