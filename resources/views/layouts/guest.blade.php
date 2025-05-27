@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>SocialV | Responsive Bootstrap 5 Admin Dashboard Template</title>
-    @include('frontend.partial.style')
+    @include('user-interface.partial.style')
 </head>
 
 <body style="overflow-y: auto;">
@@ -64,7 +64,7 @@
     </section>
 </div>
 
-@include('frontend.partial.script')
+@include('user-interface.partial.script')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         new Swiper('.swiper-general', {

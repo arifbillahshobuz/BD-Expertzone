@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
+
 
 
 Route::middleware('auth')->group(function () {
@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('/', [HomeController::class, 'home'])->name('home');
 });
 
 require __DIR__ . '/auth.php';
