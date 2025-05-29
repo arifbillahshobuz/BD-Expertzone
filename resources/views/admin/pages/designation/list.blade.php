@@ -2,4 +2,5 @@
 
 @section('content')
     @include('components.designation-list')
+    @include('components.designation-create-modal')
 @endsection

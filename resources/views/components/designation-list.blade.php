@@ -5,10 +5,11 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ __('All Designations') }}</h3>
                     <div class="card-actions">
-                        <a href="{{ route('admin.designation.create') }}" class="btn btn-primary">
+                        <!-- Button to trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDesignationModal">
                             <i class="ti ti-plus"></i>
                             {{ __('Add new') }}
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -28,10 +29,10 @@
                                         <td>{{ $designation->title }}</td>
                                         <td>{{ $designation->created_at->format('d M Y') }}</td>
                                         <td>
-                                            <a href="{{ route('admin.designation.edit', $designation->id) }}" class="btn btn-primary">
-                                                <i class="ti ti-edit"></i>
-                                                {{ __('Edit') }}
-                                            </a>
+                                            <!-- Edit Button -->
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $designation->id }}">
+                                                <i class="ti ti-edit"></i> {{ __('Edit') }}
+                                            </button>
                                             <form action="{{ route('admin.designation.destroy', $designation->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -40,6 +41,7 @@
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
+                                            @include('components.designation-edit-modal')
                                         </td>
                                     </tr>
                                 @endforeach
