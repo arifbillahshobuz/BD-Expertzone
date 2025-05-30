@@ -13,8 +13,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 });
-Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::middleware(['auth', 'verified'])->group(function () {
 });
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
