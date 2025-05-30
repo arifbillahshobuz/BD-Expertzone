@@ -1,5 +1,4 @@
 @extends('admin.layouts.master')
-
 @section('content')
     <div class="page-wrapper">
         <div class="page-body">
@@ -17,7 +16,7 @@
                     <div class="card-body">
                         <div class="card">
                             <div class="table-responsive">
-                                <table class="table table-vcenter card-table table-striped">
+                                <table class="table table-vcenter card-table table-striped datatable">
                                     <thead>
                                     <tr>
                                         <th>{{ __('Designation title') }}</th>
@@ -59,3 +58,11 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.datatable').DataTable();
+        });
+    </script>
+@endpush
+

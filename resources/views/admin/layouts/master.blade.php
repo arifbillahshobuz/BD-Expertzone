@@ -24,6 +24,9 @@
     <link href="{{ asset('assets/admin/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/admin/css/iziToast.min.css') }}" rel="stylesheet" />
 
+    {{--    Datat Table Css--}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.css" />
+
     @stack('styles')
 
     <style>
@@ -49,6 +52,13 @@
     @yield('content')
 </div>
 
+
+{{--Jquery Cdn--}}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+{{--Data Table Cdn--}}
+<script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
+
 <!-- Libs JS -->
 <script src="{{ asset('assets/admin/js/jquery.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -65,6 +75,8 @@
 
 <!-- Admin JS -->
 <script src="{{ asset('assets/admin/js/default/admin.js') }}"></script>
+
+
 
 @stack('scripts')
 
