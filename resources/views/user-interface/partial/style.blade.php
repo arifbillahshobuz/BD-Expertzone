@@ -10,6 +10,9 @@
 <!-- Sweetlaert2 css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/sweetalert2/dist/sweetalert2.min.css" />
 
+{{--iziToast --}}
+<link rel="stylesheet" href="{{asset('frontend/assets/css/iziToast.min.css')}}/">
+
 <!-- vanillajs css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
 

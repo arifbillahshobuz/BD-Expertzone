@@ -12,117 +12,126 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PartnerController extends Controller
 {
-    public function index():View|RedirectResponse
+    public function index(): View|RedirectResponse
     {
         try {
-            return view('content.pathName.pathNameList');
+            return view('admin.pages.partner.list');
         } catch (Exception $exception) {
-            return redirect()->back()->with('error',$exception->getMessage());
-        }
-    }
-    public function list(): JsonResponse
-    {
-        try {
-            $data = Partner::all();
-            return response()->json([
-                'status'=> 'success',
-                'data'=>$data,
-                'message'=> 'data fetch successfully!'
-            ],200);
-        } catch (Exception $exception) {
-            return response()->json([
-                'status'=> 'fail',
-                'message'=> 'something went wrong!',
-                'error'=> $exception->getMessage()
-            ],200);
+            return redirect()->back()->with('error', 'Failed to load partner page');
         }
     }
 
-    public function create():View|RedirectResponse
+    public function list(): JsonResponse
+    {
+        try {
+            $partners = Partner::all();
+            return response()->json([
+                'status' => 'success',
+                'data' => $partners,
+                'message' => 'Partners fetched successfully'
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch partners',
+                'error' => config('app.debug') ? $exception->getMessage() : null
+            ], 500);
+        }
+    }
+
+    public function create(): View|RedirectResponse
     {
         try {
             return view("content.pathName.pathNameAdd");
         } catch (Exception $exception) {
-            return redirect()->back()->with('error',$exception);
+            return redirect()->back()->with('error', 'Failed to load create form')->withInput();
         }
     }
 
-    public function edit($id):View|RedirectResponse
+    public function edit(Partner $partner): View|RedirectResponse
     {
         try {
-            $data = Partner::findOrFail($id);
-            return view("content.pathName.pathNameEdit", compact('data'));
+            return view("content.pathName.pathNameEdit", compact('partner'));
         } catch (Exception $exception) {
-            return redirect()->back()->with(['error' => $exception->getMessage()])->withInput();
+            return redirect()->back()->with('error', 'Partner not found');
         }
     }
 
-    public function destroy(Request $request):JsonResponse
+    public function destroy(Partner $partner): JsonResponse
     {
         try {
-            $data = Partner::findOrFail($request->input('id'));
-            $data->delete();
-            return response()->json(['success' => true]);
+            $partner->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Partner deleted successfully'
+            ]);
         } catch (Exception $exception) {
             return response()->json([
-                'status' => 'fail',
-                'message' => $exception->getMessage()
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to delete partner'
+            ], 500);
         }
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(PartnerStoreRequest $request): RedirectResponse
     {
         try {
-            $request->validate([
-                'key' => 'required|string'
-            ]);
-            $fileName = null;
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("demo/", $fileName);
-            }
+            $fileName = $this->handleFileUpload($request->file('image'));
+
             Partner::create([
                 'database' => $request->input('from'),
                 'image' => $fileName
             ]);
-            return redirect()->route('routeName')->with(['success'=>"Partner Create Successfully"],200);
-        } catch (ValidationException $validationException) {
-            return redirect()->back()->with('error', $validationException->getMessage())->withInput();
+
+            return redirect()->route('routeName')
+                ->with('success', 'Partner created successfully');
         } catch (Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage())->withInput();
+            return redirect()->back()
+                ->with('error', 'Failed to create partner')
+                ->withInput();
         }
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(PartnerUpdateRequest $request, Partner $partner): RedirectResponse
     {
         try {
-            $data = Partner::findOrFail($id);
-            $request->validate([
-                'from' => 'required'
-            ]);
-            $fileName = $data->image;
+            $fileName = $partner->image;
+
             if ($request->hasFile('image')) {
-                $request->validate([
-                    'image' => 'required'
-                ]);
-                if (file_exists(public_path('demo/' . $fileName))) {
-                    unlink(public_path('demo/' . $fileName));
-                }
-                $file = $request->file('image');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("demo/", $fileName);
+                $fileName = $this->handleFileUpload($request->file('image'), $partner->image);
             }
-            $data->update([
+
+            $partner->update([
                 'database' => $request->input('from'),
                 'image' => $fileName
             ]);
-            return redirect()->route('routeName')->with(['success'=>"Partner Update Successfully"],200);
-        } catch (ValidationException $validationException) {
-            return redirect()->back()->with('error', $validationException->getMessage())->withInput();
+
+            return redirect()->route('routeName')
+                ->with('success', 'Partner updated successfully');
         } catch (Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage())->withInput();
+            return redirect()->back()
+                ->with('error', 'Failed to update partner')
+                ->withInput();
         }
+    }
+
+    protected function handleFileUpload(?UploadedFile $file, string $existingFile = null): ?string
+    {
+        if (!$file) {
+            return $existingFile;
+        }
+
+        // Delete old file if exists
+        if ($existingFile && file_exists(public_path('demo/'.$existingFile))) {
+            unlink(public_path('demo/'.$existingFile));
+        }
+
+        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+            . '.' . date('Ymdhis')
+            . '.' . $file->getClientOriginalExtension();
+
+        $file->move("demo/", $fileName);
+
+        return $fileName;
     }
 }

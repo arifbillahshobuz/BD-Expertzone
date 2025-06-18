@@ -14,14 +14,14 @@ class DesignationController extends Controller
     public function index(): View
     {
         $designations = Designation::all();
-        return view('admin.designation.index', compact('designations'));
+        return view('admin.pages.designation.list', compact('designations'));
     }
     /**
      * Show the form for creating a new designation.
      */
     public function create(): View
     {
-        return view('admin.designation.create');
+        return view('admin.pages.designation.create');
     }
 
     /**
@@ -49,7 +49,7 @@ class DesignationController extends Controller
      */
     public function edit(Designation $designation) :View
     {
-        return view('admin.designation.edit', compact('designation'));
+        return view('admin.pages.designation.edit', compact('designation'));
     }
 
     /**

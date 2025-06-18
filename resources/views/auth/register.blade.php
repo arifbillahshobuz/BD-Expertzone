@@ -22,6 +22,14 @@
                         <span class="text-danger">{{ $errors->first('name') }}</span>
                     @endif
                 </div>
+                <div class=" form-group text-start">
+                    <h6 class="form-label fw-bold">Username</h6>
+                    <input type="text" class="form-control mb-0 {{ $errors->has('username') ? 'is-invalid' : '' }}"
+                        placeholder="username" value="{{ old('username') }}" name="username">
+                    @if ($errors->has('username'))
+                        <span class="text-danger">{{ $errors->first('username') }}</span>
+                    @endif
+                </div>
 
                 <div class="form-group text-start">
                     <h6 class="form-label fw-bold">Email Address</h6>

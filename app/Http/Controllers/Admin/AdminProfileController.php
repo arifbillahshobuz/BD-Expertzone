@@ -30,7 +30,6 @@ class AdminProfileController extends Controller
             $user->email = $request->email;
             $user->save();
         }
-
         return redirect()->back()->with('success', 'Profile updated successfully.');
     }
 
