@@ -58,14 +58,14 @@ class PartnerController extends Controller
         try {
 //            dd($request->all());
             $request->validate([
-                'first_name' => 'required|string',
-                'last_name' => 'required|string',
+                'first_name' => 'required|string|max:50',
+                'last_name' => 'nullable|string|max:50',
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:partners,email'],
                 'phone' => 'required|string',
                 'image' => 'required',
-                'address' => 'required|string',
-                'company' => 'required|string',
-                'designation_id' => 'required|string',
+                'address' => 'nullable|string|max:100',
+                'company' => 'nullable|string|max:50',
+                'designation_id' => 'required',
             ]);
             $fileName = null;
             if ($request->hasFile('image')) {
@@ -96,6 +96,15 @@ class PartnerController extends Controller
     public function update(Request $request, Partner $partner): RedirectResponse
     {
         try {
+            $request->validate([
+                'first_name' => 'required|string|max:50',
+                'last_name' => 'nullable|string|max:50',
+                'email' => ['required'],
+                'phone' => 'required|string',
+                'address' => 'nullable|string|max:100',
+                'company' => 'nullable|string|max:50',
+                'designation_id' => 'required',
+            ]);
             $fileName = $partner->image;
 
             if ($request->hasFile('image')) {
