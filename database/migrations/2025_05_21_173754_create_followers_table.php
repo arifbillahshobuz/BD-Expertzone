@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,6 +15,7 @@ return new class extends Migration
             $table->foreignId('follower_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->foreignId('followed_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->timestamps();
+            $table->unique(['follower_id', 'followed_id']);
         });
     }
 
