@@ -38,7 +38,9 @@
                                             <form action="{{ route('admin.partner.destroy', $partner->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
+                                                <button type="submit"
+                                                        onclick="return confirm('Are you sure you want to delete this Partner?');"
+                                                        class="btn btn-danger">
                                                     <i class="ti ti-trash"></i>
                                                     {{ __('Delete') }}
                                                 </button>

@@ -29,8 +29,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
         Route::get('/', [PartnerController::class, 'index'])->name('index');
         Route::post('/store', [PartnerController::class, 'store'])->name('store');
-        Route::put('/update/{designation}', [PartnerController::class, 'update'])->name('update');
-        Route::delete('/delete/{designation}', [PartnerController::class, 'destroy'])->name('destroy');
+        Route::post('/update/{partner}', [PartnerController::class, 'update'])->name('update');
+        Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
     });
     // post category routes
     Route::group(['prefix' => 'post-category', 'as' => 'post.category.'], function () {

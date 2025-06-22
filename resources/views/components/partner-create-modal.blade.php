@@ -8,7 +8,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('admin.designation.store') }}" method="POST" class="x-form">
+                <form action="{{ route('admin.partner.store') }}" method="POST" class="x-form" enctype="multipart/form-data">
                     @csrf
                     <div class="container">
                         <div class="row">
@@ -42,7 +42,26 @@
                             </div>
                         </div>
                         <div class="row">
-                            <input type="file" name="" id="">
+                            <div class="mb-3 col-6">
+                                <label for="cv" class="form-label">Your Image:</label>
+                                <input type="file" class="form-control" id="image" name="image">
+                            </div>
+                            <div class="form-group text-start mb-3 col-6">
+                                <h6 class="form-label fw-bold">Designation</h6>
+                                <select name="designation_id" id="designation" class="form-select {{ $errors->has('designation_id') ? 'is-invalid' : '' }}">
+                                    <option value="">Select Designation</option>
+                                    @foreach ($designations as $designation)
+                                        <option value="{{ $designation->id }}" >
+                                            {{ $designation->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('designation_id')
+                                <div class="invalid-feedback d-block text-danger">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="text-end">

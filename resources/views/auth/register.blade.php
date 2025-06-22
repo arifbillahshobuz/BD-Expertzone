@@ -63,9 +63,7 @@
                         {{ $message }}
                     </div>
                     @enderror
-
                 </div>
-
                 <div class="form-group text-start">
                     <h6 class="form-label fw-bold">Password</h6>
                     <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
