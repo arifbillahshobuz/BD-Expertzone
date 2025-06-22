@@ -15,7 +15,8 @@ class PartnerController extends Controller
     public function index(): View|RedirectResponse
     {
         try {
-            return view('admin.pages.partner.list');
+            $partners = Partner::all();
+            return view('admin.pages.partner.list', compact('partners'));
         } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Failed to load partner page');
         }

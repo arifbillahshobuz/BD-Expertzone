@@ -26,16 +26,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($designations as $designation)
+                                @foreach($partners as $partner)
                                     <tr>
-                                        <td>{{ $designation->title }}</td>
-                                        <td>{{ $designation->created_at->format('d M Y') }}</td>
+                                        <td>{{ $partner->title }}</td>
+                                        <td>{{ $partner->created_at->format('d M Y') }}</td>
                                         <td>
                                             <!-- Edit Button -->
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $designation->id }}">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $partner->id }}">
                                                 <i class="ti ti-edit"></i> {{ __('Edit') }}
                                             </button>
-                                            <form action="{{ route('admin.designation.destroy', $designation->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.designation.destroy', $partner->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
