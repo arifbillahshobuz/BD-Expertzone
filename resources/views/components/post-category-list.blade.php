@@ -3,10 +3,11 @@
         <div class="container-xl">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ __('All Partners') }}</h3>
+                    <h3 class="card-title">{{ __('All Post Categories') }}</h3>
                     <div class="card-actions">
                         <!-- Button to trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#createPostCategoryModal">
                             <i class="ti ti-plus"></i>
                             {{ __('Add new') }}
                         </button>
@@ -18,34 +19,35 @@
                             <table class="table table-vcenter card-table table-striped">
                                 <thead>
                                 <tr>
-                                    <th></th>
-                                    <th></th>
                                     <th>Title</th>
                                     <th>Date</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($partners as $partner)
+                                @foreach ($postCategories as $postCategory)
                                     <tr>
-                                        <td>{{ "$partner->first_name $partner->last_name"   }}</td>
-                                        <td>{{ $partner->created_at->format('d M Y') }}</td>
+                                        <td>{{ $postCategory->title }}</td>
+                                        <td>{{ $postCategory->created_at->format('d M Y') }}</td>
                                         <td>
                                             <!-- Edit Button -->
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $partner->id }}">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal{{ $postCategory->id }}">
                                                 <i class="ti ti-edit"></i> {{ __('Edit') }}
                                             </button>
-                                            <form action="{{ route('admin.partner.destroy', $partner->id) }}" method="POST" class="d-inline">
+                                            <form
+                                                action="{{ route('admin.post.category.destroy', $postCategory->id) }}"
+                                                method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this Partner?');"
+                                                        onclick="return confirm('Are you sure you want to delete this post Category?');"
                                                         class="btn btn-danger">
                                                     <i class="ti ti-trash"></i>
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
-                                            @include('components.partner-edit-modal')
+                                            @include('components.post-category-edit-modal')
                                         </td>
                                     </tr>
                                 @endforeach

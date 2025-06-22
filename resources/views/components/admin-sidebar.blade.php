@@ -134,6 +134,30 @@
                         </div>
                     </div>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle }}"
+                       href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
+                       aria-expanded="true">
+                            <span
+                                class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
+                                <i class="ti ti-list sidebar-icon"></i>
+                            </span>
+                        <span class="nav-link-title">
+                                {{ __('Post Category') }}
+                            </span>
+                    </a>
+                    <div
+                        class="dropdown-menu">
+                        <div class="dropdown-menu-columns">
+                            <div class="dropdown-menu-column">
+                                <a class="dropdown-item"
+                                   href="{{route('admin.post.category.index')}}">
+                                    {{ __('Post Category') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

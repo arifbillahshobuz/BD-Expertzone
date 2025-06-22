@@ -1,3 +1,81 @@
-<div>
-    <!-- He who is contented is rich. - Laozi -->
+<!-- Modal for Editing -->
+<div class="modal fade" id="editModal{{ $partner->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $partner->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ $partner->id }}">{{ __('Update Post Category') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.partner.update', $partner->id) }}" method="post" class="x-form" enctype="multipart/form-data">
+                    @csrf
+                    <div class="container">
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label for="title" class="form-label">{{ __('First Name') }}</label>
+                                <input name="first_name" value="{{$partner->first_name ?? ''}}" class="form-control px-3 py-2 rounded border border-secondary shadow-sm" placeholder="Enter your First Name" />
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label for="title" class="form-label">{{ __('Last Name') }}</label>
+                                <input name="last_name" value="{{$partner->last_name ?? ''}}" class="form-control px-3 py-2 rounded border border-secondary shadow-sm" placeholder="Enter your Last Name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label for="title" class="form-label">{{ __('Email') }}</label>
+                                <input name="email" value="{{$partner->email ?? ''}}" class="form-control px-3 py-2 rounded border border-secondary shadow-sm" placeholder="Enter your Email" />
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label for="title" class="form-label">{{ __('Phone') }}</label>
+                                <input name="phone" value="{{$partner->phone ?? ''}}" class="form-control px-3 py-2 rounded border border-secondary shadow-sm" placeholder="Enter your Phone" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="address" class="form-label">{{ __('Address') }}</label>
+                                <input name="address" value="{{ $partner->address ?? '' }}"
+                                       class="form-control px-3 py-2 rounded border border-secondary shadow-sm"
+                                       placeholder="{{ __('Enter your Address') }}" />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="company" class="form-label">{{ __('Company') }}</label>
+                                <input name="company" value="{{ $partner->company ?? '' }}"
+                                       class="form-control px-3 py-2 rounded border border-secondary shadow-sm"
+                                       placeholder="{{ __('Enter your Company Name') }}" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="image" class="form-label">{{ __('Your Image') }}:</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="designation" class="form-label fw-bold">{{ __('Designation') }}</label>
+                                <select name="designation_id" id="designation"
+                                        class="form-select @error('designation_id') is-invalid @enderror">
+                                    <option value="">{{ __('Select Designation') }}</option>
+                                    @foreach ($designations as $designation)
+                                        <option value="{{ $designation->id }}"
+                                            {{ isset($partner) && $partner->designation_id == $designation->id ? 'selected' : '' }}>
+                                            {{ $designation->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('designation_id')
+                                <div class="invalid-feedback d-block text-danger">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </div>

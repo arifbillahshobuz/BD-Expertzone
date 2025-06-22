@@ -16,17 +16,6 @@ class DesignationController extends Controller
         $designations = Designation::all();
         return view('admin.pages.designation.list', compact('designations'));
     }
-    /**
-     * Show the form for creating a new designation.
-     */
-    public function create(): View
-    {
-        return view('admin.pages.designation.create');
-    }
-
-    /**
-     * Show the form for editing the specified designation.
-     */
     public function store(Request $request) :RedirectResponse
     {
         try {
@@ -43,18 +32,6 @@ class DesignationController extends Controller
             return redirect()->back()->with('error', 'Failed to create designation.');
         }
     }
-
-    /**
-     * Show the form for editing the specified designation.
-     */
-    public function edit(Designation $designation) :View
-    {
-        return view('admin.pages.designation.edit', compact('designation'));
-    }
-
-    /**
-     * Update the specified designation in storage.
-     */
     public function update(Request $request, Designation $designation) :RedirectResponse
     {
         try {
@@ -71,10 +48,6 @@ class DesignationController extends Controller
             return redirect()->back()->with('error', 'Failed to update designation.');
         }
     }
-
-    /**
-     * Remove the specified designation from storage.
-     */
     public function destroy(Designation $designation) :RedirectResponse
     {
         try {
@@ -84,6 +57,4 @@ class DesignationController extends Controller
             return redirect()->back()->with('error', 'Failed to delete designation.');
         }
     }
-
-
 }
