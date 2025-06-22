@@ -15,16 +15,15 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::get('/', [HomeController::class, 'home'])->name('home');
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [HomeController::class, 'home'])->name('dashboard');
 
     //    User Profile Routes
     Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');
     Route::get('profile/edit', [UserProfileController::class, 'editProfile'])->name('user.edit-profile');
     Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile-update');
     Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('user.change-password');
-
-
 });
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

@@ -2,7 +2,7 @@
     <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar p-lg-0 mt-0">
         <div class="container-fluid navbar-inner  ">
             <div class="d-flex align-items-center pb-2 pb-lg-0 d-xl-none">
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('home') }}"
                     class="d-flex align-items-center iq-header-logo navbar-brand d-block d-xl-none">
                     <svg width="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -23,7 +23,7 @@
                             <ul class="iq-nav-menu list-unstyled">
                                 <li class="nav-item">
                                     <a class="nav-link menu-arrow justify-content-start active"
-                                        href="{{ route('dashboard') }}">
+                                        href="{{ route('home') }}">
                                         <span class="nav-text">Home</span>
                                     </a>
                                 </li>
@@ -704,7 +704,9 @@
                         <div class="card shadow-none m-0">
                             <div class="card-header ">
                                 <div class="header-title">
-                                    <h5 class="mb-0 ">{{ auth()->user()->name }}</h5>
+                                    @auth
+                                        <h5 class="mb-0 ">{{ auth()->user()->name }}</h5>
+                                    @endauth
                                 </div>
                             </div>
                             <div class="card-body p-0 ">

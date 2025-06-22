@@ -13,7 +13,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    public function profile() :HasOne
+    public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
     }

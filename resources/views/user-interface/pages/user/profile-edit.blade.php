@@ -83,7 +83,7 @@
                                         <div class="form-group col-sm-6">
                                             <label for="name" class="form-label">Name:</label>
                                             <input type="text" class="form-control" id="name" name="name"
-                                                value="{{ auth()->user()->name }}">
+                                                value="{{ auth()->user()->name ?? '' }}">
 
                                             <small class="text-danger">
                                                 @error('name')
@@ -95,7 +95,7 @@
                                         <div class="form-group col-sm-6">
                                             <label for="username" class="form-label">User Name:</label>
                                             <input type="text" class="form-control" id="username" name="username"
-                                                value="{{ auth()->user()->username }}">
+                                                value="{{ auth()->user()->username ?? '' }}">
 
                                             <small class="text-danger">
                                                 @error('username')
@@ -109,7 +109,7 @@
                                             <input type="text"
                                                 class="form-control @error('blood_group') is-invalid @enderror"
                                                 id="blood_group" name="blood_group"
-                                                value="{{ auth()->user()->profile->blood_group }}">
+                                                value="{{ auth()->user()->profile->blood_group ?? '' }}">
                                             <small class="text-danger">
                                                 @error('blood_group')
                                                     {{ $message }}
@@ -147,7 +147,7 @@
                                             <label for="dob" class="form-label">Date Of Birth:</label>
                                             <input class="form-control @error('date_of_birth') is-invalid @enderror"
                                                 id="dob" name="date_of_birth" type="date"
-                                                value="{{ old('date_of_birth') ?? auth()->user()->profile->date_of_birth }}">
+                                                value="{{ old('date_of_birth') ?? (auth()->user()->profile->date_of_birth ?? '') }}">
 
                                             <small class="text-danger">
                                                 @error('date_of_birth')
@@ -160,7 +160,7 @@
                                             <label for="language" class="form-label">Language:</label>
                                             <input class="form-control @error('language') is-invalid @enderror"
                                                 id="language" name="language"
-                                                value="{{ old('language') ?? auth()->user()->profile->language }}"
+                                                value="{{ old('language') ?? (auth()->user()->profile->language ?? '') }}"
                                                 placeholder="English, Bengali, Hindi">
 
                                             <small class="text-danger">
@@ -174,7 +174,7 @@
                                             <label for="education" class="form-label">Education:</label>
                                             <input class="form-control @error('education') is-invalid @enderror"
                                                 id="education" name="education"
-                                                value="{{ old('education') ?? auth()->user()->profile->education }}">
+                                                value="{{ old('education') ?? (auth()->user()->profile->education ?? '') }}">
 
                                             <small class="text-danger">
                                                 @error('education')
@@ -187,7 +187,7 @@
                                             <label for="hobby" class="form-label">Hobby:</label>
                                             <input class="form-control @error('hobby') is-invalid @enderror"
                                                 id="hobby" name="hobby"
-                                                value="{{ old('hobby') ?? auth()->user()->profile->hobby }}">
+                                                value="{{ old('hobby') ?? (auth()->user()->profile->hobby ?? '') }}">
                                             <small class="text-danger">
                                                 @error('hobby')
                                                     {{ $message }}
@@ -207,7 +207,7 @@
                                             <div class="mt-2" id="cv-filename-preview">
                                                 @if (Auth::user()->profile && Auth::user()->profile->cv)
                                                     Currently: <a
-                                                        href="{{ asset('storage/' . Auth::user()->profile->cv) }}"
+                                                        href="{{ asset('storage/' . Auth::user()->profile->cv ?? '') }}"
                                                         target="_blank">{{ basename(Auth::user()->profile->cv) }}</a>
                                                 @else
                                                     No CV uploaded.
@@ -238,11 +238,11 @@
                                                 name="relationship">
                                                 <option value="">Select</option>
                                                 <option value="unmarried"
-                                                    {{ old('relationship') == 'unmarried' ? 'selected' : '' ?? auth()->user()->profile->relationship }}>
+                                                    {{ old('relationship') == 'unmarried' ? 'selected' : '' ?? (auth()->user()->profile->relationship ?? '') }}>
                                                     Unmarried
                                                 </option>
                                                 <option value="married"
-                                                    {{ old('relationship') == 'married' ? 'selected' : '' ?? auth()->user()->profile->relationship }}>
+                                                    {{ old('relationship') == 'married' ? 'selected' : '' ?? (auth()->user()->profile->relationship ?? '') }}>
                                                     Married
                                                 </option>
                                             </select>
@@ -257,7 +257,7 @@
                                         <div class="form-group col-sm-12">
                                             <label class="form-label">Bio:</label>
                                             <textarea class="form-control @error('bio') is-invalid @enderror" name="bio" rows="5"
-                                                style="line-height: 20px;">{{ old('bio') ?? auth()->user()->profile->bio }}</textarea>
+                                                style="line-height: 20px;">{{ old('bio') ?? (auth()->user()->profile->bio ?? '') }}</textarea>
                                             <small class="text-danger">
                                                 @error('bio')
                                                     {{ $message }}
@@ -267,7 +267,7 @@
 
                                         <div class="form-group col-sm-6">
                                             <label class="form-label">Present Address:</label>
-                                            <textarea class="form-control" name="present_address" rows="3" style="line-height: 15px;">{{ auth()->user()->profile->present_address }}</textarea>
+                                            <textarea class="form-control" name="present_address" rows="3" style="line-height: 15px;">{{ auth()->user()->profile->present_address ?? '' }}</textarea>
                                             <small class="text-danger">
                                                 @error('present_address')
                                                     {{ $message }}
@@ -278,7 +278,7 @@
                                         <div class="form-group col-sm-6">
                                             <label class="form-label">Permanent Address:</label>
                                             <textarea class="form-control @error('permanent_address') is-invalid @enderror" name="permanent_address"
-                                                rows="3" style="line-height: 15px;">{{ auth()->user()->profile->permanent_address }}</textarea>
+                                                rows="3" style="line-height: 15px;">{{ auth()->user()->profile->permanent_address ?? '' }}</textarea>
                                             <small class="text-danger">
                                                 @error('permanent_address')
                                                     {{ $message }}
