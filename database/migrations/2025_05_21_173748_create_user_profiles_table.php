@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
             $table->foreignId('designation_id')->constrained()->cascadeOnUpdate();
             $table->string('CV', 1000)->nullable();
+            $table->string('cover_photo', 1000)->nullable();
             $table->timestamps();
         });
     }

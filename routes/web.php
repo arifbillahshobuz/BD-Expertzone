@@ -21,6 +21,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('profile/edit', [UserProfileController::class, 'editProfile'])->name('user.edit-profile');
     Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile-update');
     Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('user.change-password');
+
+    Route::post('update-cover-photo', [UserProfileController::class, 'updateCoverPhoto'])->name('user.update-cover-photo');
+    Route::post('update-profile-photo', [UserProfileController::class, 'updateProfilePhoto'])->name('user.update-profile-photo');
+
 });
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

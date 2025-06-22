@@ -710,7 +710,7 @@
                 <li class="nav-item dropdown user-dropdown">
                     <a href="javascript:void(0);" class="d-flex align-items-center dropdown-toggle"
                         id="drop-down-arrow" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset('frontend/') }}/assets/images/user/1.jpg"
+                        <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? "" }}"
                             class="img-fluid rounded-circle avatar-48 border border-2 me-3" alt="user"
                             loading="lazy">
                     </a>

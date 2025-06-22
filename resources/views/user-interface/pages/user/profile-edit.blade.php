@@ -57,20 +57,8 @@
                                         <div class="col-md-12">
                                             <div class="profile-img-edit">
                                                 <img class="profile-pic" id="avatar-preview"
-                                                    src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('default-avatar.jpg') }} width="100px"
-                                                    height="100px" alt="profile-pic" loading="lazy">
-                                                <div class="p-image d-flex align-items-center justify-content-center"
-                                                    style="cursor: pointer;">
-                                                    <span class="material-symbols-outlined">edit</span>
-
-                                                    <input class="file-upload" type="file" id="avatar-input"
-                                                        name="avatar" accept="image/*" />
-                                                </div>
-                                                <small class="text-danger mt-1">
-                                                    @error('avatar')
-                                                        {{ $message }}
-                                                    @enderror
-                                                </small>
+                                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? "" }}" width="150px"
+                                                    height="150px" alt="profile-pic" loading="lazy">
                                             </div>
                                         </div>
                                     </div>
@@ -452,63 +440,4 @@
             </div>
         </div>
     </div>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const avatarInput = document.getElementById('avatar-input');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const pImageOverlay = document.querySelector('.p-image'); // The div that covers the image
-
-            const cvInput = document.getElementById('cv');
-            const cvFilenamePreview = document.getElementById('cv-filename-preview');
-
-            // --- Avatar Preview Logic ---
-            // 1. Trigger file input when the 'p-image' overlay is clicked
-            if (pImageOverlay && avatarInput) {
-                pImageOverlay.addEventListener('click', function() {
-                    avatarInput.click(); // Programmatically click the hidden file input
-                });
-            }
-
-            // 2. Handle image preview when file is selected
-            if (avatarInput && avatarPreview) {
-                avatarInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-
-                    if (file) {
-                        const reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            avatarPreview.src = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-
-                        avatarPreview.src =
-                            '{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/user/01.jpg') }}';
-                    }
-                });
-            }
-
-            // --- CV Filename Preview Logic (similar to before) ---
-            if (cvInput && cvFilenamePreview) {
-                cvInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        cvFilenamePreview.innerHTML = `Selected: <strong>${file.name}</strong>`;
-                    } else {
-                        cvFilenamePreview.innerHTML = `
-                        @if (Auth::user()->profile && Auth::user()->profile->cv)
-                            Currently: <a href="{{ asset('storage/' . Auth::user()->profile->cv) }}" target="_blank">{{ basename(Auth::user()->profile->cv) }}</a>
-                        @else
-                            No CV uploaded.
-                        @endif
-                    `;
-                    }
-                });
-            }
-        });
-    </script>
-
 @endsection
