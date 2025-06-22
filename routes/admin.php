@@ -15,7 +15,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [AdminProfileController::class, 'editProfile'])->name('edit');
         Route::put('/update', [AdminProfileController::class, 'updateProfile'])->name('update');
-        Route::put('/change-password', [AdminProfileController::class, 'changePassword'])->name('update');
+        Route::put('/change-password', [AdminProfileController::class, 'changePassword'])->name('password.update');
     });
     // Designation routes
     Route::group(['prefix' => 'designation', 'as' => 'designation.'], function () {

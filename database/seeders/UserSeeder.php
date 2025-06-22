@@ -16,12 +16,25 @@ class UserSeeder extends Seeder
         // You can use the factory to create users or manually insert them
 
         // Alternatively, you can create a specific user
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('password'),
-            'phone' => '1234567890',
-            'role' => 'admin'
-        ]);
+        User::insert(
+            [
+                [
+                    'name' => 'Admin User',
+                    'username' => 'admin',
+                    'email' => 'admin@gmail.com',
+                    'password' => bcrypt('password'),
+                    'phone' => '1234567890',
+                    'role' => 'admin'
+                ],
+                [
+                    'name' => 'User',
+                    'username' => 'user',
+                    'email' => 'user@gmail.com',
+                    'password' => bcrypt('password'),
+                    'phone' => '0987654321',
+                    'role' => 'user'
+                ]
+            ]
+        );
     }
 }

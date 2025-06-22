@@ -1,3 +1,4 @@
+
 <script src="{{asset('frontend/')}}/assets/js/libs.min.js"></script>
 <!-- Lodash Utility -->
 <script src="{{asset('frontend/')}}/assets/vendor/lodash/lodash.min.js"></script>
@@ -30,8 +31,6 @@
 <script src="{{asset('frontend/')}}/assets/js/lottie.js"></script>
 <!--select2 Script -->
 <script src="{{asset('frontend/')}}/assets/js/select2.js"></script>
-<!--ecommerce Script -->
-<script src="{{asset('frontend/')}}/assets/js/ecommerce.js"></script>
 
 {{--<script src="{{asset('frontend/')}}/assets/vendor/zuck.js-master/dist/zuck.min.js"></script>--}}
 <script src="https://cdn.jsdelivr.net/npm/zuck.js/dist/zuck.min.js"></script>

@@ -1,6 +1,6 @@
 <aside class="sidebar sidebar-default sidebar-base navs-rounded-all " id="first-tour" data-toggle="main-sidebar" data-sidebar="responsive">
     <div class="sidebar-header d-flex align-items-center justify-content-start position-relative">
-        <a href="{{route('home')}}"
+        <a href="{{route('dashboard')}}"
            class="d-flex align-items-center gap-2 iq-header-logo">
             <svg width="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -27,7 +27,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page"
-                       href="{{route('home')}}">
+                       href="{{route('dashboard')}}">
                         <i class="icon material-symbols-outlined">
                             newspaper
                         </i>

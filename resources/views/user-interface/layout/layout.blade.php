@@ -7,10 +7,12 @@
     <title>@yield('title')</title>
     @include('user-interface.partial.style')
     @yield('page-style')
+
+    {!! ToastMagic::styles() !!}
     <!-- Config Options -->
 
     <meta name="setting_options"
-          content='{
+        content='{
     "saveLocal":"sessionStorage",
     "storeKey":"socialV",
     "setting":{
@@ -30,101 +32,79 @@
   }'>
     <!-- End Config Options -->
 </head>
-<body class=" ">
-<!-- loader Start -->
-<div id="loading">
+
+<body class="">
+
+    <!-- loader Start -->
+    {{-- <div id="loading">
     <div id="loading-center">
     </div>
-</div>
-<!-- loader END -->
-<!-- Wrapper Start -->
-@include('user-interface.partial.wrapper')
-<!-- Wrapper End-->
-<main class="main-content">
-    <div class="position-relative">
-        <!-- header start-->
-        @include('user-interface.partial.header')
-        <!-- header end -->
-        <div>
-            <div class="position-relative">
-            </div>
-            <div class="content-inner " id="page_layout">
-                <div class="container">
-                    @yield('content')
+</div> --}}
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    @include('user-interface.partial.wrapper')
+    <!-- Wrapper End-->
+    <main class="main-content">
+        <div class="position-relative">
+            <!-- header start-->
+            @include('user-interface.partial.header')
+            <!-- header end -->
+            <div>
+                <div class="position-relative">
                 </div>
+                <div class="content-inner " id="page_layout">
+                    <div class="container">
+                        @yield('content')
+                    </div>
 
-                <!-- Like Modal start-->
-              @include('user-interface.partial.likemodal')
-                <!-- Like Modal end-->
+                    <!-- Like Modal start-->
+                    @include('user-interface.partial.likemodal')
+                    <!-- Like Modal end-->
+                </div>
             </div>
+            <!-- sidebar-mini start-->
+            @include('user-interface.partial.sidebar-mini')
+            <!-- sidebar end -->
+            <!-- popup-modal start-->
+            @include('user-interface.partial.popupmodal')
+            <!-- popup-modal end-->
         </div>
-        <!-- sidebar-mini start-->
-        @include('user-interface.partial.sidebar-mini')
-        <!-- sidebar end -->
-        <!-- popup-modal start-->
-        @include('user-interface.partial.popupmodal')
-        <!-- popup-modal end-->
-    </div>
-</main>
-<!-- footer start-->
-@include('user-interface.partial.footer')
-<!-- footer End-->
+    </main>
+    <!-- footer start-->
+    @include('user-interface.partial.footer')
+    <!-- footer End-->
 
-<!-- offcanvas start -->
+    <!-- offcanvas start -->
 
-<!-- Live Customizer start -->
-<!-- Setting offcanvas start here -->
-@include('user-interface.partial.offcanvas')
-<!-- Settings sidebar end here -->
+    <!-- Live Customizer start -->
+    <!-- Setting offcanvas start here -->
+    @include('user-interface.partial.offcanvas')
+    <!-- Settings sidebar end here -->
 
-<a class="btn btn-fixed-end btn-danger btn-icon btn-setting" id="settingbutton" data-bs-toggle="offcanvas"
-   data-bs-target="#live-customizer" role="button" aria-controls="live-customizer">
+    <a class="btn btn-fixed-end btn-danger btn-icon btn-setting" id="settingbutton" data-bs-toggle="offcanvas"
+        data-bs-target="#live-customizer" role="button" aria-controls="live-customizer">
         <span class="icon material-symbols-outlined animated-rotate text-white">
             settings
         </span>
-</a> <!-- Live Customizer end -->
+    </a> <!-- Live Customizer end -->
 
-<!-- Share Modal start-->
-@include('user-interface.partial.share-model')
-<!-- Share Moda end-->
+    <!-- Share Modal start-->
+    @include('user-interface.partial.share-model')
+    <!-- Share Moda end-->
 
 
-<!-- offcanvas bottom start-->
-@include('user-interface.partial.offcanvas-bottom')
-<!-- offcanvas bottom end-->
+    <!-- offcanvas bottom start-->
+    @include('user-interface.partial.offcanvas-bottom')
+    <!-- offcanvas bottom end-->
 
-<!-- Backend Bundle JavaScript -->
-@include('user-interface.partial.script')
-@if($errors->any())
-    @foreach ($errors->all() as $error)
-        <script>
-            iziToast.show({
-                message: '{{ $error }}',
-                color: 'red',
-                position: 'topRight',
-            });
-        </script>
-    @endforeach
-@endif
-@if(session('success'))
-    <script>
-        iziToast.show({
-            message: '{{ session("success") }}',
-            color: 'green',
-            position: 'topRight',
-        });
-    </script>
-@endif
+    <!-- Backend Bundle JavaScript -->
+    @include('user-interface.partial.script')
 
-@if(session('error'))
-    <script>
-        iziToast.show({
-            message: '{{ session("error") }}',
-            color: 'red',
-            position: 'topRight',
-        });
-    </script>
-@endif
+    {{-- ToastMagic Scripts --}}
+    {!! ToastMagic::scripts() !!}
+
+
+
 
 </body>
 

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('admin.layout.layout')
 
 @section('content')
     <div class="page-wrapper">
@@ -33,7 +33,7 @@
                     </div>
                 </form>
 
-                <form class="card mt-4" action="{{ route('admin.password.update') }}" method="POST" enctype="multipart/form-data">
+                <form class="card mt-4" action="{{ route('admin.profile.password.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="card-body">

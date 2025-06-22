@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('image', 255)->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('blood_group', 10)->nullable();
             $table->string('language', 10)->nullable();
@@ -25,6 +24,7 @@ return new class extends Migration {
             $table->string('permanent_address', 50)->nullable();
             $table->foreignId('user_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
             $table->foreignId('designation_id')->constrained()->cascadeOnUpdate();
+            $table->string('CV', 1000)->nullable();
             $table->timestamps();
         });
     }
