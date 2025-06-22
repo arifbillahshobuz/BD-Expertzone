@@ -11,7 +11,7 @@ use Illuminate\View\View;
 
 class AdminProfileController extends Controller
 {
-    public function editProfile() :View
+    public function editProfile(): View
     {
         return view('admin.profile.edit-profile');
     }

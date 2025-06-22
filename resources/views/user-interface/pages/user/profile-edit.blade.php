@@ -5,31 +5,33 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
+
+
             <div class="card">
                 <div class="card-body p-0">
                     <div class="iq-edit-list">
                         <ul class="iq-edit-profile row nav nav-pills" role="tablist">
                             <li class="col-md-3 p-0">
-                                <a class="nav-link active" data-bs-toggle="pill" href="#personal-information"
-                                    aria-selected="true" role="tab">
+                                <a class="nav-link {{ session('tab') == 'personal-information' || !session('tab') ? 'active' : '' }}"
+                                    data-bs-toggle="pill" href="#personal-information" role="tab">
                                     Personal Information
                                 </a>
                             </li>
                             <li class="col-md-3 p-0">
-                                <a class="nav-link" data-bs-toggle="pill" href="#chang-pwd" aria-selected="false"
-                                    tabindex="-1" role="tab">
+                                <a class="nav-link {{ session('tab') == 'chang-pwd' ? 'active' : '' }}"
+                                    data-bs-toggle="pill" href="#chang-pwd" role="tab">
                                     Change Password
                                 </a>
                             </li>
                             <li class="col-md-3 p-0">
-                                <a class="nav-link" data-bs-toggle="pill" href="#emailandsms" aria-selected="false"
-                                    tabindex="-1" role="tab">
+                                <a class="nav-link {{ session('tab') == 'emailandsms' ? 'active' : '' }}"
+                                    data-bs-toggle="pill" href="#emailandsms" role="tab">
                                     Email and SMS
                                 </a>
                             </li>
                             <li class="col-md-3 p-0">
-                                <a class="nav-link" data-bs-toggle="pill" href="#manage-contact" aria-selected="false"
-                                    tabindex="-1" role="tab">
+                                <a class="nav-link {{ session('tab') == 'manage-contact' ? 'active' : '' }}"
+                                    data-bs-toggle="pill" href="#manage-contact" role="tab">
                                     Manage Contact
                                 </a>
                             </li>
@@ -43,7 +45,8 @@
         <div class="col-lg-12">
             <div class="iq-edit-list-data">
                 <div class="tab-content">
-                    <div class="tab-pane fade active show" id="personal-information" role="tabpanel">
+                    <div class="tab-pane fade {{ !session('tab') || session('tab') == 'personal-information' ? 'active show' : '' }}"
+                        id="personal-information" role="tabpanel">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
                                 <div class="header-title">
@@ -57,14 +60,21 @@
                                     <div class="form-group row align-items-center">
                                         <div class="col-md-12">
                                             <div class="profile-img-edit">
-                                                <img class="profile-pic"
-                                                    src="{{ asset('/' . auth()->user()->avatar) ?? asset('assets/images/user/01.jpg') }}"
-                                                    alt="profile-pic" loading="lazy">
+                                                <img class="profile-pic" id="avatar-preview"
+                                                    src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('default-avatar.jpg') }} width="100px"
+                                                    height="100px" alt="profile-pic" loading="lazy">
                                                 <div class="p-image d-flex align-items-center justify-content-center"
                                                     style="cursor: pointer;">
                                                     <span class="material-symbols-outlined">edit</span>
-                                                    <input class="" type="file" name="avatar">
+
+                                                    <input class="file-upload" type="file" id="avatar-input"
+                                                        name="avatar" accept="image/*" />
                                                 </div>
+                                                <small class="text-danger mt-1">
+                                                    @error('avatar')
+                                                        {{ $message }}
+                                                    @enderror
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
@@ -185,16 +195,24 @@
                                             </small>
                                         </div>
 
-                                        <div class="form-group col-sm-6">
-                                            <label for="cv" class="form-label">Upload your CV in PDF
-                                                format:</label>
-                                            <input type="file" class="form-control @error('cv') is-invalid @enderror"
-                                                id="cv" name="cv" accept="application/pdf">
+                                        <div class="form-group">
+                                            <label for="cv" class="form-label">Your CV (PDF):</label>
+                                            <input type="file" class="form-control" id="cv" name="cv"
+                                                accept=".pdf">
                                             <small class="text-danger">
                                                 @error('cv')
                                                     {{ $message }}
                                                 @enderror
                                             </small>
+                                            <div class="mt-2" id="cv-filename-preview">
+                                                @if (Auth::user()->profile && Auth::user()->profile->cv)
+                                                    Currently: <a
+                                                        href="{{ asset('storage/' . Auth::user()->profile->cv) }}"
+                                                        target="_blank">{{ basename(Auth::user()->profile->cv) }}</a>
+                                                @else
+                                                    No CV uploaded.
+                                                @endif
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
@@ -276,7 +294,8 @@
                     </div>
 
 
-                    <div class="tab-pane fade" id="chang-pwd" role="tabpanel">
+                    <div class="tab-pane fade {{ session('tab') == 'chang-pwd' ? 'active show' : '' }}" id="chang-pwd"
+                        role="tabpanel">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
                                 <div class="iq-header-title">
@@ -284,19 +303,38 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <form>
+                                <form action="{{ route('user.change-password') }}" method="POST">
+                                    @csrf
                                     <div class="form-group">
                                         <label for="cpass" class="form-label">Current Password:</label>
-                                        <a href="#" class="float-end">Forgot Password</a>
-                                        <input type="Password" class="form-control" id="cpass" value="">
+                                        <input type="Password" class="form-control" id="cpass"
+                                            name="current_password" value="">
+                                        <small class="text-danger">
+                                            @error('current_password')
+                                                {{ $message }}
+                                            @enderror
+                                        </small>
                                     </div>
                                     <div class="form-group">
                                         <label for="npass" class="form-label">New Password:</label>
-                                        <input type="Password" class="form-control" id="npass" value="">
+                                        <input type="Password" class="form-control" id="npass" name="password"
+                                            value="">
+                                        <small class="text-danger">
+                                            @error('password')
+                                                {{ $message }}
+                                            @enderror
+                                        </small>
+
                                     </div>
                                     <div class="form-group">
-                                        <label for="vpass" class="form-label">Verify Password:</label>
-                                        <input type="Password" class="form-control" id="vpass" value="">
+                                        <label for="vpass" class="form-label">Confirm Password:</label>
+                                        <input type="Password" class="form-control" id="vpass"
+                                            name="password_confirmation" value="">
+                                        <small class="text-danger">
+                                            @error('password_confirmation')
+                                                {{ $message }}
+                                            @enderror
+                                        </small>
                                     </div>
                                     <button type="submit" class="btn btn-primary me-2">Submit</button>
                                     <button type="reset" class="btn btn-danger-subtle">cancel</button>
@@ -418,5 +456,63 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarInput = document.getElementById('avatar-input');
+            const avatarPreview = document.getElementById('avatar-preview');
+            const pImageOverlay = document.querySelector('.p-image'); // The div that covers the image
+
+            const cvInput = document.getElementById('cv');
+            const cvFilenamePreview = document.getElementById('cv-filename-preview');
+
+            // --- Avatar Preview Logic ---
+            // 1. Trigger file input when the 'p-image' overlay is clicked
+            if (pImageOverlay && avatarInput) {
+                pImageOverlay.addEventListener('click', function() {
+                    avatarInput.click(); // Programmatically click the hidden file input
+                });
+            }
+
+            // 2. Handle image preview when file is selected
+            if (avatarInput && avatarPreview) {
+                avatarInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+
+                    if (file) {
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            avatarPreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+
+                        avatarPreview.src =
+                            '{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/user/01.jpg') }}';
+                    }
+                });
+            }
+
+            // --- CV Filename Preview Logic (similar to before) ---
+            if (cvInput && cvFilenamePreview) {
+                cvInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        cvFilenamePreview.innerHTML = `Selected: <strong>${file.name}</strong>`;
+                    } else {
+                        cvFilenamePreview.innerHTML = `
+                        @if (Auth::user()->profile && Auth::user()->profile->cv)
+                            Currently: <a href="{{ asset('storage/' . Auth::user()->profile->cv) }}" target="_blank">{{ basename(Auth::user()->profile->cv) }}</a>
+                        @else
+                            No CV uploaded.
+                        @endif
+                    `;
+                    }
+                });
+            }
+        });
+    </script>
 
 @endsection

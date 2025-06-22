@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');
     Route::get('profile/edit', [UserProfileController::class, 'editProfile'])->name('user.edit-profile');
     Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile-update');
+    Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('user.change-password');
 
 
 });

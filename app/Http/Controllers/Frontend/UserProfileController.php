@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\Designation;
 use App\Models\UserProfile;
@@ -12,6 +13,7 @@ use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
@@ -78,7 +80,7 @@ class UserProfileController extends Controller
             );
 
             ToastMagic::success('Profile updated successfully!');
-            return redirect()->back();
+            return redirect()->back()->with('tab', 'personal-information');
 
         } catch (ValidationException $exception) {
             Log::error('Validation error while updating profile: ' . $exception->getMessage());
@@ -86,7 +88,48 @@ class UserProfileController extends Controller
             return redirect()->back()->withErrors($exception->validator)->withInput();
         } catch (\Throwable $exception) {
             ToastMagic::error('Something went wrong: ' . $exception->getMessage());
-            return redirect()->back();
+            return redirect()->back()->with('tab', 'personal-information');
+        }
+    }
+
+    /**
+     * Show the form for changing the user password.
+     *
+     * @return 
+     */
+    public function changePassword(Request $request): RedirectResponse
+    {
+        try {
+            $request->validate([
+                'current_password' => 'required|string|min:8',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+
+            $user = Auth::user();
+
+            if (!Hash::check($request->input('current_password'), $user->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => ['The provided password does not match your current password.'],
+                ]);
+            }
+
+            $user->password = Hash::make($request->input('password')); // Use input() directly
+            $user->save();
+
+            ToastMagic::success('Password changed successfully!');
+
+            return Redirect::back()
+                ->with('tab', 'chang-pwd');
+
+        } catch (ValidationException $exception) {
+            return Redirect::back()
+                ->with('tab', 'chang-pwd') // Keep password tab active
+                ->withErrors($exception->validator)
+                ->withInput(); // Keep old input values
+        } catch (\Throwable $exception) {
+            return Redirect::back()
+                ->with('tab', 'chang-pwd') // Keep password tab active
+                ->withErrors(['error' => 'Something went wrong while changing the password. Please try again.']);
         }
     }
 
