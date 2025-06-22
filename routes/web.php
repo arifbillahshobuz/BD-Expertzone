@@ -14,10 +14,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 });
-
+Route::get('/', [HomeController::class, 'home'])->name('dashboard');
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [HomeController::class, 'home'])->name('dashboard');
-
     //    User Profile Routes
     Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');
     Route::get('profile/edit', [UserProfileController::class, 'editProfile'])->name('user.edit-profile');

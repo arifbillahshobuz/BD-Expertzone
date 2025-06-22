@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#profile" role="button" aria-expanded="false"
+                    <a class="nav-link" data-bs-toggle="collapse" href="{{route('user.profile')}}" role="button" aria-expanded="false"
                        aria-controls="profile">
                         <i class="icon material-symbols-outlined">
                             person

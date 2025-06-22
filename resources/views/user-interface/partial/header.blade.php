@@ -704,7 +704,7 @@
                         <div class="card shadow-none m-0">
                             <div class="card-header ">
                                 <div class="header-title">
-                                    <h5 class="mb-0 ">{{ auth()->user()->name }}</h5>
+                                    <h5 class="mb-0 ">{{ auth()->user()->name ?? '' }}</h5>
                                 </div>
                             </div>
                             <div class="card-body p-0 ">
