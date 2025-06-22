@@ -30,6 +30,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/store', [PartnerController::class, 'store'])->name('store');
         Route::put('/update/{designation}', [PartnerController::class, 'update'])->name('update');
         Route::delete('/delete/{designation}', [PartnerController::class, 'destroy'])->name('destroy');
+
+
     });
 });
 

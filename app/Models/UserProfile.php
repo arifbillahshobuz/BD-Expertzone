@@ -26,6 +26,7 @@ class UserProfile extends Model
         'user_id',
         'designation_id',
         'cv',
+        'cover_photo'
     ];
 
     public function user() :BelongsTo
