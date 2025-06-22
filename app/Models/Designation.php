@@ -9,6 +9,10 @@ class Designation extends Model
     protected $fillable = [
         'title',
     ];
+    public function partners()
+    {
+        return $this->hasMany(Partner::class);
+    }
 
 
 }

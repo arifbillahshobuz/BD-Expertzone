@@ -18,7 +18,8 @@ class PartnerController extends Controller
     {
         try {
             $designations = Designation::all();
-            $partners = Partner::all();
+            $partners = Partner::with('designation:id,title')->get();
+//            dd($partners);
             return view('admin.pages.partner.list', compact(['partners','designations']));
         } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Failed to load partner page');

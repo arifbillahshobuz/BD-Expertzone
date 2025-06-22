@@ -18,18 +18,26 @@
                             <table class="table table-vcenter card-table table-striped">
                                 <thead>
                                 <tr>
-                                    <th></th>
-                                    <th></th>
                                     <th>Title</th>
-                                    <th>Date</th>
+                                    <th>Image</th>
+                                    <th>Email</th>
+                                    <th>Company Name</th>
+                                    <th>Designation</th>
+                                    <th>Address</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($partners as $partner)
                                     <tr>
-                                        <td>{{ "$partner->first_name $partner->last_name"   }}</td>
-                                        <td>{{ $partner->created_at->format('d M Y') }}</td>
+                                        <td>{{ "$partner->first_name $partner->last_name" ?? 'N/A'}}</td>
+                                        <td><img src="{{ $partner->image ? asset('upload/partner/' . $partner->image) : asset('images/default.png') }}"
+                                                 width="50" height="50">
+                                        </td>
+                                        <td>{{ $partner->email ?? 'N/A'}}</td>
+                                        <td>{{ $partner->company ?? 'N/A'}}</td>
+                                        <td>{{ $partner->designation->title ?? 'N/A'}}</td>
+                                        <td>{{ $partner->address ?? 'N/A'}}</td>
                                         <td>
                                             <!-- Edit Button -->
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $partner->id }}">

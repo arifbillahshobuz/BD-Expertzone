@@ -53,6 +53,20 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse"
+                                        href="#storeData" role="button" aria-expanded="false"
+                                        aria-controls="storeData">
+                                        <span class="nav-text">Partner</span>
+                                    </a>
+                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
+                                        @foreach($partners as $partner)
+                                            <li class="nav-item">
+                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
