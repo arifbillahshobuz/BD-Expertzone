@@ -8,7 +8,7 @@
     @include('user-interface.partial.style')
     @yield('page-style')
 
-{{--    {!! ToastMagic::styles() !!}--}}
+    {!! ToastMagic::styles() !!}
     <!-- Config Options -->
 
     <meta name="setting_options"
@@ -101,7 +101,7 @@
     @include('user-interface.partial.script')
 
     {{-- ToastMagic Scripts --}}
-{{--    {!! ToastMagic::scripts() !!}--}}
+    {!! ToastMagic::scripts() !!}
 
 
 
