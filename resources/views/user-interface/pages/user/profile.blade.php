@@ -1,5 +1,7 @@
 @extends('user-interface.layout.layout');
-@section('title', 'User Profile')
+@section('title')
+    User Profile
+@endsection
 @section('content')
 
     <div class="container position-relative p-0">

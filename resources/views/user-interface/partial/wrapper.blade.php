@@ -34,6 +34,7 @@
                         <span class="item-name">Newsfeed</span>
                     </a>
                 </li>
+                @auth()
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="{{route('user.profile')}}" role="button" aria-expanded="false"
                        aria-controls="profile">
@@ -95,6 +96,7 @@
                         </li>
                     </ul>
                 </li>
+                @endauth
             </ul>
             <!-- Sidebar Menu End -->
         </div>
