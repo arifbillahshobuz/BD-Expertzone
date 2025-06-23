@@ -15,4 +15,10 @@ class HomeController extends Controller
         $partners = Partner::all();
         return view('user-interface.app', compact('partners'));
     }
+    public function partnerList()
+    {
+        $partners = Partner::all();
+        return view('user-interface.pages.partner.list', compact('partners'));
+    }
+
 }

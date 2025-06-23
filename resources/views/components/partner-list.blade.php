@@ -31,7 +31,7 @@
                                 @foreach($partners as $partner)
                                     <tr>
                                         <td>{{ "$partner->first_name $partner->last_name" ?? 'N/A'}}</td>
-                                        <td><img src="{{ $partner->image ? asset('upload/partner/' . $partner->image) : asset('images/default.png') }}"
+                                        <td><img src="{{ $partner->image ? asset('uploads/partner/' . $partner->image) : asset('images/default.png') }}"
                                                  width="50" height="50">
                                         </td>
                                         <td>{{ $partner->email ?? 'N/A'}}</td>

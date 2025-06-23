@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/partner', [HomeController::class, 'partnerList'])->name('partner.list');
 Route::middleware(['auth', 'verified'])->group(function () {
     //    User Profile Routes
     Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');

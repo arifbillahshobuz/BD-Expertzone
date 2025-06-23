@@ -54,18 +54,17 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse"
-                                        href="#storeData" role="button" aria-expanded="false"
-                                        aria-controls="storeData">
+                                    <a class="nav-link menu-arrow justify-content-start"
+                                        href="{{route('partner.list')}}" target="_blank">
                                         <span class="nav-text">Partner</span>
                                     </a>
-                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        @foreach($partners as $partner)
-                                            <li class="nav-item">
-                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+{{--                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">--}}
+{{--                                        @foreach($globalPartners as $partner)--}}
+{{--                                            <li class="nav-item">--}}
+{{--                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a>--}}
+{{--                                            </li>--}}
+{{--                                        @endforeach--}}
+{{--                                    </ul>--}}
                                 </li>
                             </ul>
                         </div>
@@ -409,6 +408,7 @@
                         </div>
                     </div>
                 </li>
+                @auth()
                 <li class="nav-item dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="group-drop"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -718,10 +718,7 @@
                         <div class="card shadow-none m-0">
                             <div class="card-header ">
                                 <div class="header-title">
-
-                                    @auth
-                                        <h5 class="mb-0 ">{{ auth()->user()->name ?? ''}}</h5>
-                                    @endauth
+                                        <h5 class="mb-0 ">{{ auth()->user()->name ?? 'N/A'}}</h5>
                                 </div>
                             </div>
                             <div class="card-body p-0 ">
@@ -760,10 +757,24 @@
                                         </form>
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center iq-sub-card border-0">
+                                    <span class="material-symbols-outlined"> line_style </span>
+                                    <div class="ms-3">
+                                        <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </li>
+                @endauth
+                @guest()
+                <li class="nav-item dropdown">
+                    <a href="{{route('login')}}" class="dropdown-toggle d-flex align-items-center">
+                        <span>Login</span>
+                    </a>
+                </li>
+                @endguest
             </ul>
         </div>
     </nav>

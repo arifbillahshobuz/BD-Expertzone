@@ -72,7 +72,7 @@ class PartnerController extends Controller
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("upload/partner", $fileName);
+                $file->move("uploads/partner", $fileName);
             }
             Partner::create([
                 'first_name' => $request->input('first_name'),
@@ -112,12 +112,12 @@ class PartnerController extends Controller
                 $request->validate([
                     'image' => 'required'
                 ]);
-                if (file_exists(public_path('upload/partner/' . $fileName))) {
-                    unlink(public_path('upload/partner/' . $fileName));
+                if (file_exists(public_path('uploads/partner/' . $fileName))) {
+                    unlink(public_path('uploads/partner/' . $fileName));
                 }
                 $file = $request->file('image');
                 $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("upload/partner/", $fileName);
+                $file->move("uploads/partner/", $fileName);
             }
 
             $partner->update([
