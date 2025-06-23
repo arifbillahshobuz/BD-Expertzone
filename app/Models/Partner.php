@@ -16,4 +16,8 @@ class Partner extends Model
         'company',
         'designation_id',
     ];
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class);
+    }
 }
