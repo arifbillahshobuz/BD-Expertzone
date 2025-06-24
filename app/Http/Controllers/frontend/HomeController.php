@@ -14,6 +14,10 @@ class HomeController extends Controller
     {
         $jobCategories = PostCategory::where('title', '=', 'government')->get();
         $posts = Post::with('user')->latest()->published()->paginate(10);
+
+        // $post = $posts->first();
+        // dd($post->media);
+
         $partners = Partner::all();
         return view('user-interface.app', compact('partners', 'posts'));
     }

@@ -14,21 +14,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserPostController extends Controller
 {
-    /**
-     * Show all post 
-     * 
-     *
-     */
-
-    public function index()
-    {
-        $posts = Post::with('user')->latest()->published()->paginate(10);
-
-        return view('user-interface.pages.post.show-post', compact('posts'));
-    }
-
-
-
 
 
     /**
@@ -73,7 +58,7 @@ class UserPostController extends Controller
 
             Post::create([
                 'content' => $request->input('content'),
-                'media' => !empty($mediaPaths) ? json_encode($mediaPaths) : null,
+                'media' => !empty($mediaPaths) ? $mediaPaths : null,
                 'slug' => Str::slug(Str::limit($request->input('content'), 50)) . '-' . time(),
                 'is_published' => true,
                 'type' => Post::TYPE_USER,

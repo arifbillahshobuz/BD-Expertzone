@@ -16,7 +16,7 @@
                              <div class="w-100">
                                  <div class="d-flex align-items-center justify-content-between">
                                      <div>
-                                         <h6 class="mb-0 d-inline-block ">{{ auth()->user()->name }}</h6>
+                                         <h6 class="mb-0 d-inline-block ">{{ auth()->user()->name ?? '' }}</h6>
                                          <span class="d-inline-block text-primary">
                                              <svg class="align-text-bottom" width="17" height="17"
                                                  viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,40 +102,51 @@
                      </div>
 
 
-                     <div class="user-post mt-4">
-                         @php
-                             $mediaFiles = $post->media ?? [];
-                             $count = count($mediaFiles);
-                         @endphp
+                     @php
+                         if (is_array($post->media)) {
+                             $mediaFiles = $post->media;
+                         } else {
+                             $mediaFiles = json_decode($post->media, true) ?: [];
+                         }
+                         $count = count($mediaFiles);
+                     @endphp
 
-                         @if ($count > 0)
-                             <div class="row g-2">
-                                 @foreach ($mediaFiles as $index => $media)
-                                     @php
-                                         // Decide column class based on how many images you want per row
-                                         // Here, for example, 3 images per row: col-md-4 (12/3 = 4)
-                                         $colClass = 'col-md-4';
-                                         $marginTopClass = $index >= 3 ? 'mt-md-0 mt-3' : ''; // margin top for rows after first
-                                     @endphp
+                     @if ($count > 0)
+                         <div class="row mt-3">
+                             {{-- প্রথম ছবি --}}
+                             <div class="col-md-6">
+                                 <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}"
+                                     class="rounded">
+                                     <img src="{{ asset($mediaFiles[0]) }}" alt="post-image"
+                                         class="img-fluid rounded w-100" loading="lazy">
+                                 </a>
+                             </div>
 
-                                     <div class="{{ $colClass }} {{ $marginTopClass }}">
-                                         <a data-fslightbox="gallery" href="{{ asset($media) }}"
-                                             class="rounded d-block">
-                                             @if (Str::endsWith($media, ['jpg', 'jpeg', 'png', 'gif']))
-                                                 <img src="{{ asset($media) }}" alt="post-image"
-                                                     class="img-fluid rounded w-100" loading="lazy">
-                                             @elseif (Str::endsWith($media, ['mp4', 'mov', 'avi']))
-                                                 <video controls class="img-fluid rounded w-100" preload="metadata">
-                                                     <source src="{{ asset($media) }}" type="video/mp4">
-                                                     Your browser does not support the video tag.
-                                                 </video>
-                                             @endif
+
+                             @if ($count > 1)
+                                 <div class="col-md-6 mt-md-0 mt-3">
+                                     <div class="post-overlay-box h-100 rounded position-relative">
+                                         <img src="{{ asset($mediaFiles[1]) }}" alt="post-image"
+                                             class="img-fluid rounded w-100 h-100 object-cover" loading="lazy">
+
+                                         <a data-fslightbox="gallery-{{ $post->id }}"
+                                             href="{{ asset($mediaFiles[1]) }}"
+                                             class="rounded font-size-18 position-absolute top-50 start-50 translate-middle text-white bg-dark px-3 py-2"
+                                             style="z-index: 2;">
+                                             +{{ $count - 1 }}
                                          </a>
                                      </div>
-                                 @endforeach
-                             </div>
-                         @endif
-                     </div>
+                                 </div>
+                             @endif
+
+                             @for ($i = 2; $i < $count; $i++)
+                                 <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[$i]) }}"
+                                     class="d-none"></a>
+                             @endfor
+                         </div>
+                     @endif
+
+
 
 
                      <div class="post-meta-likes mt-4">
@@ -808,3 +819,9 @@
      </div>
 
  </div>
+
+
+ <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
+ <script>
+     refreshFsLightbox();
+ </script>

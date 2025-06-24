@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->longText('content')->nullable();
-            $table->string('media')->nullable();
+            $table->longText('media')->nullable();
             $table->string('slug', 100)->unique();
             $table->boolean('is_published')->default(false);
             $table->tinyInteger('type')->default(0);

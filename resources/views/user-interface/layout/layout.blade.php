@@ -103,4 +103,5 @@
     {!! ToastMagic::scripts() !!}
 
 </body>
+
 </html>
