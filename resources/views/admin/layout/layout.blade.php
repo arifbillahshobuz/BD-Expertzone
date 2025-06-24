@@ -8,6 +8,8 @@
     <meta name="csrf" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
+
+
     @include('admin.partial.style')
     @yield('page-style')
     @stack('styles')

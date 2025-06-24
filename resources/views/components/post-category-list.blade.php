@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="card">
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped">
+                            <table class="table table-vcenter card-table table-striped dataTable">
                                 <thead>
                                 <tr>
                                     <th>Title</th>
@@ -62,33 +62,10 @@
         </div>
     </div>
 </div>
-<div class="app-ecommerce-category">
-    <!-- Category List Table -->
-    <div class="card">
-        <div class="card-header border-bottom">
-            <div class="d-flex justify-content-between align-items-center row pt-4 gap-4 gap-md-0">
-                <div class="col-md-4 user_plan">
-                    <h5 class="card-title mb-0">Filters</h5>
-                </div>
-                <div class="col-md-4 user_role"></div>
-                <div class="col-md-4 category_status"></div>
-            </div>
-        </div>
-        <div class="card-datatable table-responsive">
-            <table class="datatables-category-list table">
-                <thead class="border-top">
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>Category</th>
-                    <th>Total Products</th>
-                    <th>Feature Category</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
+
+<script >
+    $(document).ready( function () {
+        $('.dataTable').DataTable();
+    } );
+
+</script>

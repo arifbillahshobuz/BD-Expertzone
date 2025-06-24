@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,16 +12,22 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 50);
-            $table->string('image', 255)->nullable();
-            $table->longText('content');
-            $table->string('video')->nullable();
+            $table->longText('content')->nullable();
+            $table->string('media')->nullable();
+            $table->string('slug', 100)->unique();
+            $table->boolean('is_published')->default(false);
+            $table->tinyInteger('type')->default(0);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('post_category_id')->nullable()->constrained('post_categories')->restrictOnDelete()->cascadeOnUpdate();
+            $table->timestamp('published_at')->nullable();
+            $table->boolean('is_featured')->default(false);
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['type', 'is_published']);
+
         });
     }
-
     /**
      * Reverse the migrations.
      */

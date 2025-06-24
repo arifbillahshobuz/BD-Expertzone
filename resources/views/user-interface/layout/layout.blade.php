@@ -56,7 +56,6 @@
                     <div class="container">
                         @yield('content')
                     </div>
-
                     <!-- Like Modal start-->
                     @include('user-interface.partial.likemodal')
                     <!-- Like Modal end-->
@@ -103,9 +102,5 @@
     {{-- ToastMagic Scripts --}}
     {!! ToastMagic::scripts() !!}
 
-
-
-
 </body>
-
 </html>

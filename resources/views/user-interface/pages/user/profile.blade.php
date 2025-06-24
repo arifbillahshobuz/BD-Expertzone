@@ -2,19 +2,23 @@
 @section('title')
     User Profile
 @endsection
-@section('content')
 
+@section('content')
     <div class="container position-relative p-0">
         <div class="header-cover-img" style="width: 100%; overflow: hidden; position: relative;">
-            <img src="{{ asset(optional(auth()->user()->profile)->cover_photo ?? 'frontend/assets/images/page-img/profile-bg1.jpg') }}" alt="Cover Photo">
-
-{{--            <img src="{{ asset(auth()->user()->profile->cover_photo ?: 'frontend/assets/images/page-img/profile-bg1.jpg') }}"--}}
-{{--                 class="img-fluid w-100"--}}
-{{--                 style="object-fit: cover; height: 300px;"--}}
-{{--                 alt="Cover Photo">--}}
+            <img
+                src="{{ asset(optional(auth()->user()->profile)->cover_photo ?? 'frontend/assets/images/page-img/profile-bg1.jpg') }}"
+                class="img-fluid w-100"
+                style="object-fit: cover; height: 300px;"
+                alt="Cover Photo"
+            >
             <!-- Edit Icon -->
-            <button class="btn btn-sm bg-primary rounded-pill position-absolute" style="top: 15px; right: 15px;"
-                    data-bs-toggle="modal" data-bs-target="#coverPhotoModal">
+            <button
+                class="btn btn-sm bg-primary rounded-pill position-absolute"
+                style="top: 15px; right: 15px;"
+                data-bs-toggle="modal"
+                data-bs-target="#coverPhotoModal"
+            >
                 <span class="material-symbols-outlined">edit</span>
             </button>
         </div>

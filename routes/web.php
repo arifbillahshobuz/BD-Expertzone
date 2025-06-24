@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminProfileController;
-use App\Http\Controllers\frontend\HomeController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Frontend\UserController;
-use App\Http\Controllers\Frontend\UserProfileController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\Frontend\UserController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Frontend\UserPostController;
+use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Frontend\UserProfileController;
 Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -15,6 +16,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 Route::get('/', [HomeController::class, 'home'])->name('home');
+
 Route::get('/partner', [HomeController::class, 'partnerList'])->name('partner.list');
 Route::middleware(['auth', 'verified'])->group(function () {
     //    User Profile Routes
@@ -25,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('update-cover-photo', [UserProfileController::class, 'updateCoverPhoto'])->name('user.update-cover-photo');
     Route::post('update-profile-photo', [UserProfileController::class, 'updateProfilePhoto'])->name('user.update-profile-photo');
+
+    //    User Post Routes
+    Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
 
 });
 require __DIR__ . '/auth.php';

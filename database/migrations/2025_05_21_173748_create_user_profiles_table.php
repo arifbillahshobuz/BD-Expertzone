@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('present_address', 50)->nullable();
             $table->string('permanent_address', 50)->nullable();
             $table->foreignId('user_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
-            $table->foreignId('designation_id')->constrained()->cascadeOnUpdate();
+            $table->foreignId('designation_id')->nullable()->constrained()->cascadeOnUpdate();
             $table->string('CV', 1000)->nullable();
             $table->string('cover_photo', 1000)->nullable();
             $table->timestamps();
@@ -31,7 +31,7 @@ return new class extends Migration {
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migrations
      */
     public function down(): void
     {

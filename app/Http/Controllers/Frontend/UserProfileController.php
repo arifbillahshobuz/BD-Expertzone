@@ -185,7 +185,6 @@ class UserProfileController extends Controller
      * Update the user's avatar.
      *
      */
-
     public function updateProfilePhoto(Request $request): RedirectResponse
     {
         try {
