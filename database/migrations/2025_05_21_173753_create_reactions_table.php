@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,7 +12,9 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
-            $table->string('react', 50); // like, love, etc.
+            $table->string('name', 50); // like, love, etc.
+            $table->string('display_name', 50); // Like, Love
+            $table->string('icon_path');
             $table->timestamps();
         });
     }

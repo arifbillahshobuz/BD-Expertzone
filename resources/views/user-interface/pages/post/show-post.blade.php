@@ -12,7 +12,7 @@
     .post-media-item video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain !important;
         display: block;
 
     }
@@ -38,14 +38,14 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="me-3 flex-shrik-0">
                                 <img class="border border-2 rounded-circle user-post-profile"
-                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/01.jpg') ?? '' }}"
+                                    src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/01.jpg') ?? '' }}"
                                     alt="user-image" loading="lazy">
                             </div>
 
                             <div class="w-100">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div>
-                                        <h6 class="mb-0 d-inline-block ">{{ auth()->user()->name ?? '' }}</h6>
+                                        <h6 class="mb-0 d-inline-block ">{{ $post->user->name ?? '' }}</h6>
                                         <span class="d-inline-block text-primary">
                                             <svg class="align-text-bottom" width="17" height="17"
                                                 viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -222,259 +222,165 @@
                     @endif
 
                     <div class="post-meta-likes mt-4">
+                        <!-- User avatars who liked the post -->
                         <div class="d-flex align-items-center gap-2 flex-wrap">
                             <ul class="list-inline m-0 p-0 post-user-liked-list">
-                                <li>
-                                    <img src="{{ asset('frontend/') }}/assets/images/user/01.jpg" alt="userimg"
-                                        class="rounded-circle img-fluid userimg" loading="lazy">
-                                </li>
-                                <li>
-                                    <img src="{{ asset('frontend/') }}/assets/images/user/02.jpg" alt="userimg"
-                                        class="rounded-circle img-fluid userimg" loading="lazy">
-                                </li>
-                                <li>
-                                    <img src="{{ asset('frontend/') }}/assets/images/user/03.jpg" alt="userimg"
-                                        class="rounded-circle img-fluid userimg" loading="lazy">
-                                </li>
-                                <li>
-                                    <img src="{{ asset('frontend/') }}/assets/images/user/04.jpg" alt="userimg"
-                                        class="rounded-circle img-fluid userimg" loading="lazy">
-                                </li>
+                                @foreach ($post->reactions->take(4) as $reaction)
+                                    <li>
+                                        <img src="{{ $reaction->user->avatar }}"
+                                            class="rounded-circle img-fluid userimg" loading="lazy">
+                                    </li>
+                                @endforeach
                             </ul>
                             <div class="d-inline-flex align-items-center gap-1">
-                                <h6 class="m-0 font-size-14">Aliana Molex</h6>
-                                <span class="text-capitalize font-size-14 fw-medium" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#likemodal">and 208 others liked
-                                    this</span>
+                                @if ($post->reactions->count() > 0)
+                                    <h6 class="m-0 font-size-14">{{ $post->reactions->first()->user->name }}</h6>
+                                    @if ($post->reactions->count() > 1)
+                                        <span class="text-capitalize font-size-14 fw-medium" data-bs-toggle="modal"
+                                            data-bs-target="#likemodal{{ $post->id }}">
+                                            and {{ $post->reactions->count() - 1 }} others liked this
+                                        </span>
+                                    @endif
+                                @endif
                             </div>
                         </div>
                     </div>
+
                     <div class="comment-area mt-4 pt-4 border-top">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="like-block position-relative d-flex align-items-center flex-shrink-0">
-                                <div class="like-data">
-                                    <div class="dropdown">
-                                        <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" role="button">
-                                            <span class="material-symbols-outlined align-text-top font-size-20">
-                                                thumb_up
-                                            </span>
-                                            <span class="fw-medium">140 Likes</span>
-                                        </span>
-                                        <div class="dropdown-menu py-2 shadow">
-                                            <a class="ms-2 me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Like"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/01.png"
-                                                    class="img-fluid" alt="like" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Love"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/02.png"
-                                                    class="img-fluid" alt="love" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Happy"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/03.png"
-                                                    class="img-fluid" alt="happy" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="HaHa"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/04.png"
-                                                    class="img-fluid" alt="haha" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Think"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/05.png"
-                                                    class="img-fluid" alt="think" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Sad"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/06.png"
-                                                    class="img-fluid" alt="sad" loading="lazy"></a>
-                                            <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Lovely"><img
-                                                    src="{{ asset('frontend/') }}/assets/images/icon/07.png"
-                                                    class="img-fluid" alt="lovely" loading="lazy"></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Reaction button component -->
+                            <x-reaction-button :reactable="$post" />
+
+                            <!-- Comment and share buttons -->
                             <div class="d-flex align-items-center gap-3 flex-shrink-0">
-                                <div class="total-comment-block" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#commentcollapes1" aria-expanded="false"
-                                    aria-controls="commentcollapes">
-                                    <span class="material-symbols-outlined align-text-top font-size-20">
-                                        comment
-                                    </span>
-                                    <span class="fw-medium">20 Comment</span>
+                                <div class="total-comment-block" data-bs-toggle="collapse"
+                                    data-bs-target="#commentcollapes{{ $post->id }}">
+                                    <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
+                                    <span class="fw-medium">Comments</span>
+                                    @if ($post->comments_count > 0)
+                                        <span class="fw-medium">({{ $post->comments_count ?? '' }})</span>
+                                    @endif
                                 </div>
-                                <div class="share-block d-flex align-items-center feather-icon">
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#share-btn"
-                                        aria-controls="share-btn" class="d-flex align-items-center">
-                                        <span class="material-symbols-outlined align-text-top font-size-20">
-                                            share
-                                        </span>
-                                        <span class="ms-1 fw-medium">99 Share</span></a>
+                                <div class="share-block">
+                                    <a href="#" data-bs-toggle="modal"
+                                        data-bs-target="#share-btn-{{ $post->id }}">
+                                        <span
+                                            class="material-symbols-outlined align-text-top font-size-20">share</span>
+                                        <span class="ms-1 fw-medium">Share</span>
+                                        @if ($post->shares_count > 0 ?? '')
+                                            <span class="fw-medium">({{ $post->shares_count ?? '' }})</span>
+                                        @endif
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="collapse mt-4 pt-4 border-top" id="commentcollapes1">
+                    </div>
+
+                    <!-- Comments section -->
+                    {{-- <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
+                        @if ($post->comments->count() > 0)
                             <ul class="list-inline m-o p-0 comment-list">
-                                <li class="mb-3">
-                                    <div class="comment-list-block">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="comment-list-user-img flex-shrink-0">
-                                                <img src="{{ asset('frontend/') }}/assets/images/user/13.jpg"
-                                                    alt="userimg" class="avatar-48 rounded-circle img-fluid"
-                                                    loading="lazy">
-                                            </div>
-                                            <div class="comment-list-user-data">
-                                                <div class="d-inline-flex align-items-center gap-1 flex-wrap">
-                                                    <h6 class="m-0">Bob Frapples</h6>
-                                                    <span class="d-inline-block text-primary">
-                                                        <svg class="align-text-bottom"
-                                                            xmlns="http://www.w3.org/2000/svg" width="17"
-                                                            height="17" viewBox="0 0 17 17" fill="none">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M12.2483 0.216553H4.75081C2.13805 0.216553 0.5 2.0665 0.5 4.68444V11.7487C0.5 14.3666 2.13027 16.2166 4.75081 16.2166H12.2475C14.8689 16.2166 16.5 14.3666 16.5 11.7487V4.68444C16.5 2.0665 14.8689 0.216553 12.2483 0.216553Z"
-                                                                fill="currentColor" />
-                                                            <path d="M5.5 8.21627L7.50056 10.216L11.5 6.21655"
-                                                                stroke="white" stroke-width="1.5"
-                                                                stroke-linecap="round" stroke-linejoin="round" />
-                                                        </svg>
-                                                    </span>
-                                                    <spna class="fw-medium small text-capitalize">
-                                                        3 min ago
-                                                    </spna>
+                                @foreach ($post->comments as $comment)
+                                    <li class="mb-3">
+                                        <div class="comment-list-block">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="comment-list-user-img flex-shrink-0">
+                                                    <img src="{{ $comment->user->avatar }}" alt="userimg"
+                                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="comment-list-user-comment">
-                                            <div class="comment-list-comment">
-                                                "Just stumbled upon this post and it's
-                                                giving me all the feels! 🙌"
-                                            </div>
-                                            <div class="comment-list-action mt-2">
-                                                <ul class="list-inline m-0 p-0 d-flex align-items-center gap-2">
-                                                    <li>
-                                                        <div
-                                                            class="like-block position-relative d-flex align-items-center flex-shrink-0">
-                                                            <div class="like-data">
-                                                                <div class="dropdown">
-                                                                    <span class="dropdown-toggle"
-                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                        aria-expanded="false" role="button">
-                                                                        <span
-                                                                            class="material-symbols-outlined align-text-top font-size-18">
-                                                                            thumb_up
-                                                                        </span>
-                                                                        <span class="fw-medium small">Likes</span>
-                                                                    </span>
-                                                                    <div class="dropdown-menu py-2 shadow">
-                                                                        <a class="ms-2 me-2"
-                                                                            href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Like"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/01.png"
-                                                                                class="img-fluid" alt="like"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Love"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/02.png"
-                                                                                class="img-fluid" alt="love"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Happy"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/03.png"
-                                                                                class="img-fluid" alt="happy"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="HaHa"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/04.png"
-                                                                                class="img-fluid" alt="haha"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Think"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/05.png"
-                                                                                class="img-fluid" alt="think"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Sad"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/06.png"
-                                                                                class="img-fluid" alt="sad"
-                                                                                loading="lazy"></a>
-                                                                        <a class="me-2" href="javascript:void(0);"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            title="Lovely"><img
-                                                                                src="{{ asset('frontend/') }}/assets/images/icon/07.png"
-                                                                                class="img-fluid" alt="lovely"
-                                                                                loading="lazy"></a>
-                                                                    </div>
+                                                <div class="comment-list-user-data">
+                                                    <div class="d-inline-flex align-items-center gap-1 flex-wrap">
+                                                        <h6 class="m-0">{{ $comment->user->name }}</h6>
+                                                        <span class="d-inline-block text-primary">
+                                                            <svg class="align-text-bottom"
+                                                                xmlns="http://www.w3.org/2000/svg" width="17"
+                                                                height="17" viewBox="0 0 17 17" fill="none">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                    d="M12.2483 0.216553H4.75081C2.13805 0.216553 0.5 2.0665 0.5 4.68444V11.7487C0.5 14.3666 2.13027 16.2166 4.75081 16.2166H12.2475C14.8689 16.2166 16.5 14.3666 16.5 11.7487V4.68444C16.5 2.0665 14.8689 0.216553 12.2483 0.216553Z"
+                                                                    fill="currentColor" />
+                                                                <path d="M5.5 8.21627L7.50056 10.216L11.5 6.21655"
+                                                                    stroke="white" stroke-width="1.5"
+                                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                            </svg>
+                                                        </span>
+                                                        <span class="fw-medium small text-capitalize">
+                                                            {{ $comment->created_at->diffForHumans() ?? ""}}
+                                                        </span>
+                                                    </div>
+                                                    <div class="comment-list-comment">
+                                                        {{ $comment->content ?? " " }}
+                                                    </div>
+                                                    <div class="comment-list-action mt-2">
+                                                        <ul
+                                                            class="list-inline m-0 p-0 d-flex align-items-center gap-2">
+                                                            <li>
+                                                                <x-reaction-button :reactable="$comment" small="true" />
+                                                            </li>
+                                                            <li>
+                                                                <span class="fw-medium small"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#subcomment-collapse-{{ $comment->id }}"
+                                                                    role="button">
+                                                                    Reply
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="add-comment-form-block collapse mt-3"
+                                                            id="subcomment-collapse-{{ $comment->id }}">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <div class="flex-shrink-0">
+                                                                    <img src="{{ auth()->user()->avatar }}"
+                                                                        alt="userimg"
+                                                                        class="avatar-48 rounded-circle img-fluid"
+                                                                        loading="lazy">
+                                                                </div>
+                                                                <div class="add-comment-form">
+                                                                    <form
+                                                                        action="{{ route('comments.reply' ?? '', $comment) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        <input type="text" name="content"
+                                                                            class="form-control"
+                                                                            placeholder="Write a reply...">
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary font-size-12 text-capitalize px-5">
+                                                                            Post
+                                                                        </button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <span class="fw-medium small" data-bs-toggle="collapse"
-                                                            data-bs-target="#subcomment-collapse1" role="button"
-                                                            aria-expanded="false" aria-controls="collapseExample">
-                                                            Reply
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                                <div class="add-comment-form-block collapse mt-3"
-                                                    id="subcomment-collapse1">
-                                                    <div class="d-flex align-items-center gap-3">
-                                                        <div class="flex-shrink-0">
-                                                            <img src="{{ asset('frontend/') }}/assets/images/user/1.jpg"
-                                                                alt="userimg"
-                                                                class="avatar-48 rounded-circle img-fluid"
-                                                                loading="lazy">
-                                                        </div>
-                                                        <div class="add-comment-form">
-                                                            <form>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Write a Comment...">
-                                                                <button type="submit"
-                                                                    class="btn btn-primary font-size-12 text-capitalize px-5">
-                                                                    post
-                                                                </button>
-                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                @endforeach
                             </ul>
-                            <div class="add-comment-form-block">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="flex-shrink-0">
-                                        <img src="{{ asset('frontend/') }}/assets/images/user/1.jpg" alt="userimg"
-                                            class="avatar-48 rounded-circle img-fluid" loading="lazy">
-                                    </div>
-                                    <div class="add-comment-form">
-                                        <form>
-                                            <input type="text" class="form-control"
-                                                placeholder="Write a Comment...">
-                                            <button type="submit"
-                                                class="btn btn-primary font-size-12 text-capitalize px-5">
-                                                post
-                                            </button>
-                                        </form>
-                                    </div>
+                        @endif
+
+                        <!-- Add comment form -->
+                        <div class="add-comment-form-block">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <img src="{{ auth()->user()->avatar }}" alt="userimg"
+                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                </div>
+                                <div class="add-comment-form">
+                                    <form action="{{ route('posts.comments.store', $post) }}" method="POST">
+                                        @csrf
+                                        <input type="text" name="content" class="form-control"
+                                            placeholder="Write a Comment...">
+                                        <button type="submit"
+                                            class="btn btn-primary font-size-12 text-capitalize px-5">
+                                            Post
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+
                 </div>
             </div>
         </div>
@@ -900,3 +806,86 @@
         }
     });
 </script>
+
+{{-- Reaction  --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Handle reaction forms
+        document.querySelectorAll('.reaction-form').forEach(form => {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const method = form.method === 'post' ? 'POST' : 'DELETE';
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector(
+                                'meta[name="csrf-token"]
+                            ').content,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ...Object.fromEntries(formData),
+                            _method: method
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.action) {
+                        // Update reaction count
+                        const countElement = form.querySelector('.reaction-count') ||
+                            form.closest('.like-data').querySelector('.reaction-count');
+                        if (countElement) {
+                            const currentCount = parseInt(countElement.textContent);
+                            countElement.textContent = data.action === 'added' ?
+                                currentCount + 1 :
+                                data.action === 'removed' ?
+                                currentCount - 1 :
+                                currentCount;
+                        }
+
+                        // Update the reaction button if needed
+                        if (data.action === 'removed') {
+                            // Change back to default state
+                            const likeData = form.closest('.like-data');
+                            likeData.innerHTML = `
+<div class="dropdown">
+    <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        role="button">
+        <img src="/frontend/assets/images/icon/01.png" width="20" height="20" alt="Like"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
+        <span class="fw-medium reaction-count">${countElement.textContent}</span>
+    </span>
+    ${likeData.querySelector('.dropdown-menu').outerHTML}
+</div>
+`;
+
+                            // Reinitialize tooltips
+                            initializeTooltips();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        function initializeTooltips() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    }); <
+    script / >

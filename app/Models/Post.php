@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Reaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,6 +57,46 @@ class Post extends Model
     public function scopeUserPosts($query)
     {
         return $query->where('type', self::TYPE_USER);
+    }
+
+
+    // Likes and Reactions
+    public function reactions()
+    {
+        return $this->morphMany(PostReaction::class, 'reactable');
+    }
+
+    public function getReactionCounts()
+    {
+        return $this->reactions()
+            ->selectRaw('reaction_id, count(*) as count')
+            ->groupBy('reaction_id')
+            ->with('reaction')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [
+                    $item->reaction->name => [
+                        'count' => $item->count,
+                        'icon_path' => $item->reaction->icon_path,
+                        'display_name' => $item->reaction->display_name
+                    ]
+                ];
+            });
+    }
+
+    public function getUserReaction(User $user = null)
+    {
+        if (!$user) {
+            $user = auth()->user();
+        }
+
+        return $user ? $this->reactions()->where('user_id', $user->id)->first() : null;
+    }
+
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
 

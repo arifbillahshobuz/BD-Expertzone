@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\frontend\HomeController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Frontend\ReactionController;
 use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\UserProfileController;
@@ -30,6 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //    User Post Routes
     Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
+
+    // Reaction Routes
+    Route::match(['POST', 'DELETE'], '/react/post/{post}', [ReactionController::class, 'reactPost'])
+        ->name('reactions.react.post');
+    Route::match(['POST', 'DELETE'], '/react/comment/{comment}', [ReactionController::class, 'reactComment'])
+        ->name('reactions.react.comment');
 
 });
 require __DIR__ . '/auth.php';

@@ -13,7 +13,10 @@ class HomeController extends Controller
     public function home()
     {
         $jobCategories = PostCategory::where('title', '=', 'government')->get();
-        $posts = Post::with('user')->latest()->published()->paginate(10);
+        $posts = Post::with(['user', 'reactions.user'])
+            ->latest()
+            ->published()
+            ->paginate(10);
 
         // $post = $posts->first();
         // dd($post->media);
