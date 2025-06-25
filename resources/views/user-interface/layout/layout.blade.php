@@ -102,6 +102,10 @@
     {{-- ToastMagic Scripts --}}
     {!! ToastMagic::scripts() !!}
 
+    {{-- Fslight box js --}}
+    <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
+
+
 </body>
 
 </html>
