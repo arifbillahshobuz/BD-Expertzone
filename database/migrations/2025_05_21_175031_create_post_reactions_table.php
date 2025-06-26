@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->unique(['user_id', 'reactable_id', 'reactable_type']);
         });
 
+
     }
 
     /**

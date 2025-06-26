@@ -57,8 +57,8 @@
                                         <div class="col-md-12">
                                             <div class="profile-img-edit">
                                                 <img class="profile-pic" id="avatar-preview"
-                                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? "" }}" width="150px"
-                                                    height="150px" alt="profile-pic" loading="lazy">
+                                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? '' }}"
+                                                    width="150px" height="150px" alt="profile-pic" loading="lazy">
                                             </div>
                                         </div>
                                     </div>

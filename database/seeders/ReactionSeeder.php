@@ -52,7 +52,10 @@ class ReactionSeeder extends Seeder
         ];
 
         foreach ($reactions as $reaction) {
-            Reaction::create($reaction);
+            Reaction::updateOrCreate(
+                ['name' => $reaction['name']], // Check if reaction with this name exists
+                $reaction // If not, create it; if yes, update it
+            );
         }
     }
 }
