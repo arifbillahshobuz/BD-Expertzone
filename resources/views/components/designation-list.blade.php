@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="card">
                         <div class="table-responsive">
-                            <table  class="table table-vcenter card-table table-striped ">
+                            <table class="table table-vcenter card-table table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Title</th>
@@ -62,3 +62,19 @@
         </div>
     </div>
 </div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" />
+
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+
+<link rel="stylesheet" href="/DataTables/datatables.css" />
+
+<script src="/DataTables/datatables.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable();
+        console.log(DataTable());
+    });
+</script>
