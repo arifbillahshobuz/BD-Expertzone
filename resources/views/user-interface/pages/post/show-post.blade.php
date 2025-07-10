@@ -328,7 +328,7 @@
                                                             id="subcomment-collapse-{{ $comment->id }}">
                                                             <div class="d-flex align-items-center gap-3">
                                                                 <div class="flex-shrink-0">
-                                                                    <img src="{{ auth()->user()->avatar }}"
+                                                                    <img src="{{ auth()->user()->avatar??'N/A' }}"
                                                                         alt="userimg"
                                                                         class="avatar-48 rounded-circle img-fluid"
                                                                         loading="lazy">
@@ -362,7 +362,7 @@
                         <div class="add-comment-form-block">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="flex-shrink-0">
-                                    <img src="{{ auth()->user()->avatar }}" alt="userimg"
+                                    <img src="{{ auth()->user()->avatar??'N/A' }}" alt="userimg"
                                         class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                 </div>
                                 <div class="add-comment-form">
