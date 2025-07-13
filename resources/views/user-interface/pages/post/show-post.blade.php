@@ -257,8 +257,8 @@
                                     data-bs-target="#commentcollapes{{ $post->id }}">
                                     <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
                                     <span class="fw-medium">Comments</span>
-                                    @if ($post->comments_count > 0)
-                                        <span class="fw-medium">({{ $post->comments_count ?? '' }})</span>
+                                    @if ($post->comments->count() > 0)
+                                        <span class="fw-medium">({{ $post->comments->count() }})</span>
                                     @endif
                                 </div>
                                 <div class="share-block">
@@ -277,7 +277,7 @@
                     </div>
 
                     <!-- Comments section -->
-                    {{-- <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
+                    <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
                         @if ($post->comments->count() > 0)
                             <ul class="list-inline m-o p-0 comment-list">
                                 @foreach ($post->comments as $comment)
@@ -304,12 +304,10 @@
                                                             </svg>
                                                         </span>
                                                         <span class="fw-medium small text-capitalize">
-                                                            {{ $comment->created_at->diffForHumans() ?? ""}}
+                                                            {{ $comment->created_at->diffForHumans() ?? '' }}
                                                         </span>
                                                     </div>
-                                                    <div class="comment-list-comment">
-                                                        {{ $comment->content ?? " " }}
-                                                    </div>
+                                                    <p class="mb-1">{{ $comment->content }}</p>
                                                     <div class="comment-list-action mt-2">
                                                         <ul
                                                             class="list-inline m-0 p-0 d-flex align-items-center gap-2">
@@ -325,6 +323,7 @@
                                                                 </span>
                                                             </li>
                                                         </ul>
+                                                        <!-- Subcomment form -->
                                                         <div class="add-comment-form-block collapse mt-3"
                                                             id="subcomment-collapse-{{ $comment->id }}">
                                                             <div class="d-flex align-items-center gap-3">
@@ -379,14 +378,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
-
+                    </div>
                 </div>
             </div>
         </div>
     @endforeach
 
-    <div class="col-sm-12 social-post">
+    {{-- <div class="col-sm-12 social-post">
         <div class="card card-block card-stretch card-height">
             <div class="card-body">
                 <div class="user-post-data">
@@ -792,7 +790,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
 

@@ -27,7 +27,7 @@ class UserPostController extends Controller
     {
         try {
             $request->validate([
-                'content' => 'required|string|max:5000',
+                'content' => 'nullable|string|max:5000',
                 'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:20480', // 20MB max
             ]);
 
