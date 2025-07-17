@@ -281,14 +281,15 @@
                     <!-- Comments section -->
                     <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
                         @if ($post->comments->count() > 0)
-                            <ul class="list-inline m-o p-0 comment-list">
-                                @foreach ($post->comments as $comment)
+                            <ul class="list-inline m-0 p-0 comment-list">
+                                @foreach ($post->comments->where('parent_id', null) as $comment)
                                     <li class="mb-3">
                                         <div class="comment-list-block">
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="comment-list-user-img flex-shrink-0">
-                                                    <img src="{{ $comment->user->avatar }}" alt="userimg"
-                                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                                    <img src="{{ $comment->user->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
+                                                        alt="userimg" class="avatar-48 rounded-circle img-fluid"
+                                                        loading="lazy">
                                                 </div>
                                                 <div class="comment-list-user-data">
                                                     <div class="d-inline-flex align-items-center gap-1 flex-wrap">
@@ -330,14 +331,14 @@
                                                             id="subcomment-collapse-{{ $comment->id }}">
                                                             <div class="d-flex align-items-center gap-3">
                                                                 <div class="flex-shrink-0">
-                                                                    <img src="{{ auth()->user()->avatar ?? '' }}"
+                                                                    <img src="{{ auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
                                                                         alt="userimg"
                                                                         class="avatar-48 rounded-circle img-fluid"
                                                                         loading="lazy">
                                                                 </div>
                                                                 <div class="add-comment-form">
                                                                     <form
-                                                                        action="{{ route('comments.reply' ?? '', $comment) }}"
+                                                                        action="{{ route('comments.reply', $comment) }}"
                                                                         method="POST">
                                                                         @csrf
                                                                         <input type="text" name="content"
@@ -351,6 +352,14 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @if ($comment->replies && $comment->replies->count())
+                                                            <ul class="list-unstyled ms-4">
+                                                                @include(
+                                                                    'user-interface.pages.post.partials.comment_replies',
+                                                                    ['comments' => $comment->replies]
+                                                                )
+                                                            </ul>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
