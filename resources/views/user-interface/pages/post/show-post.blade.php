@@ -34,7 +34,8 @@
         <div class="col-sm-12 social-post">
             <div class="card card-block card-stretch card-height">
                 <div class="card-body">
-                    <div class="user-post-data">
+                    <div class="user-post-data"> <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                            class="avatar-48 rounded-circle img-fluid" loading="lazy">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="me-3 flex-shrik-0">
                                 <img class="border border-2 rounded-circle user-post-profile"
