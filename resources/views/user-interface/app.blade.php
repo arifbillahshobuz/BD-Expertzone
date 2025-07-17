@@ -7,14 +7,6 @@
     <div class="row gx-4">
         <div class="col-lg-8" id="dynamicDivContainer">
             <div id="content">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-5">
-                            <div id="stories" class="storiesWrapper d-flex gap-3"></div>
-                        </div>
-                    </div>
-                </div>
-
                 {{-- Create post From  --}}
 
                 @include('user-interface.pages.post.add-post')
@@ -1171,7 +1163,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card">
+            <div class="card" style="position: sticky; top: 20px; ">
                 <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
                         <h4 class="card-title">All jobs</h4>

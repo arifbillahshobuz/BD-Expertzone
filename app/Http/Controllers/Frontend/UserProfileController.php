@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\UserProfileUpdateRequest;
+use App\Models\Post;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -30,7 +31,14 @@ class UserProfileController extends Controller
      */
     public function userProfile(): View
     {
-        return view('user-interface.pages.user.profile');
+        $posts = Post::with(['user', 'reactions.user'])
+    ->where('user_id', Auth::id()) // ✅ Only logged-in user's posts
+    ->published() // ✅ Assuming this is a scope
+    ->latest()
+    ->paginate(10);
+
+
+        return view('user-interface.pages.user.profile',compact('posts'));
     }
 
 
