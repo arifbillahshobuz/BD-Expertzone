@@ -34,13 +34,11 @@
         <div class="col-sm-12 social-post">
             <div class="card card-block card-stretch card-height">
                 <div class="card-body">
-                    <div class="user-post-data"> <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
-                            class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                    <div class="user-post-data">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="me-3 flex-shrik-0">
-                                <img class="border border-2 rounded-circle user-post-profile"
-                                    src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/01.jpg') ?? '' }}"
-                                    alt="user-image" loading="lazy">
+                                <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                                    class="avatar-48 rounded-circle img-fluid" loading="lazy">
                             </div>
 
                             <div class="w-100">
@@ -332,6 +330,7 @@
                                                             id="subcomment-collapse-{{ $comment->id }}">
                                                             <div class="d-flex align-items-center gap-3">
                                                                 <div class="flex-shrink-0">
+
                                                                     <img src="{{ auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
                                                                         alt="userimg"
                                                                         class="avatar-48 rounded-circle img-fluid"
