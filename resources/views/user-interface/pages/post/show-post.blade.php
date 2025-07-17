@@ -34,7 +34,8 @@
         <div class="col-sm-12 social-post">
             <div class="card card-block card-stretch card-height">
                 <div class="card-body">
-                    <div class="user-post-data">
+                    <div class="user-post-data"> <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                            class="avatar-48 rounded-circle img-fluid" loading="lazy">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="me-3 flex-shrik-0">
                                 <img class="border border-2 rounded-circle user-post-profile"
@@ -285,7 +286,7 @@
                                         <div class="comment-list-block">
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="comment-list-user-img flex-shrink-0">
-                                                    <img src="{{ $comment->user->avatar }}" alt="userimg"
+                                                    <img src="{{ $comment->user->avatar ?? '' }}" alt="userimg"
                                                         class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                                 </div>
                                                 <div class="comment-list-user-data">
@@ -329,6 +330,7 @@
                                                             <div class="d-flex align-items-center gap-3">
                                                                 <div class="flex-shrink-0">
                                                                     <img src="{{ auth()->user()->avatar??'N/A' }}"
+
                                                                         alt="userimg"
                                                                         class="avatar-48 rounded-circle img-fluid"
                                                                         loading="lazy">
