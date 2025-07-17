@@ -250,14 +250,16 @@
                     <div class="comment-area mt-4 pt-4 border-top">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <!-- Reaction button component -->
-                            <x-reaction-button :reactable="$post" />
+                            <div class="reaction-block-{{ $post->id }}">
+                                <x-reaction-button :reactable="$post" />
+                            </div>
 
                             <!-- Comment and share buttons -->
                             <div class="d-flex align-items-center gap-3 flex-shrink-0">
                                 <div class="total-comment-block" data-bs-toggle="collapse"
                                     data-bs-target="#commentcollapes{{ $post->id }}">
                                     <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
-                                    <span class="fw-medium">Comments</span>
+                                    <span class="fw-medium cursor-pointer">Comments</span>
                                     @if ($post->comments->count() > 0)
                                         <span class="fw-medium">({{ $post->comments->count() }})</span>
                                     @endif
@@ -280,14 +282,15 @@
                     <!-- Comments section -->
                     <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
                         @if ($post->comments->count() > 0)
-                            <ul class="list-inline m-o p-0 comment-list">
-                                @foreach ($post->comments as $comment)
+                            <ul class="list-inline m-0 p-0 comment-list">
+                                @foreach ($post->comments->where('parent_id', null) as $comment)
                                     <li class="mb-3">
                                         <div class="comment-list-block">
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="comment-list-user-img flex-shrink-0">
-                                                    <img src="{{ $comment->user->avatar ?? '' }}" alt="userimg"
-                                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                                    <img src="{{ $comment->user->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
+                                                        alt="userimg" class="avatar-48 rounded-circle img-fluid"
+                                                        loading="lazy">
                                                 </div>
                                                 <div class="comment-list-user-data">
                                                     <div class="d-inline-flex align-items-center gap-1 flex-wrap">
@@ -329,15 +332,14 @@
                                                             id="subcomment-collapse-{{ $comment->id }}">
                                                             <div class="d-flex align-items-center gap-3">
                                                                 <div class="flex-shrink-0">
-                                                                    <img src="{{ auth()->user()->avatar??'N/A' }}"
-
+                                                                    <img src="{{ auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
                                                                         alt="userimg"
                                                                         class="avatar-48 rounded-circle img-fluid"
                                                                         loading="lazy">
                                                                 </div>
                                                                 <div class="add-comment-form">
                                                                     <form
-                                                                        action="{{ route('comments.reply' ?? '', $comment) }}"
+                                                                        action="{{ route('comments.reply', $comment) }}"
                                                                         method="POST">
                                                                         @csrf
                                                                         <input type="text" name="content"
@@ -351,6 +353,14 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @if ($comment->replies && $comment->replies->count())
+                                                            <ul class="list-unstyled ms-4">
+                                                                @include(
+                                                                    'user-interface.pages.post.partials.comment_replies',
+                                                                    ['comments' => $comment->replies]
+                                                                )
+                                                            </ul>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -820,17 +830,14 @@
         document.querySelectorAll('.reaction-form').forEach(form => {
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-
                 const formData = new FormData(form);
                 const method = form.method === 'post' ? 'POST' : 'DELETE';
-
                 try {
                     const response = await fetch(form.action, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]
-                            ').content,
+                                'meta[name="csrf-token"]').content,
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
@@ -839,41 +846,14 @@
                             _method: method
                         })
                     });
-
                     const data = await response.json();
-
-                    if (data.action) {
-                        // Update reaction count
-                        const countElement = form.querySelector('.reaction-count') ||
-                            form.closest('.like-data').querySelector('.reaction-count');
-                        if (countElement) {
-                            const currentCount = parseInt(countElement.textContent);
-                            countElement.textContent = data.action === 'added' ?
-                                currentCount + 1 :
-                                data.action === 'removed' ?
-                                currentCount - 1 :
-                                currentCount;
+                    if (data.html) {
+                        // Replace the reaction block with the new HTML
+                        const reactionBlock = form.closest('[class^="reaction-block-"]');
+                        if (reactionBlock) {
+                            reactionBlock.innerHTML = data.html;
                         }
-
-                        // Update the reaction button if needed
-                        if (data.action === 'removed') {
-                            // Change back to default state
-                            const likeData = form.closest('.like-data');
-                            likeData.innerHTML = `
-<div class="dropdown">
-    <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        role="button">
-        <img src="/frontend/assets/images/icon/01.png" width="20" height="20" alt="Like"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
-        <span class="fw-medium reaction-count">${countElement.textContent}</span>
-    </span>
-    ${likeData.querySelector('.dropdown-menu').outerHTML}
-</div>
-`;
-
-                            // Reinitialize tooltips
-                            initializeTooltips();
-                        }
+                        initializeTooltips();
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -887,5 +867,5 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         }
-    }); <
-    script / >
+    });
+</script>

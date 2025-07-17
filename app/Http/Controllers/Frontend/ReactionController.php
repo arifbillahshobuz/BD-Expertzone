@@ -32,44 +32,79 @@ class ReactionController extends Controller
 
             if ($existingReaction) {
                 $existingReaction->delete();
-                return back()->with('success', 'Reaction removed');
-            }
-
-            return back()->with('error', 'No reaction to remove');
-        }
-
-        // Validate the request for POST (adding reaction)
-        $validated = $request->validate([
-            'reaction_id' => 'required|integer|exists:reactions,id'
-        ]);
-
-        $reactionId = $validated['reaction_id'];
-
-        // Check for existing reaction
-        $existingReaction = $reactable->reactions()
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($existingReaction) {
-            // User already reacted - toggle or update
-            if ($existingReaction->reaction_id == $reactionId) {
-                // Same reaction - remove it
-                $existingReaction->delete();
                 $action = 'removed';
             } else {
-                // Different reaction - update
-                $existingReaction->update(['reaction_id' => $reactionId]);
-                $action = 'updated';
+                $action = 'none';
             }
-        } else {
-            // Create new reaction
-            $reactable->reactions()->create([
-                'user_id' => $user->id,
-                'reaction_id' => $reactionId
-            ]);
-            $action = 'added';
+
+            if ($request->ajax()) {
+                $view = view('components.reaction-button', [
+                    'reactable' => $reactable,
+                    'user' => $user
+                ])->render();
+
+                return response()->json([
+                    'html' => $view,
+                    'action' => $action,
+                    'message' => $action === 'removed' ? 'Reaction removed' : 'No reaction to remove'
+                ]);
+            }
+
+            return $action === 'removed'
+                ? back()->with('success', 'Reaction removed')
+                : back()->with('error', 'No reaction to remove');
         }
 
-        return back()->with('success', 'Reaction ' . $action);
+        // Only validate for POST (not DELETE)
+        if ($request->isMethod('POST')) {
+            $validated = $request->validate([
+                'reaction_id' => 'required|integer|exists:reactions,id'
+            ]);
+
+            $reactionId = $validated['reaction_id'];
+
+            // Check for existing reaction
+            $existingReaction = $reactable->reactions()
+                ->where('user_id', $user->id)
+                ->first();
+
+            if ($existingReaction) {
+                // User already reacted - toggle or update
+                if ($existingReaction->reaction_id == $reactionId) {
+                    // Same reaction - remove it
+                    $existingReaction->delete();
+                    $action = 'removed';
+                } else {
+                    // Different reaction - update
+                    $existingReaction->update(['reaction_id' => $reactionId]);
+                    $action = 'updated';
+                }
+            } else {
+                // Create new reaction
+                $reactable->reactions()->create([
+                    'user_id' => $user->id,
+                    'reaction_id' => $reactionId
+                ]);
+                $action = 'added';
+            }
+
+            if ($request->ajax()) {
+                $view = view('components.reaction-button', [
+                    'reactable' => $reactable,
+                    'user' => $user
+                ])->render();
+
+                return response()->json([
+                    'html' => $view,
+                    'action' => $action,
+                    'message' => 'Reaction ' . $action
+                ]);
+            }
+
+            return back()->with('success', 'Reaction ' . $action);
+        }
+
+        // Fallback for unsupported methods
+        return response()->json(['message' => 'Unsupported request method.'], 405);
     }
 }
