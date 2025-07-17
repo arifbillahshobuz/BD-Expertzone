@@ -36,9 +36,7 @@
                 </li>
                 @auth()
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="{{route('user.profile')}}" role="button" aria-expanded="false"
-                       aria-controls="profile">
-
+                    <a class="nav-link" href="{{route('user.profile')}}" role="button">
                         <i class="icon material-symbols-outlined">
                             person
                         </i>
