@@ -61,54 +61,21 @@ class CommentController extends Controller
             $reply->load('user');
             $commentHtml = view('user-interface.pages.post.partials.single_comment', ['comment' => $reply])->render();
             return response()->json(['success' => true, 'comment_html' => $commentHtml]);
-            $data = [
-                'id' => $reply->id,
-                'content' => $reply->content,
-                'user' => [
-                    'id' => $reply->user->id,
-                    'name' => $reply->user->name,
-                    'avatar' => $reply->user->avatar,
-                ],
-                'created_at' => $reply->created_at->toIso8601String(),
-                'post_id' => $reply->post_id,
-                'parent_id' => $reply->parent_id,
-            ];
-            event(new \App\Events\CommentCreated($data));
-            return response()->json(['success' => true, 'comment' => $data]);
         }
 
         return redirect()->back()->with('success', 'Reply posted successfully!');
     }
 
-    // Delete a comment (AJAX or normal)
-    public function destroy(Request $request, Comment $comment)
+    // Delete a comment (and its replies via cascade)
+    public function destroy(Comment $comment)
     {
         // Optional: Add authorization check here
         if (auth()->id() !== $comment->user_id) {
-
-        // Only allow the comment owner or post owner to delete
-        $comment->loadMissing('user', 'post.user');
-        $currentUser = request()->user();
-        $currentUserId = $currentUser ? $currentUser->getKey() : null;
-        $commentOwnerId = $comment->user ? $comment->user->getKey() : null;
-        $postOwnerId = $comment->post && $comment->post->user ? $comment->post->user->getKey() : null;
-        if ($currentUserId !== $commentOwnerId && $currentUserId !== $postOwnerId) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
-        $comment->delete();
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
-        return redirect()->back()->with('success', 'Comment deleted successfully!');
-    }
 
-    // Hide a comment (AJAX only, just a stub for now)
-    public function hide(Request $request, Comment $comment)
-    {
-        // You can implement a real hide logic (e.g., set a hidden flag), for now just return success
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
-        return redirect()->back();
+        $comment->delete();
+
+        return response()->json(['success' => true]);
     }
 }

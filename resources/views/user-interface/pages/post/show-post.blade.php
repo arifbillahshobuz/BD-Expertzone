@@ -383,10 +383,25 @@
                     countSpan.innerText = `${newCount} Comment${newCount !== 1 ? 's' : ''}`;
                 }
 
-                // Find correct list and prepend the comment
-                const targetListId = data.parent_id ? `#replies-for-comment-${data.parent_id}` :
-                    `#comment-list-${postId}`;
-                const commentList = document.querySelector(targetListId);
+                // Find correct list and prepend the comment or reply
+                let commentList;
+                if (data.parent_id) {
+                    // If it's a reply, check if a reply list exists, else create it
+                    let replyListId = `replies-for-comment-${data.parent_id}`;
+                    commentList = document.getElementById(replyListId);
+                    if (!commentList) {
+                        // Create a new reply list under the parent comment
+                        const parentLi = document.getElementById(`comment-${data.parent_id}`);
+                        if (parentLi) {
+                            commentList = document.createElement('ul');
+                            commentList.className = 'list-unstyled ms-5 mb-2';
+                            commentList.id = replyListId;
+                            parentLi.appendChild(commentList);
+                        }
+                    }
+                } else {
+                    commentList = document.getElementById(`comment-list-${postId}`);
+                }
                 if (!commentList) return;
 
                 const li = document.createElement('li');
@@ -475,7 +490,7 @@
     </div>
 </div>
                 `;
-                commentList.prepend(li);
+                commentList.appendChild(li);
                 // Live update the comment time every minute
                 const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
                 if (timeSpan && data.created_at) {
@@ -634,12 +649,14 @@
     });
 
 
-    // AJAX form submission handler
+    // AJAX form submission handler with debug log
     $(document).on('submit', '.reply-form, .main-comment-form', function(e) {
     e.preventDefault();
     let form = $(this);
     let input = form.find('input[name="content"]');
     let content = input.val().trim();
+    // Debug log to ensure handler is triggered
+    console.log('AJAX handler triggered for comment form', form.attr('class'));
     if (!content) {
         input.focus();
         return false;
@@ -687,6 +704,7 @@
             form.find('button[type="submit"]').prop('disabled', false);
         }
     });
+    return false;
     });
     });
 </script>
