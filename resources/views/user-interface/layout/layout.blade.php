@@ -55,7 +55,7 @@
             <div>
                 <div class="position-relative">
                 </div>
-                <div class="content-inner " id="page_layout">
+                <div class="content-inner " id="page_layout" style="padding-top: 0px;">
                     <div class="container">
                         @yield('content')
                     </div>

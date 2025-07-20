@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Partner;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
+              if (Auth::check()) {
+            $designationId = Auth::user()->designation_id;
+
+            $sameDesignationUsers = User::where('designation_id', $designationId)
+                                        ->where('id', '!=', Auth::id())
+                                        ->get();
+
+            $view->with('sameDesignationUsers', $sameDesignationUsers);
+        }
             $partners = Partner::with('designation')->get();
             $view->with('globalPartners', $partners);
         });

@@ -122,13 +122,9 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="mt-4">
                         <p class="m-0">{{ $post->content }}</p>
                     </div>
-
-
                     @php
                         if (is_array($post->media)) {
                             $mediaFiles = $post->media;
@@ -245,7 +241,7 @@
                         </div>
                     </div>
 
-                    <div class="comment-area mt-4 pt-4 border-top">
+                    {{-- <div class="comment-area mt-4 pt-4 border-top">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <!-- Reaction button component -->
                             <div class="reaction-block-{{ $post->id }}">
@@ -275,18 +271,41 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Comments section -->
-                    <div class="collapse mt-4 pt-4 border-top" id="commentcollapes{{ $post->id }}">
-                        @if ($post->comments->count() > 0)
-                            <ul class="list-inline m-0 p-0 comment-list">
+                    <div class="comment-area mt-4 pt-4 border-top">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="like-block position-relative d-flex align-items-center flex-shrink-0">
+                                <x-reaction-button :reactable="$post" />
+                            </div>
+                            <div class="d-flex align-items-center gap-3 flex-shrink-0">
+                                <div class="total-comment-block" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#commentcollapes{{ $post->id }}" aria-expanded="true"
+                                    aria-controls="commentcollapes{{ $post->id }}">
+                                    <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
+                                    <span class="fw-medium">{{ $post->comments->count() }} Comment</span>
+                                </div>
+                                <div class="share-block d-flex align-items-center feather-icon">
+                                    <a href="javascript:void(0);" data-bs-toggle="modal"
+                                        data-bs-target="#share-btn-{{ $post->id }}"
+                                        aria-controls="share-btn-{{ $post->id }}"
+                                        class="d-flex align-items-center">
+                                        <span
+                                            class="material-symbols-outlined align-text-top font-size-20">share</span>
+                                        <span class="ms-1 fw-medium">{{ $post->shares_count ?? 0 }} Share</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-top collapse show" id="commentcollapes{{ $post->id }}">
+                            <ul class="list-inline m-0 p-0 comment-list" id="comment-list-{{ $post->id }}">
                                 @foreach ($post->comments->where('parent_id', null) as $comment)
                                     <li class="mb-3">
                                         <div class="comment-list-block">
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="comment-list-user-img flex-shrink-0">
-                                                    <img src="{{ $comment->user->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
+                                                    <img src="{{ $comment->user->avatar ?? '/frontend/assets/images/user/1.jpg' }}"
                                                         alt="userimg" class="avatar-48 rounded-circle img-fluid"
                                                         loading="lazy">
                                                 </div>
@@ -294,16 +313,7 @@
                                                     <div class="d-inline-flex align-items-center gap-1 flex-wrap">
                                                         <h6 class="m-0">{{ $comment->user->name }}</h6>
                                                         <span class="d-inline-block text-primary">
-                                                            <svg class="align-text-bottom"
-                                                                xmlns="http://www.w3.org/2000/svg" width="17"
-                                                                height="17" viewBox="0 0 17 17" fill="none">
-                                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                    d="M12.2483 0.216553H4.75081C2.13805 0.216553 0.5 2.0665 0.5 4.68444V11.7487C0.5 14.3666 2.13027 16.2166 4.75081 16.2166H12.2475C14.8689 16.2166 16.5 14.3666 16.5 11.7487V4.68444C16.5 2.0665 14.8689 0.216553 12.2483 0.216553Z"
-                                                                    fill="currentColor" />
-                                                                <path d="M5.5 8.21627L7.50056 10.216L11.5 6.21655"
-                                                                    stroke="white" stroke-width="1.5"
-                                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                            </svg>
+                                                            <!-- SVG icon here -->
                                                         </span>
                                                         <span class="fw-medium small text-capitalize">
                                                             {{ $comment->created_at->diffForHumans() ?? '' }}
@@ -373,7 +383,7 @@
                         <div class="add-comment-form-block">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="flex-shrink-0">
-                                    <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                                    <img src="{{ auth()->user()->avatar??'N/A' }}" alt="userimg"
                                         class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                 </div>
                                 <div class="add-comment-form">
@@ -825,6 +835,44 @@
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
+        // Handle delete comment/reply/subreply (event delegation for dynamic content)
+        document.body.addEventListener('click', async function(e) {
+            const target = e.target.closest('.delete-comment-btn');
+            if (target) {
+                e.preventDefault();
+                if (!confirm('Are you sure you want to delete this?')) return;
+                const commentId = target.getAttribute('data-id');
+                const type = target.getAttribute('data-type');
+                let url = '';
+                if (type === 'comment') {
+                    url = `/comments/${commentId}`;
+                } else if (type === 'reply') {
+                    url = `/comments/${commentId}`;
+                } else if (type === 'subreply') {
+                    url = `/comments/${commentId}`;
+                }
+                try {
+                    const response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector(
+                                'meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        // Remove the comment/reply/subreply from DOM
+                        target.closest('.comment-list-block').parentElement.remove();
+                    } else {
+                        alert('Failed to delete.');
+                    }
+                } catch (error) {
+                    alert('Error deleting.');
+                }
+            }
+        });
+
         // Handle reaction forms
         document.querySelectorAll('.reaction-form').forEach(form => {
             form.addEventListener('submit', async function(e) {
@@ -866,5 +914,56 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         }
+    });
+
+
+    // Handle comment forms (main and reply) for real-time update
+    document.querySelectorAll('.reply-form, .main-comment-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector(
+                            'meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.comment_html) {
+                        // For main comment
+                        if (form.classList.contains('main-comment-form')) {
+                            const postId = form.dataset.postId;
+                            const commentList = document.getElementById(
+                                'comment-list-' + postId);
+                            if (commentList) {
+                                commentList.insertAdjacentHTML('beforeend', data
+                                    .comment_html);
+                            }
+                            // Optionally update comment count if you show it
+                            // updateCommentCount(postId, 1);
+                        } else {
+                            // For reply comment
+                            let repliesContainer = form.closest('.comment-list-action')
+                                .querySelector('.list-unstyled.ms-4');
+                            if (!repliesContainer) {
+                                repliesContainer = document.createElement('ul');
+                                repliesContainer.className = 'list-unstyled ms-4';
+                                form.closest('.comment-list-action').appendChild(
+                                    repliesContainer);
+                            }
+                            repliesContainer.insertAdjacentHTML('beforeend', data
+                                .comment_html);
+                        }
+                        form.querySelector('input[name="content"]').value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
     });
 </script>

@@ -28,7 +28,7 @@
                                     @foreach ($designations as $designation)
                                         <tr>
                                             <td>{{ $designation->title }}</td>
-                                            <td>{{ $designation->created_at->format('d M Y') }}</td>
+                                            <td>{{ $designation->created_at ? $designation->created_at->format('d M Y') : 'N/A'  }}</td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
