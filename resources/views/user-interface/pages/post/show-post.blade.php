@@ -3,6 +3,7 @@
     .post-media-item {
         background-color: #eee;
         height: 250px;
+        /* Fixed height for consistency */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -12,9 +13,9 @@
     .post-media-item video {
         width: 100%;
         height: 100%;
-        object-fit: contain !important;
+        /* FOR FEED DISPLAY: Use 'cover' to fill the area, cropping if aspect ratio doesn't match */
+        object-fit: cover;
         display: block;
-
     }
 
     .post-overlay-count {
@@ -25,9 +26,46 @@
     .post-overlay-count:hover {
         background-color: rgba(0, 0, 0, 0.85) !important;
     }
+
+    /* FsLightbox specific styles for full size video/image in lightbox */
+    /* FOR LIGHTBOX: Use 'contain' to show the full frame, with letterboxing if aspect ratio doesn't match */
+    .fslightbox-source.fslightbox-video,
+    .fslightbox-source.fslightbox-image {
+        /* Apply to both video and image in lightbox */
+        object-fit: contain !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+
+    .stylish-toggle-btn {
+        background: linear-gradient(90deg, #f8fafc 0%, #e9ecef 100%);
+        border: 1px solid #e0e0e0;
+        color: #222;
+        transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.06);
+        letter-spacing: 0.01em;
+    }
+
+    .stylish-toggle-btn:hover,
+    .stylish-toggle-btn:focus {
+        background: linear-gradient(90deg, #e3e9f7 0%, #f1f3f6 100%);
+        color: #1976d2;
+        border-color: #b6c2d2;
+        box-shadow: 0 4px 16px 0 rgba(25, 118, 210, 0.10);
+        outline: none;
+    }
+
+    .stylish-toggle-btn .material-symbols-outlined {
+        font-size: 1.3em;
+        vertical-align: middle;
+        color: inherit;
+        transition: color 0.2s;
+    }
 </style>
-
-
 
 <div class="row social-post-container">
     @foreach ($posts as $post)
@@ -37,14 +75,16 @@
                     <div class="user-post-data">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="me-3 flex-shrik-0">
-                                <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
-                                    class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                {{-- Use asset('storage/') for user avatar, with a default fallback --}}
+                                <img src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                    alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
                             </div>
 
                             <div class="w-100">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div>
-                                        <h6 class="mb-0 d-inline-block ">{{ $post->user->name ?? '' }}</h6>
+                                        {{-- Check if user relationship exists before accessing name --}}
+                                        <h6 class="mb-0 d-inline-block ">{{ $post->user->name ?? 'Unknown User' }}</h6>
                                         <span class="d-inline-block text-primary">
                                             <svg class="align-text-bottom" width="17" height="17"
                                                 viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,50 +108,37 @@
                                             <div class="dropdown-menu m-0 p-0">
                                                 <a class="dropdown-item p-3" href="#">
                                                     <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">
-                                                            save
-                                                        </span>
+                                                        <span class="material-symbols-outlined">save</span>
                                                         <div class="data ms-2">
                                                             <h6>Save Post</h6>
-                                                            <p class="mb-0">Add this to your
-                                                                saved items</p>
+                                                            <p class="mb-0">Add this to your saved items</p>
                                                         </div>
                                                     </div>
                                                 </a>
                                                 <a class="dropdown-item p-3" href="#">
                                                     <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">
-                                                            cancel
-                                                        </span>
+                                                        <span class="material-symbols-outlined">cancel</span>
                                                         <div class="data ms-2">
                                                             <h6>Hide Post</h6>
-                                                            <p class="mb-0">See fewer posts
-                                                                like this.</p>
+                                                            <p class="mb-0">See fewer posts like this.</p>
                                                         </div>
                                                     </div>
                                                 </a>
                                                 <a class="dropdown-item p-3" href="#">
                                                     <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">
-                                                            person_remove
-                                                        </span>
+                                                        <span class="material-symbols-outlined">person_remove</span>
                                                         <div class="data ms-2">
                                                             <h6>Unfollow User</h6>
-                                                            <p class="mb-0">Stop seeing
-                                                                posts but stay friends.</p>
+                                                            <p class="mb-0">Stop seeing posts but stay friends.</p>
                                                         </div>
                                                     </div>
                                                 </a>
                                                 <a class="dropdown-item p-3" href="#">
                                                     <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">
-                                                            notifications
-                                                        </span>
+                                                        <span class="material-symbols-outlined">notifications</span>
                                                         <div class="data ms-2">
                                                             <h6>Notifications</h6>
-                                                            <p class="mb-0">Turn on
-                                                                notifications for this
-                                                                post</p>
+                                                            <p class="mb-0">Turn on notifications for this post</p>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -125,7 +152,9 @@
                     <div class="mt-4">
                         <p class="m-0">{{ $post->content }}</p>
                     </div>
+
                     @php
+                        // Assuming $post->media is a JSON string of paths or an array of paths
                         if (is_array($post->media)) {
                             $mediaFiles = $post->media;
                         } else {
@@ -137,10 +166,11 @@
                     @if ($count > 0)
                         <div class="user-post mt-4">
                             <div class="row g-1">
+                                {{-- First media item --}}
                                 <div class="{{ $count > 1 ? 'col-md-6' : 'col-12' }}">
                                     <div class="post-media-item rounded overflow-hidden position-relative"
                                         style="height: 250px;">
-                                        {{-- Use asset('storage/' . $path) for correct URL --}}
+                                        {{-- CRITICAL FIX: Use asset('storage/' . $path) for correct URL --}}
                                         <a data-fslightbox="gallery-{{ $post->id }}"
                                             href="{{ asset($mediaFiles[0]) }}">
                                             @php
@@ -169,10 +199,12 @@
                                     </div>
                                 </div>
 
+                                {{-- Second media item (if exists) with overlay if more than 2 --}}
                                 @if ($count > 1)
                                     <div class="col-md-6">
                                         <div class="post-media-item rounded overflow-hidden position-relative"
                                             style="height: 250px;">
+                                            {{-- CRITICAL FIX: Use asset('storage/' . $path) for correct URL --}}
                                             <a data-fslightbox="gallery-{{ $post->id }}"
                                                 href="{{ asset($mediaFiles[1]) }}">
                                                 @php
@@ -197,6 +229,7 @@
                                                     <img src="{{ asset($mediaFiles[1]) }}" alt="post-image"
                                                         class="d-block w-100 h-100 object-cover" loading="lazy">
                                                 @endif
+
                                                 @if ($count > 2)
                                                     <div class="post-overlay-count position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75"
                                                         style="z-index: 1;">
@@ -207,29 +240,33 @@
                                         </div>
                                     </div>
                                 @endif
-                                @for ($i = 2; $i < $count; $i++)
-                                    <a data-fslightbox="gallery-{{ $post->id }}"
-                                        href="{{ asset($mediaFiles[$i]) }}" class="d-none"></a>
-                                @endfor
 
-                            </div> {{-- End of .row --}}
-                        </div> {{-- End of .user-post --}}
+                                {{-- Hidden links for all other media files for FsLightbox to pick up --}}
+                                @for ($i = 2; $i < $count; $i++)
+                                    {{-- CRITICAL FIX: Use asset('storage/' . $path) for correct URL --}}
+                                    <a data-fslightbox="gallery-{{ $post->id }}"
+                                        href="{{ asset('/' . $mediaFiles[$i]) }}" class="d-none"></a>
+                                @endfor
+                            </div>
+                        </div>
                     @endif
 
                     <div class="post-meta-likes mt-4">
-                        <!-- User avatars who liked the post -->
                         <div class="d-flex align-items-center gap-2 flex-wrap">
                             <ul class="list-inline m-0 p-0 post-user-liked-list">
                                 @foreach ($post->reactions->take(4) as $reaction)
                                     <li>
-                                        <img src="{{ $reaction->user->avatar }}"
+                                        {{-- Use asset('storage/') for reaction user avatar, with default fallback --}}
+                                        <img src="{{ asset('/' . ($reaction->user->avatar ?? 'frontend/assets/images/user/1.jpg')) }}"
                                             class="rounded-circle img-fluid userimg" loading="lazy">
                                     </li>
                                 @endforeach
                             </ul>
                             <div class="d-inline-flex align-items-center gap-1">
                                 @if ($post->reactions->count() > 0)
-                                    <h6 class="m-0 font-size-14">{{ $post->reactions->first()->user->name }}</h6>
+                                    {{-- Check if first reaction user exists before accessing name --}}
+                                    <h6 class="m-0 font-size-14">
+                                        {{ $post->reactions->first()->user->name ?? 'Someone' }}</h6>
                                     @if ($post->reactions->count() > 1)
                                         <span class="text-capitalize font-size-14 fw-medium" data-bs-toggle="modal"
                                             data-bs-target="#likemodal{{ $post->id }}">
@@ -241,39 +278,6 @@
                         </div>
                     </div>
 
-                    {{-- <div class="comment-area mt-4 pt-4 border-top">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            <!-- Reaction button component -->
-                            <div class="reaction-block-{{ $post->id }}">
-                                <x-reaction-button :reactable="$post" />
-                            </div>
-
-                            <!-- Comment and share buttons -->
-                            <div class="d-flex align-items-center gap-3 flex-shrink-0">
-                                <div class="total-comment-block" data-bs-toggle="collapse"
-                                    data-bs-target="#commentcollapes{{ $post->id }}">
-                                    <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
-                                    <span class="fw-medium cursor-pointer">Comments</span>
-                                    @if ($post->comments->count() > 0)
-                                        <span class="fw-medium">({{ $post->comments->count() }})</span>
-                                    @endif
-                                </div>
-                                <div class="share-block">
-                                    <a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#share-btn-{{ $post->id }}">
-                                        <span
-                                            class="material-symbols-outlined align-text-top font-size-20">share</span>
-                                        <span class="ms-1 fw-medium">Share</span>
-                                        @if ($post->shares_count > 0 ?? '')
-                                            <span class="fw-medium">({{ $post->shares_count ?? '' }})</span>
-                                        @endif
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    <!-- Comments section -->
                     <div class="comment-area mt-4 pt-4 border-top">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <div class="like-block position-relative d-flex align-items-center flex-shrink-0">
@@ -284,7 +288,9 @@
                                     data-bs-target="#commentcollapes{{ $post->id }}" aria-expanded="true"
                                     aria-controls="commentcollapes{{ $post->id }}">
                                     <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
-                                    <span class="fw-medium">{{ $post->comments->count() }} Comment</span>
+                                    <span
+                                        class="fw-medium comment-count-{{ $post->id }}">{{ $post->comments->count() }}
+                                        Comment</span>
                                 </div>
                                 <div class="share-block d-flex align-items-center feather-icon">
                                     <a href="javascript:void(0);" data-bs-toggle="modal"
@@ -293,109 +299,55 @@
                                         class="d-flex align-items-center">
                                         <span
                                             class="material-symbols-outlined align-text-top font-size-20">share</span>
-                                        <span class="ms-1 fw-medium">{{ $post->shares_count ?? 0 }} Share</span>
+                                        <span class="ms-1 fw-medium"> Share</span>
+                                        {{-- Use relationship count --}}
                                     </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 pt-4 border-top collapse show" id="commentcollapes{{ $post->id }}">
-                            <ul class="list-inline m-0 p-0 comment-list" id="comment-list-{{ $post->id }}">
-                                @foreach ($post->comments->where('parent_id', null) as $comment)
-                                    <li class="mb-3">
-                                        <div class="comment-list-block">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <div class="comment-list-user-img flex-shrink-0">
-                                                    <img src="{{ $comment->user->avatar ?? '/frontend/assets/images/user/1.jpg' }}"
-                                                        alt="userimg" class="avatar-48 rounded-circle img-fluid"
-                                                        loading="lazy">
-                                                </div>
-                                                <div class="comment-list-user-data">
-                                                    <div class="d-inline-flex align-items-center gap-1 flex-wrap">
-                                                        <h6 class="m-0">{{ $comment->user->name }}</h6>
-                                                        <span class="d-inline-block text-primary">
-                                                            <!-- SVG icon here -->
-                                                        </span>
-                                                        <span class="fw-medium small text-capitalize">
-                                                            {{ $comment->created_at->diffForHumans() ?? '' }}
-                                                        </span>
-                                                    </div>
-                                                    <p class="mb-1">{{ $comment->content }}</p>
-                                                    <div class="comment-list-action mt-2">
-                                                        <ul
-                                                            class="list-inline m-0 p-0 d-flex align-items-center gap-2">
-                                                            <li>
-                                                                <x-reaction-button :reactable="$comment" small="true" />
-                                                            </li>
-                                                            <li>
-                                                                <span class="fw-medium small"
-                                                                    data-bs-toggle="collapse"
-                                                                    data-bs-target="#subcomment-collapse-{{ $comment->id }}"
-                                                                    role="button">
-                                                                    Reply
-                                                                </span>
-                                                            </li>
-                                                        </ul>
-                                                        <!-- Subcomment form -->
-                                                        <div class="add-comment-form-block collapse mt-3"
-                                                            id="subcomment-collapse-{{ $comment->id }}">
-                                                            <div class="d-flex align-items-center gap-3">
-                                                                <div class="flex-shrink-0">
 
-                                                                    <img src="{{ auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg' }}"
-                                                                        alt="userimg"
-                                                                        class="avatar-48 rounded-circle img-fluid"
-                                                                        loading="lazy">
-                                                                </div>
-                                                                <div class="add-comment-form">
-                                                                    <form
-                                                                        action="{{ route('comments.reply', $comment) }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="text" name="content"
-                                                                            class="form-control"
-                                                                            placeholder="Write a reply...">
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary font-size-12 text-capitalize px-5">
-                                                                            Post
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @if ($comment->replies && $comment->replies->count())
-                                                            <ul class="list-unstyled ms-4">
-                                                                @include(
-                                                                    'user-interface.pages.post.partials.comment_replies',
-                                                                    ['comments' => $comment->replies]
-                                                                )
-                                                            </ul>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                        <div class="mt-4 pt-4 border-top collapse show" id="commentcollapes{{ $post->id }}"
+                            x-data="commentComponent({{ $post->id }})" x-init="init()">
+
+
+                            <ul class="list-inline m-0 p-0 comment-list" id="comment-list-{{ $post->id }}"
+                                x-ref="commentList">
+                                @foreach ($post->comments->where('parent_id', null) as $comment)
+                                    {!! view('user-interface.pages.post.partials.single_comment', compact('comment'))->render() !!}
                                 @endforeach
                             </ul>
-                        @endif
+                            <div class="d-flex flex-column align-items-center justify-content-center gap-1 mt-2">
+                                <button type="button"
+                                    class="show-more-comments-btn d-none stylish-toggle-btn px-4 py-2 rounded-pill shadow-sm fw-semibold d-flex align-items-center gap-2"
+                                    data-post-id="{{ $post->id }}" data-action="show">
+                                    <span class="material-symbols-outlined align-text-bottom fs-5">expand_more</span>
+                                    <span>Show more comments</span>
+                                </button>
+                                <button type="button"
+                                    class="show-less-comments-btn d-none stylish-toggle-btn px-4 py-2 rounded-pill shadow-sm fw-semibold d-flex align-items-center gap-2"
+                                    data-post-id="{{ $post->id }}" data-action="hide">
+                                    <span class="material-symbols-outlined align-text-bottom fs-5">expand_less</span>
+                                    <span>Hide comments</span>
+                                </button>
+                            </div>
 
-                        <!-- Add comment form -->
-                        <div class="add-comment-form-block">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <img src="{{ auth()->user()->avatar??'N/A' }}" alt="userimg"
-                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
-                                </div>
-                                <div class="add-comment-form">
-                                    <form action="{{ route('posts.comments.store', $post) }}" method="POST">
-                                        @csrf
-                                        <input type="text" name="content" class="form-control"
-                                            placeholder="Write a Comment...">
-                                        <button type="submit"
-                                            class="btn btn-primary font-size-12 text-capitalize px-5">
-                                            Post
-                                        </button>
-                                    </form>
+
+                            <div class="add-comment-form-block mt-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                            alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                    </div>
+                                    <div class="add-comment-form w-100">
+                                        <form class="main-comment-form"
+                                            action="{{ route('posts.comments.store', $post) }}" method="POST">
+                                            @csrf
+                                            <input type="text" name="content" class="form-control"
+                                                placeholder="Write a Comment...">
+                                            <button type="submit"
+                                                class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -404,566 +356,461 @@
             </div>
         </div>
     @endforeach
+</div>
 
-    {{-- <div class="col-sm-12 social-post">
-        <div class="card card-block card-stretch card-height">
-            <div class="card-body">
-                <div class="user-post-data">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="me-3 flex-shrik-0">
-                            <img class="border border-2 rounded-circle user-post-profile"
-                                src="{{ asset('frontend/') }}/assets/images/user/03.jpg" alt="user-image"
-                                loading="lazy">
-                        </div>
-                        <div class="w-100">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <h6 class="mb-0 d-inline-block">Barb Ackue</h6>
-                                    <span class="d-inline-block text-primary">
-                                        <svg class="align-text-bottom" width="17" height="17"
-                                            viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M11.8457 0H4.34822C1.73547 0 0.0974121 1.84995 0.0974121 4.46789V11.5321C0.0974121 14.1501 1.72768 16 4.34822 16H11.8449C14.4663 16 16.0974 14.1501 16.0974 11.5321V4.46789C16.0974 1.84995 14.4663 0 11.8457 0Z"
-                                                fill="currentColor" />
-                                            <path d="M5.09741 7.99978L7.09797 9.9995L11.0974 6.00006" stroke="white"
-                                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </span>
-                                    <span class="mb-0 d-inline-block text-capitalize fw-medium">Add a New
-                                        Post</span>
-                                    <p class="mb-0">1 Hour ago</p>
-                                </div>
-                                <div class="card-post-toolbar">
-                                    <div class="dropdown">
-                                        <span class="dropdown-toggle material-symbols-outlined"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                            role="button">
-                                            more_horiz
-                                        </span>
-                                        <div class="dropdown-menu m-0 p-0">
-                                            <a class="dropdown-item p-3" href="#">
-                                                <div class="d-flex align-items-top">
-                                                    <span class="material-symbols-outlined">
-                                                        save
-                                                    </span>
-                                                    <div class="data ms-2">
-                                                        <h6>Save Post</h6>
-                                                        <p class="mb-0">Add this to your
-                                                            saved items</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a class="dropdown-item p-3" href="#">
-                                                <div class="d-flex align-items-top">
-                                                    <span class="material-symbols-outlined">
-                                                        cancel
-                                                    </span>
-                                                    <div class="data ms-2">
-                                                        <h6>Hide Post</h6>
-                                                        <p class="mb-0">See fewer posts
-                                                            like this.</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a class="dropdown-item p-3" href="#">
-                                                <div class="d-flex align-items-top">
-                                                    <span class="material-symbols-outlined">
-                                                        person_remove
-                                                    </span>
-                                                    <div class="data ms-2">
-                                                        <h6>Unfollow User</h6>
-                                                        <p class="mb-0">Stop seeing
-                                                            posts but stay friends.</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a class="dropdown-item p-3" href="#">
-                                                <div class="d-flex align-items-top">
-                                                    <span class="material-symbols-outlined">
-                                                        notifications
-                                                    </span>
-                                                    <div class="data ms-2">
-                                                        <h6>Notifications</h6>
-                                                        <p class="mb-0">Turn on
-                                                            notifications for this
-                                                            post</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
+<script type="module">
+    import '/js/echo-comments.js';
+</script>
+
+<script>
+    // AlpineJS component definition
+    window.commentComponent = function(postId) {
+        return {
+            addComment(data) {
+                // Prevent duplicates
+                if (document.getElementById(`comment-${data.id}`)) {
+                    return;
+                }
+
+                // Update comment count
+                const countSpan = document.querySelector(`.comment-count-${postId}`);
+                if (countSpan) {
+                    let currentCount = parseInt(countSpan.innerText) || 0;
+                    let newCount = currentCount + 1;
+                    countSpan.innerText = `${newCount} Comment${newCount !== 1 ? 's' : ''}`;
+                }
+
+                // Find correct list and prepend the comment or reply
+                let commentList;
+                if (data.parent_id) {
+                    // If it's a reply, check if a reply list exists, else create it
+                    let replyListId = `replies-for-comment-${data.parent_id}`;
+                    commentList = document.getElementById(replyListId);
+                    if (!commentList) {
+                        // Create a new reply list under the parent comment
+                        const parentLi = document.getElementById(`comment-${data.parent_id}`);
+                        if (parentLi) {
+                            commentList = document.createElement('ul');
+                            commentList.className = 'list-unstyled ms-5 mb-2';
+                            commentList.id = replyListId;
+                            parentLi.appendChild(commentList);
+                        }
+                    }
+                } else {
+                    commentList = document.getElementById(`comment-list-${postId}`);
+                }
+                if (!commentList) return;
+
+                const li = document.createElement('li');
+                li.className = 'mb-3 comment-item';
+                li.id = `comment-${data.id}`;
+                // Use the same markup as the Blade comment area for consistency, including actions and reactions
+                li.innerHTML = `
+<div class="comment-list-block">
+    <div class="d-flex align-items-center gap-3">
+        <div class="comment-list-user-img flex-shrink-0">
+            <img src="${data.user.avatar ? '/' + data.user.avatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+        </div>
+        <div class="comment-list-user-data">
+            <div class="d-inline-flex align-items-center gap-1 flex-wrap">
+                <h6 class="m-0">${data.user.name}</h6>
+                <span class="d-inline-block text-primary"></span>
+                <span class="fw-medium small text-capitalize">${data.created_at ? moment(data.created_at).fromNow() : ''}</span>
+            </div>
+        </div>
+        <div class="ms-auto">
+            <div class="dropdown">
+                <button type="button" class="dropdown-toggle material-symbols-outlined comment-action-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Comment actions" style="background:none;border:none;padding:0;cursor:pointer;">more_horiz</button>
+                <div class="dropdown-menu m-0 p-0">
+                    <a class="dropdown-item p-3 delete-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
+                        <span class="material-symbols-outlined fs-3 text-danger flex-shrink-0">delete</span>
+                        <span>
+                            <span class="fw-bold d-block">Delete Comment</span>
+                            <span class="text-muted small">Remove this comment permanently.</span>
+                        </span>
+                    </a>
+                    <a class="dropdown-item p-3 hide-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
+                        <span class="material-symbols-outlined fs-3 text-secondary flex-shrink-0">visibility_off</span>
+                        <span>
+                            <span class="fw-bold d-block">Hide Comment</span>
+                            <span class="text-muted small">See fewer comments like this.</span>
+                        </span>
+                    </a>
                 </div>
-                <div class="mt-4">
-                    <p class="m-0">"Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Morbi nulla dolor, ornare at commodo non, feugiat non
-                        nisi.
-                        Phasellus faucibus mollis pharetra. Proin blandit ac massa sed
-                        rhoncus"</p>
-                    <ul class="list-inline m-0 p-0 d-flex flex-wrap gap-1">
-                        <li>
-                            <a href="javascript:void(0);">#family</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">#happiness</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">#travelling</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">#camping</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">#climbing</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="user-post mt-4">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <a data-fslightbox="gallery"
-                                href="{{ asset('frontend/') }}/assets/images/page-img/boy.jpg" class="rounded">
-                                <img src="{{ asset('frontend/') }}/assets/images/page-img/boy.jpg" alt="post-image"
-                                    class="img-fluid rounded w-100" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mt-md-0 mt-3">
-                            <a data-fslightbox="gallery"
-                                href="{{ asset('frontend/') }}/assets/images/page-img/bus.jpg" class="rounded">
-                                <img src="{{ asset('frontend/') }}/assets/images/page-img/bus.jpg" alt="post-image"
-                                    class="img-fluid rounded w-100" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mt-md-0 mt-3">
-                            <a data-fslightbox="gallery"
-                                href="{{ asset('frontend/') }}/assets/images/page-img/fd.jpg" class="rounded">
-                                <img src="{{ asset('frontend/') }}/assets/images/page-img/fd.jpg" alt="post-image"
-                                    class="img-fluid rounded w-100" loading="lazy">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <a data-fslightbox="gallery"
-                                href="{{ asset('frontend/') }}/assets/images/page-img/mountain.jpg" class="rounded">
-                                <img src="{{ asset('frontend/') }}/assets/images/page-img/mountain.jpg"
-                                    alt="post-image" class="img-fluid rounded w-100" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="col-md-6 mt-md-0 mt-3">
-                            <div class="post-overlay-box h-100 rounded">
-                                <img src="{{ asset('frontend/') }}/assets/images/page-img/pizza.jpg" alt="post-image"
-                                    class="img-fluid rounded w-100 h-100 object-cover" loading="lazy">
-                                <a data-fslightbox="gallery"
-                                    href="{{ asset('frontend/') }}/assets/images/page-img/pizza.jpg"
-                                    class="rounded font-size-18">+2
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-meta-likes mt-4">
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <ul class="list-inline m-0 p-0 post-user-liked-list">
-                            <li>
-                                <img src="{{ asset('frontend/') }}/assets/images/user/01.jpg" alt="userimg"
-                                    class="rounded-circle img-fluid userimg" loading="lazy">
-                            </li>
-                            <li>
-                                <img src="{{ asset('frontend/') }}/assets/images/user/02.jpg" alt="userimg"
-                                    class="rounded-circle img-fluid userimg" loading="lazy">
-                            </li>
-                            <li>
-                                <img src="{{ asset('frontend/') }}/assets/images/user/03.jpg" alt="userimg"
-                                    class="rounded-circle img-fluid userimg" loading="lazy">
-                            </li>
-                            <li>
-                                <img src="{{ asset('frontend/') }}/assets/images/user/04.jpg" alt="userimg"
-                                    class="rounded-circle img-fluid userimg" loading="lazy">
-                            </li>
-                        </ul>
-                        <div class="d-inline-flex align-items-center gap-1">
-                            <h6 class="m-0 font-size-14">Aliana Molex</h6>
-                            <span class="text-capitalize font-size-14 fw-medium" type="button"
-                                data-bs-toggle="modal" data-bs-target="#likemodal">and 208 others liked
-                                this</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment-area mt-4 pt-4 border-top">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="like-block position-relative d-flex align-items-center flex-shrink-0">
-                            <div class="like-data">
-                                <div class="dropdown">
-                                    <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" role="button">
-                                        <span class="material-symbols-outlined align-text-top font-size-20">
-                                            thumb_up
-                                        </span>
-                                        <span class="fw-medium">140 Likes</span>
-                                    </span>
-                                    <div class="dropdown-menu py-2 shadow">
-                                        <a class="ms-2 me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Like"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/01.png"
-                                                class="img-fluid" alt="like" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Love"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/02.png"
-                                                class="img-fluid" alt="love" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Happy"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/03.png"
-                                                class="img-fluid" alt="happy" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="HaHa"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/04.png"
-                                                class="img-fluid" alt="haha" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Think"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/05.png"
-                                                class="img-fluid" alt="think" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Sad"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/06.png"
-                                                class="img-fluid" alt="sad" loading="lazy"></a>
-                                        <a class="me-2" href="javascript:void(0);" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Lovely"><img
-                                                src="{{ asset('frontend/') }}/assets/images/icon/07.png"
-                                                class="img-fluid" alt="lovely" loading="lazy"></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3 flex-shrink-0">
-                            <div class="total-comment-block" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#commentcollapes2" aria-expanded="false"
-                                aria-controls="commentcollapes">
-                                <span class="material-symbols-outlined align-text-top font-size-20">
-                                    comment
-                                </span>
-                                <span class="fw-medium">20 Comment</span>
-                            </div>
-                            <div class="share-block d-flex align-items-center feather-icon">
-                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#share-btn"
-                                    aria-controls="share-btn" class="d-flex align-items-center">
-                                    <span class="material-symbols-outlined align-text-top font-size-20">
-                                        share
-                                    </span>
-                                    <span class="ms-1 fw-medium">99 Share</span></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapse mt-4 pt-4 border-top" id="commentcollapes2">
-                        <ul class="list-inline m-o p-0 comment-list">
-                            <li class="mb-3">
-                                <div class="comment-list-block">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="comment-list-user-img flex-shrink-0">
-                                            <img src="{{ asset('frontend/') }}/assets/images/user/13.jpg"
-                                                alt="userimg" class="avatar-48 rounded-circle img-fluid"
-                                                loading="lazy">
-                                        </div>
-                                        <div class="comment-list-user-data">
-                                            <div class="d-inline-flex align-items-center gap-1 flex-wrap">
-                                                <h6 class="m-0">Bob Frapples</h6>
-                                                <span class="d-inline-block text-primary">
-                                                    <svg class="align-text-bottom" xmlns="http://www.w3.org/2000/svg"
-                                                        width="17" height="17" viewBox="0 0 17 17"
-                                                        fill="none">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M12.2483 0.216553H4.75081C2.13805 0.216553 0.5 2.0665 0.5 4.68444V11.7487C0.5 14.3666 2.13027 16.2166 4.75081 16.2166H12.2475C14.8689 16.2166 16.5 14.3666 16.5 11.7487V4.68444C16.5 2.0665 14.8689 0.216553 12.2483 0.216553Z"
-                                                            fill="currentColor" />
-                                                        <path d="M5.5 8.21627L7.50056 10.216L11.5 6.21655"
-                                                            stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                                            stroke-linejoin="round" />
-                                                    </svg>
-                                                </span>
-                                                <spna class="fw-medium small text-capitalize">
-                                                    3 min ago
-                                                </spna>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="comment-list-user-comment">
-                                        <div class="comment-list-comment">
-                                            "Just stumbled upon this post and it's
-                                            giving me all the feels! 🙌"
-                                        </div>
-                                        <div class="comment-list-action mt-2">
-                                            <ul class="list-inline m-0 p-0 d-flex align-items-center gap-2">
-                                                <li>
-                                                    <div
-                                                        class="like-block position-relative d-flex align-items-center flex-shrink-0">
-                                                        <div class="like-data">
-                                                            <div class="dropdown">
-                                                                <span class="dropdown-toggle"
-                                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                    aria-expanded="false" role="button">
-                                                                    <span
-                                                                        class="material-symbols-outlined align-text-top font-size-18">
-                                                                        thumb_up
-                                                                    </span>
-                                                                    <span class="fw-medium small">Likes</span>
-                                                                </span>
-                                                                <div class="dropdown-menu py-2 shadow">
-                                                                    <a class="ms-2 me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Like"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/01.png"
-                                                                            class="img-fluid" alt="like"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Love"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/02.png"
-                                                                            class="img-fluid" alt="love"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Happy"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/03.png"
-                                                                            class="img-fluid" alt="happy"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="HaHa"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/04.png"
-                                                                            class="img-fluid" alt="haha"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Think"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/05.png"
-                                                                            class="img-fluid" alt="think"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Sad"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/06.png"
-                                                                            class="img-fluid" alt="sad"
-                                                                            loading="lazy"></a>
-                                                                    <a class="me-2" href="javascript:void(0);"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top" title="Lovely"><img
-                                                                            src="{{ asset('frontend/') }}/assets/images/icon/07.png"
-                                                                            class="img-fluid" alt="lovely"
-                                                                            loading="lazy"></a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <span class="fw-medium small" data-bs-toggle="collapse"
-                                                        data-bs-target="#subcomment-collapse2" role="button"
-                                                        aria-expanded="false" aria-controls="collapseExample">
-                                                        Reply
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                            <div class="add-comment-form-block collapse mt-3"
-                                                id="subcomment-collapse2">
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="{{ asset('frontend/') }}/assets/images/user/1.jpg"
-                                                            alt="userimg" class="avatar-48 rounded-circle img-fluid"
-                                                            loading="lazy">
-                                                    </div>
-                                                    <div class="add-comment-form">
-                                                        <form>
-                                                            <input type="text" class="form-control"
-                                                                placeholder="Write a Comment...">
-                                                            <button type="submit"
-                                                                class="btn btn-primary font-size-12 text-capitalize px-5">
-                                                                post
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="add-comment-form-block">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <img src="{{ asset('frontend/') }}/assets/images/user/1.jpg" alt="userimg"
-                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
-                                </div>
-                                <div class="add-comment-form">
-                                    <form>
-                                        <input type="text" class="form-control" placeholder="Write a Comment...">
-                                        <button type="submit"
-                                            class="btn btn-primary font-size-12 text-capitalize px-5">
-                                            post
+            </div>
+        </div>
+    </div>
+    <div class="comment-list-user-comment">
+        <div class="comment-list-comment">${data.content ? data.content : ''}</div>
+        <div class="comment-list-action mt-2">
+            <ul class="list-inline m-0 p-0 d-flex align-items-center gap-2">
+                <li>
+                    <div class="like-data" id="reaction-block-comment-${data.id}">
+                        <div class="dropdown">
+                            <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+                                <img src="/frontend/assets/images/icon/01.png" width="20" height="20" alt="Like" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Like" data-bs-original-title="Like">
+                                <span class="fw-medium reaction-count">0</span>
+                            </span>
+                            <div class="dropdown-menu py-2 shadow">
+                                ${[1,2,3,4,5,6,7].map(i => `
+                                    <form action="/react/comment/${data.id}" method="POST" class="d-inline reaction-form" data-reactable-type="comment" data-reactable-id="${data.id}">
+                                        <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
+                                        <input type="hidden" name="reaction_id" value="${i}">
+                                        <button type="submit" class="ms-2 me-2 btn btn-link p-0 border-0 bg-transparent" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}" data-bs-original-title="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
+                                            <img src="/frontend/assets/images/icon/0${i}.png" width="20" height="20" alt="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
                                         </button>
                                     </form>
-                                </div>
+                                `).join('')}
                             </div>
                         </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="fw-medium small" data-bs-toggle="collapse" data-bs-target="#subcomment-collapse-${data.id}" role="button">Reply</span>
+                </li>
+            </ul>
+            <div class="add-comment-form-block collapse mt-3" id="subcomment-collapse-${data.id}">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="flex-shrink-0">
+                        <img src="${window.Laravel && window.Laravel.userAvatar ? window.Laravel.userAvatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                    </div>
+                    <div class="add-comment-form">
+                        <form class="reply-form" data-comment-id="${data.id}" action="/comments/${data.id}/reply" method="POST">
+                            <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
+                            <input type="text" name="content" class="form-control" placeholder="Write a Comment...">
+                            <button type="submit" class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div> --}}
-
+    </div>
 </div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof refreshFsLightbox === 'function') {
-            refreshFsLightbox();
-        }
-    });
-</script>
-
-{{-- Reaction  --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Handle delete comment/reply/subreply (event delegation for dynamic content)
-        document.body.addEventListener('click', async function(e) {
-            const target = e.target.closest('.delete-comment-btn');
-            if (target) {
-                e.preventDefault();
-                if (!confirm('Are you sure you want to delete this?')) return;
-                const commentId = target.getAttribute('data-id');
-                const type = target.getAttribute('data-type');
-                let url = '';
-                if (type === 'comment') {
-                    url = `/comments/${commentId}`;
-                } else if (type === 'reply') {
-                    url = `/comments/${commentId}`;
-                } else if (type === 'subreply') {
-                    url = `/comments/${commentId}`;
+                `;
+                commentList.appendChild(li);
+                // Live update the comment time every minute
+                const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
+                if (timeSpan && data.created_at) {
+                    const updateTime = () => {
+                        timeSpan.textContent = moment(data.created_at).fromNow();
+                    };
+                    updateTime();
+                    // Update every minute
+                    li._interval = setInterval(updateTime, 60000);
                 }
-                try {
-                    const response = await fetch(url, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        // Remove the comment/reply/subreply from DOM
-                        target.closest('.comment-list-block').parentElement.remove();
-                    } else {
-                        alert('Failed to delete.');
-                    }
-                } catch (error) {
-                    alert('Error deleting.');
+            },
+            init() {
+                // Listener for instant update
+                window.addEventListener(`comment-posted-${postId}`, (event) => {
+                    this.addComment(event.detail.comment);
+                });
+
+                // Listener for real-time update from other users
+                if (window.Echo) {
+                    window.Echo.private('post.' + postId)
+                        .listen('CommentCreated', (e) => {
+                            if (e.comment) this.addComment(e.comment);
+                        });
                 }
             }
+        }
+    };
+
+    // This code runs once the page is fully loaded
+    $(document).ready(function() {
+        // Show/hide comments logic
+        // Facebook-like show more/less comments logic
+        function updateCommentButtons($commentList, showCount) {
+            var $comments = $commentList.children('li');
+            var $showMoreBtn = $commentList.parent().find('.show-more-comments-btn');
+            var $showLessBtn = $commentList.parent().find('.show-less-comments-btn');
+            if ($comments.length > showCount) {
+                let hiddenCount = 0;
+                $comments.each(function(i, el) {
+                    if (i < showCount) $(el).show();
+                    else {
+                        $(el).hide();
+                        hiddenCount++;
+                    }
+                });
+                $showMoreBtn.toggleClass('d-none', hiddenCount === 0);
+                $showLessBtn.addClass('d-none');
+            } else {
+                $comments.show();
+                $showMoreBtn.addClass('d-none');
+                $showLessBtn.addClass('d-none');
+            }
+        }
+        $(document).on('click', '.show-more-comments-btn', function() {
+            var postId = $(this).data('post-id');
+            var $commentList = $('#comment-list-' + postId);
+            var $comments = $commentList.children('li');
+            $comments.show();
+            $(this).addClass('d-none');
+            $commentList.parent().find('.show-less-comments-btn').removeClass('d-none');
+        });
+        $(document).on('click', '.show-less-comments-btn', function() {
+            var postId = $(this).data('post-id');
+            var $commentList = $('#comment-list-' + postId);
+            updateCommentButtons($commentList, 2);
+        });
+        // On page load, hide all but first 2 comments and show/hide buttons accordingly
+        $('.comment-list').each(function() {
+            updateCommentButtons($(this), 2);
         });
 
-        // Handle reaction forms
-        document.querySelectorAll('.reaction-form').forEach(form => {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const method = form.method === 'post' ? 'POST' : 'DELETE';
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector(
-                                'meta[name="csrf-token"]').content,
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            ...Object.fromEntries(formData),
-                            _method: method
-                        })
-                    });
-                    const data = await response.json();
-                    if (data.html) {
-                        // Replace the reaction block with the new HTML
-                        const reactionBlock = form.closest('[class^="reaction-block-"]');
-                        if (reactionBlock) {
-                            reactionBlock.innerHTML = data.html;
+        // Comment delete/hide button handlers (AJAX skeleton)
+        $(document).on('click', '.delete-comment-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var commentId = $(this).data('id');
+            if (!confirm('Are you sure you want to delete this comment?')) return false;
+            $.ajax({
+                url: '/comments/' + commentId,
+                method: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel
+                        .csrfToken
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the comment and all its replies and reply forms (no reload)
+                        var $comment = $('#comment-' + commentId);
+                        $comment.find('.comment-item').remove();
+                        $("form.reply-form[data-comment-id='" + commentId + "']").closest(
+                            '.add-comment-form-block').remove();
+                        $comment.remove();
+                        // Optionally, update the comment count
+                        var $countSpan = $comment.closest('.comment-area').find(
+                            '.comment-count-' + $comment.closest('.comment-area').data(
+                                'post-id'));
+                        if ($countSpan.length) {
+                            let currentCount = parseInt($countSpan.text()) || 1;
+                            let newCount = Math.max(currentCount - 1, 0);
+                            $countSpan.text(newCount + ' Comment' + (newCount !== 1 ? 's' :
+                                ''));
                         }
-                        initializeTooltips();
+                    } else {
+                        alert(response.message || 'Failed to delete comment.');
                     }
-                } catch (error) {
-                    console.error('Error:', error);
+                },
+                error: function(xhr) {
+                    alert('Failed to delete comment.');
                 }
             });
+            return false;
         });
+    });
+    $(document).on('click', '.hide-comment-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var commentId = $(this).data('id');
+        $.ajax({
+            url: '/comments/' + commentId + '/hide',
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#comment-' + commentId).fadeOut(200, function() {
+                        $(this).remove();
+                    });
+                    // Optionally, update the comment count
+                    var $comment = $('#comment-' + commentId);
+                    var $countSpan = $comment.closest('.comment-area').find('.comment-count-' +
+                        $comment.closest('.comment-area').data('post-id'));
+                    if ($countSpan.length) {
+                        let currentCount = parseInt($countSpan.text()) || 1;
+                        let newCount = Math.max(currentCount - 1, 0);
+                        $countSpan.text(newCount + ' Comment' + (newCount !== 1 ? 's' : ''));
+                    }
+                } else {
+                    alert(response.message || 'Failed to hide comment.');
+                }
+            },
+            error: function(xhr) {
+                alert('Failed to hide comment.');
+            }
+        });
+        return false;
+    });
+    // Your other vanilla JS initializations can go here too
+    if (typeof refreshFsLightbox === 'function') {
+        refreshFsLightbox();
+    }
 
-        function initializeTooltips() {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        }
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
 
-    // Handle comment forms (main and reply) for real-time update
-    document.querySelectorAll('.reply-form, .main-comment-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector(
-                            'meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.comment_html) {
-                        // For main comment
-                        if (form.classList.contains('main-comment-form')) {
-                            const postId = form.dataset.postId;
-                            const commentList = document.getElementById(
-                                'comment-list-' + postId);
-                            if (commentList) {
-                                commentList.insertAdjacentHTML('beforeend', data
-                                    .comment_html);
+    // AJAX form submission handler for comments and replies (push to DOM instantly, no reload)
+    $(document).on('submit', '.reply-form, .main-comment-form', function(e) {
+        e.preventDefault();
+        let form = $(this);
+        let input = form.find('input[name="content"]');
+        let content = input.val().trim();
+        if (!content) {
+            input.focus();
+            return false;
+        }
+        form.find('button[type="submit"]').prop('disabled', true);
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                input.val('');
+                // No reload! Just rely on Pusher/Echo event for real-time update
+                // If this is the current user, also dispatch the event for instant feedback
+                if (response.comment) {
+                    const event = new CustomEvent(
+                        `comment-posted-${response.comment.post_id}`, {
+                            detail: {
+                                comment: response.comment
                             }
-                            // Optionally update comment count if you show it
-                            // updateCommentCount(postId, 1);
-                        } else {
-                            // For reply comment
-                            let repliesContainer = form.closest('.comment-list-action')
-                                .querySelector('.list-unstyled.ms-4');
-                            if (!repliesContainer) {
-                                repliesContainer = document.createElement('ul');
-                                repliesContainer.className = 'list-unstyled ms-4';
-                                form.closest('.comment-list-action').appendChild(
-                                    repliesContainer);
-                            }
-                            repliesContainer.insertAdjacentHTML('beforeend', data
-                                .comment_html);
+                        });
+                    window.dispatchEvent(event);
+                    // If this is a reply, also push it to the correct reply list instantly
+                    if (response.comment.parent_id) {
+                        // Find or create the reply list for this parent comment
+                        let replyListId = `#replies-for-comment-${response.comment.parent_id}`;
+                        let $replyList = $(replyListId);
+                        if ($replyList.length === 0) {
+                            // If not present, create it after the parent comment
+                            let $parent = $('#comment-' + response.comment.parent_id);
+                            $replyList = $('<ul class="list-inline m-0 p-0 comment-list reply-list" id="replies-for-comment-' + response.comment.parent_id + '"></ul>');
+                            $parent.append($replyList);
                         }
-                        form.querySelector('input[name="content"]').value = '';
+                        // Build the reply HTML (reuse the AlpineJS addComment logic for consistency)
+                        let data = response.comment;
+                        let li = document.createElement('li');
+                        li.className = 'mb-3 comment-item';
+                        li.id = `comment-${data.id}`;
+                        li.innerHTML = `
+<div class="comment-list-block">
+    <div class="d-flex align-items-center gap-3">
+        <div class="comment-list-user-img flex-shrink-0">
+            <img src="${data.user.avatar ? '/' + data.user.avatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+        </div>
+        <div class="comment-list-user-data">
+            <div class="d-inline-flex align-items-center gap-1 flex-wrap">
+                <h6 class="m-0">${data.user.name}</h6>
+                <span class="d-inline-block text-primary"></span>
+                <span class="fw-medium small text-capitalize">${data.created_at ? moment(data.created_at).fromNow() : ''}</span>
+            </div>
+        </div>
+        <div class="ms-auto">
+            <div class="dropdown">
+                <button type="button" class="dropdown-toggle material-symbols-outlined comment-action-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Comment actions" style="background:none;border:none;padding:0;cursor:pointer;">more_horiz</button>
+                <div class="dropdown-menu m-0 p-0">
+                    <a class="dropdown-item p-3 delete-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
+                        <span class="material-symbols-outlined fs-3 text-danger flex-shrink-0">delete</span>
+                        <span>
+                            <span class="fw-bold d-block">Delete Comment</span>
+                            <span class="text-muted small">Remove this comment permanently.</span>
+                        </span>
+                    </a>
+                    <a class="dropdown-item p-3 hide-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
+                        <span class="material-symbols-outlined fs-3 text-secondary flex-shrink-0">visibility_off</span>
+                        <span>
+                            <span class="fw-bold d-block">Hide Comment</span>
+                            <span class="text-muted small">See fewer comments like this.</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comment-list-user-comment">
+        <div class="comment-list-comment">${data.content ? data.content : ''}</div>
+        <div class="comment-list-action mt-2">
+            <ul class="list-inline m-0 p-0 d-flex align-items-center gap-2">
+                <li>
+                    <div class="like-data" id="reaction-block-comment-${data.id}">
+                        <div class="dropdown">
+                            <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
+                                <img src="/frontend/assets/images/icon/01.png" width="20" height="20" alt="Like" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Like" data-bs-original-title="Like">
+                                <span class="fw-medium reaction-count">0</span>
+                            </span>
+                            <div class="dropdown-menu py-2 shadow">
+                                ${[1,2,3,4,5,6,7].map(i => `
+                                    <form action="/react/comment/${data.id}" method="POST" class="d-inline reaction-form" data-reactable-type="comment" data-reactable-id="${data.id}">
+                                        <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
+                                        <input type="hidden" name="reaction_id" value="${i}">
+                                        <button type="submit" class="ms-2 me-2 btn btn-link p-0 border-0 bg-transparent" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}" data-bs-original-title="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
+                                            <img src="/frontend/assets/images/icon/0${i}.png" width="20" height="20" alt="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
+                                        </button>
+                                    </form>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="fw-medium small" data-bs-toggle="collapse" data-bs-target="#subcomment-collapse-${data.id}" role="button">Reply</span>
+                </li>
+            </ul>
+            <div class="add-comment-form-block collapse mt-3" id="subcomment-collapse-${data.id}">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="flex-shrink-0">
+                        <img src="${window.Laravel && window.Laravel.userAvatar ? window.Laravel.userAvatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                    </div>
+                    <div class="add-comment-form">
+                        <form class="reply-form" data-comment-id="${data.id}" action="/comments/${data.id}/reply" method="POST">
+                            <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
+                            <input type="text" name="content" class="form-control" placeholder="Write a Comment...">
+                            <button type="submit" class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        `;
+                        $replyList.append(li);
+                        // Live update the reply time every minute
+                        const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
+                        if (timeSpan && data.created_at) {
+                            const updateTime = () => {
+                                timeSpan.textContent = moment(data.created_at).fromNow();
+                            };
+                            updateTime();
+                            li._interval = setInterval(updateTime, 60000);
+                        }
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX Error:', xhr.responseText);
+                let errorMsg = 'An error occurred while posting your comment.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    try {
+                        const json = JSON.parse(xhr.responseText);
+                        if (json.message) errorMsg = json.message;
+                    } catch (e) {}
+                }
+                let errorBlock = form.closest('.add-comment-form-block').find(
+                    '.comment-error-message');
+                if (errorBlock.length === 0) {
+                    errorBlock = $('<div class="comment-error-message text-danger mt-2"></div>');
+                    form.closest('.add-comment-form-block').append(errorBlock);
+                }
+                errorBlock.text(errorMsg).show();
+                setTimeout(() => errorBlock.fadeOut(), 5000);
+            },
+            complete: function() {
+                form.find('button[type="submit"]').prop('disabled', false);
+            }
         });
+    });
     });
 </script>

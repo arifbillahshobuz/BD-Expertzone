@@ -44,8 +44,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('posts.comments.store');
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])
         ->name('comments.reply');
+
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
+    Route::post('/comments/{comment}/hide', [CommentController::class, 'hide'])
+        ->name('comments.hide');
 
 });
 require __DIR__ . '/auth.php';
