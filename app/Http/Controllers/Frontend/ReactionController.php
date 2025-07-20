@@ -24,10 +24,22 @@ class ReactionController extends Controller
     {
         $user = $request->user();
 
+        // Handle unauthenticated user or missing id
+        if (!$user || !method_exists($user, 'getAuthIdentifier') || !$user->getAuthIdentifier()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => 'You must be logged in to react.'
+                ], 401);
+            }
+            return redirect()->route('login');
+        }
+
+        $userId = $user->getAuthIdentifier();
+
         // If DELETE method, remove the reaction
         if ($request->isMethod('DELETE')) {
             $existingReaction = $reactable->reactions()
-                ->where('user_id', $user->id)
+                ->where('user_id', $userId)
                 ->first();
 
             if ($existingReaction) {
@@ -56,16 +68,27 @@ class ReactionController extends Controller
         }
 
         // Only validate for POST (not DELETE)
+
         if ($request->isMethod('POST')) {
-            $validated = $request->validate([
-                'reaction_id' => 'required|integer|exists:reactions,id'
-            ]);
+            try {
+                $validated = $request->validate([
+                    'reaction_id' => 'required|integer|exists:reactions,id'
+                ]);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'errors' => $e->errors(),
+                        'message' => $e->getMessage(),
+                    ], 422);
+                }
+                throw $e;
+            }
 
             $reactionId = $validated['reaction_id'];
 
             // Check for existing reaction
             $existingReaction = $reactable->reactions()
-                ->where('user_id', $user->id)
+                ->where('user_id', $userId)
                 ->first();
 
             if ($existingReaction) {
@@ -82,7 +105,7 @@ class ReactionController extends Controller
             } else {
                 // Create new reaction
                 $reactable->reactions()->create([
-                    'user_id' => $user->id,
+                    'user_id' => $userId,
                     'reaction_id' => $reactionId
                 ]);
                 $action = 'added';
@@ -105,6 +128,9 @@ class ReactionController extends Controller
         }
 
         // Fallback for unsupported methods
-        return response()->json(['message' => 'Unsupported request method.'], 405);
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Unsupported request method.'], 405);
+        }
+        return back()->with('error', 'Unsupported request method.');
     }
 }

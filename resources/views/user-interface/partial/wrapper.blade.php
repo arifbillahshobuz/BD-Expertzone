@@ -36,9 +36,7 @@
                 </li>
                 @auth()
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="{{route('user.profile')}}" role="button" aria-expanded="false"
-                       aria-controls="profile">
-
+                    <a class="nav-link" href="{{route('user.profile')}}" role="button">
                         <i class="icon material-symbols-outlined">
                             person
                         </i>
@@ -76,26 +74,28 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#relative-friend-list" role="button"
-                        aria-expanded="false" aria-controls="sidebar-special">
-                        <i class="icon material-symbols-outlined">
-                            people
-                        </i>
-                        <span class="item-name">Relative Friend List</span>
-                        <i class="right-icon material-symbols-outlined">chevron_right</i>
+    <a class="nav-link" data-bs-toggle="collapse" href="#relative-friend-list" role="button"
+        aria-expanded="false" aria-controls="sidebar-special">
+        <i class="icon material-symbols-outlined">people</i>
+        <span class="item-name">Relative Friend List</span>
+        <i class="right-icon material-symbols-outlined">chevron_right</i>
+    </a>
+
+    <ul class="sub-nav collapse" id="relative-friend-list" data-bs-parent="#sidebar-menu">
+        @if(isset($sameDesignationUsers) && $sameDesignationUsers->count())
+            @foreach($sameDesignationUsers as $user)
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('user.profile', $user->id) }}">
+                        <i class="icon material-symbols-outlined filled">fiber_manual_record</i>
+                        <i class="sidenav-mini-icon">FR</i>
+                        <span class="item-name">{{ $user->name }}</span>
                     </a>
-                    <ul class="sub-nav collapse" id="relative-friend-list" data-bs-parent="#sidebar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link " aria-current="page" href="dashboard/friend-request.html">
-                                <i class="icon material-symbols-outlined filled">
-                                    fiber_manual_record
-                                </i>
-                                <i class="sidenav-mini-icon"> FR </i>
-                                <span class="item-name">Friend Request</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
+            @endforeach
+        @endif
+    </ul>
+</li>
+
                 @endauth
             </ul>
             <!-- Sidebar Menu End -->

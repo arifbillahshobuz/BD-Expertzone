@@ -16,10 +16,28 @@ class CommentController extends Controller
             'content' => 'required|string|max:1000',
         ]);
 
-        $post->comments()->create([
+        $comment = $post->comments()->create([
             'user_id' => auth()->id(),
             'content' => $request->input('content'),
         ]);
+
+        if ($request->ajax()) {
+            $comment->load('user'); // Eager load the user relationship
+            $data = [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'user' => [
+                    'id' => $comment->user->id,
+                    'name' => $comment->user->name,
+                    'avatar' => $comment->user->avatar,
+                ],
+                'created_at' => $comment->created_at->toIso8601String(),
+                'post_id' => $comment->post_id,
+                'parent_id' => null, // It's a main comment
+            ];
+            event(new \App\Events\CommentCreated($data));
+            return response()->json(['success' => true, 'comment' => $data]);
+        }
 
         return redirect()->back()->with('success', 'Comment posted successfully!');
     }
@@ -31,13 +49,18 @@ class CommentController extends Controller
             'content' => 'required|string|max:1000',
         ]);
 
-        // The post_id comes from the original comment's post_id
-        Comment::create([
+        $reply = Comment::create([
             'post_id' => $comment->post_id,
             'user_id' => auth()->id(),
             'content' => $request->input('content'),
             'parent_id' => $comment->id,
         ]);
+
+        if ($request->ajax()) {
+            $reply->load('user');
+            $commentHtml = view('user-interface.pages.post.partials.single_comment', ['comment' => $reply])->render();
+            return response()->json(['success' => true, 'comment_html' => $commentHtml]);
+        }
 
         return redirect()->back()->with('success', 'Reply posted successfully!');
     }
@@ -47,11 +70,11 @@ class CommentController extends Controller
     {
         // Optional: Add authorization check here
         if (auth()->id() !== $comment->user_id) {
-            abort(403, 'Unauthorized action.');
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
         $comment->delete();
 
-        return redirect()->back()->with('success', 'Comment deleted successfully!');
+        return response()->json(['success' => true]);
     }
 }
