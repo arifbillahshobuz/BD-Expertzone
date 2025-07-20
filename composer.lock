@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "7fd433bf800a7d3bb98adabbb61bf945",
+=======
+    "content-hash": "4ad32c33037658d5f49d196fe5f5c30d",
+>>>>>>> 59cd27ad778417a8d1717c815bd28ec952c67e88
     "packages": [
         {
             "name": "brick/math",
@@ -3224,6 +3228,7 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.12.9"
             },
             "time": "2025-06-23T02:35:06+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "pusher/pusher-php-server",
@@ -3285,6 +3290,8 @@
                 "source": "https://github.com/pusher/pusher-http-php/tree/7.2.7"
             },
             "time": "2025-01-06T10:56:20+00:00"
+=======
+>>>>>>> 59cd27ad778417a8d1717c815bd28ec952c67e88
         },
         {
             "name": "ralouphie/getallheaders",

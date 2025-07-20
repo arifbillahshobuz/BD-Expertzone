@@ -383,25 +383,10 @@
                     countSpan.innerText = `${newCount} Comment${newCount !== 1 ? 's' : ''}`;
                 }
 
-                // Find correct list and prepend the comment or reply
-                let commentList;
-                if (data.parent_id) {
-                    // If it's a reply, check if a reply list exists, else create it
-                    let replyListId = `replies-for-comment-${data.parent_id}`;
-                    commentList = document.getElementById(replyListId);
-                    if (!commentList) {
-                        // Create a new reply list under the parent comment
-                        const parentLi = document.getElementById(`comment-${data.parent_id}`);
-                        if (parentLi) {
-                            commentList = document.createElement('ul');
-                            commentList.className = 'list-unstyled ms-5 mb-2';
-                            commentList.id = replyListId;
-                            parentLi.appendChild(commentList);
-                        }
-                    }
-                } else {
-                    commentList = document.getElementById(`comment-list-${postId}`);
-                }
+                // Find correct list and prepend the comment
+                const targetListId = data.parent_id ? `#replies-for-comment-${data.parent_id}` :
+                    `#comment-list-${postId}`;
+                const commentList = document.querySelector(targetListId);
                 if (!commentList) return;
 
                 const li = document.createElement('li');
@@ -490,7 +475,7 @@
     </div>
 </div>
                 `;
-                commentList.appendChild(li);
+                commentList.prepend(li);
                 // Live update the comment time every minute
                 const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
                 if (timeSpan && data.created_at) {
@@ -649,168 +634,59 @@
     });
 
 
-    // AJAX form submission handler for comments and replies (push to DOM instantly, no reload)
+    // AJAX form submission handler
     $(document).on('submit', '.reply-form, .main-comment-form', function(e) {
-        e.preventDefault();
-        let form = $(this);
-        let input = form.find('input[name="content"]');
-        let content = input.val().trim();
-        if (!content) {
-            input.focus();
-            return false;
-        }
-        form.find('button[type="submit"]').prop('disabled', true);
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: form.serialize(),
-            success: function(response) {
-                input.val('');
-                // No reload! Just rely on Pusher/Echo event for real-time update
-                // If this is the current user, also dispatch the event for instant feedback
-                if (response.comment) {
-                    const event = new CustomEvent(
-                        `comment-posted-${response.comment.post_id}`, {
-                            detail: {
-                                comment: response.comment
-                            }
-                        });
-                    window.dispatchEvent(event);
-                    // If this is a reply, also push it to the correct reply list instantly
-                    if (response.comment.parent_id) {
-                        // Find or create the reply list for this parent comment
-                        let replyListId = `#replies-for-comment-${response.comment.parent_id}`;
-                        let $replyList = $(replyListId);
-                        if ($replyList.length === 0) {
-                            // If not present, create it after the parent comment
-                            let $parent = $('#comment-' + response.comment.parent_id);
-                            $replyList = $('<ul class="list-inline m-0 p-0 comment-list reply-list" id="replies-for-comment-' + response.comment.parent_id + '"></ul>');
-                            $parent.append($replyList);
+    e.preventDefault();
+    let form = $(this);
+    let input = form.find('input[name="content"]');
+    let content = input.val().trim();
+    if (!content) {
+        input.focus();
+        return false;
+    }
+    form.find('button[type="submit"]').prop('disabled', true);
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            input.val('');
+            // No reload! Just rely on Pusher/Echo event for real-time update
+            // If this is the current user, also dispatch the event for instant feedback
+            if (response.comment) {
+                const event = new CustomEvent(
+                    `comment-posted-${response.comment.post_id}`, {
+                        detail: {
+                            comment: response.comment
                         }
-                        // Build the reply HTML (reuse the AlpineJS addComment logic for consistency)
-                        let data = response.comment;
-                        let li = document.createElement('li');
-                        li.className = 'mb-3 comment-item';
-                        li.id = `comment-${data.id}`;
-                        li.innerHTML = `
-<div class="comment-list-block">
-    <div class="d-flex align-items-center gap-3">
-        <div class="comment-list-user-img flex-shrink-0">
-            <img src="${data.user.avatar ? '/' + data.user.avatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
-        </div>
-        <div class="comment-list-user-data">
-            <div class="d-inline-flex align-items-center gap-1 flex-wrap">
-                <h6 class="m-0">${data.user.name}</h6>
-                <span class="d-inline-block text-primary"></span>
-                <span class="fw-medium small text-capitalize">${data.created_at ? moment(data.created_at).fromNow() : ''}</span>
-            </div>
-        </div>
-        <div class="ms-auto">
-            <div class="dropdown">
-                <button type="button" class="dropdown-toggle material-symbols-outlined comment-action-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Comment actions" style="background:none;border:none;padding:0;cursor:pointer;">more_horiz</button>
-                <div class="dropdown-menu m-0 p-0">
-                    <a class="dropdown-item p-3 delete-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
-                        <span class="material-symbols-outlined fs-3 text-danger flex-shrink-0">delete</span>
-                        <span>
-                            <span class="fw-bold d-block">Delete Comment</span>
-                            <span class="text-muted small">Remove this comment permanently.</span>
-                        </span>
-                    </a>
-                    <a class="dropdown-item p-3 hide-comment-btn d-flex align-items-start gap-3" href="#" data-id="${data.id}" data-type="comment">
-                        <span class="material-symbols-outlined fs-3 text-secondary flex-shrink-0">visibility_off</span>
-                        <span>
-                            <span class="fw-bold d-block">Hide Comment</span>
-                            <span class="text-muted small">See fewer comments like this.</span>
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="comment-list-user-comment">
-        <div class="comment-list-comment">${data.content ? data.content : ''}</div>
-        <div class="comment-list-action mt-2">
-            <ul class="list-inline m-0 p-0 d-flex align-items-center gap-2">
-                <li>
-                    <div class="like-data" id="reaction-block-comment-${data.id}">
-                        <div class="dropdown">
-                            <span class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">
-                                <img src="/frontend/assets/images/icon/01.png" width="20" height="20" alt="Like" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Like" data-bs-original-title="Like">
-                                <span class="fw-medium reaction-count">0</span>
-                            </span>
-                            <div class="dropdown-menu py-2 shadow">
-                                ${[1,2,3,4,5,6,7].map(i => `
-                                    <form action="/react/comment/${data.id}" method="POST" class="d-inline reaction-form" data-reactable-type="comment" data-reactable-id="${data.id}">
-                                        <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
-                                        <input type="hidden" name="reaction_id" value="${i}">
-                                        <button type="submit" class="ms-2 me-2 btn btn-link p-0 border-0 bg-transparent" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}" data-bs-original-title="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
-                                            <img src="/frontend/assets/images/icon/0${i}.png" width="20" height="20" alt="${['Like','Love','Happy','HaHa','Think','Sad','Lovely'][i-1]}">
-                                        </button>
-                                    </form>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <span class="fw-medium small" data-bs-toggle="collapse" data-bs-target="#subcomment-collapse-${data.id}" role="button">Reply</span>
-                </li>
-            </ul>
-            <div class="add-comment-form-block collapse mt-3" id="subcomment-collapse-${data.id}">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="flex-shrink-0">
-                        <img src="${window.Laravel && window.Laravel.userAvatar ? window.Laravel.userAvatar : '/frontend/assets/images/user/1.jpg'}" alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
-                    </div>
-                    <div class="add-comment-form">
-                        <form class="reply-form" data-comment-id="${data.id}" action="/comments/${data.id}/reply" method="POST">
-                            <input type="hidden" name="_token" value="${window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : ''}" autocomplete="off">
-                            <input type="text" name="content" class="form-control" placeholder="Write a Comment...">
-                            <button type="submit" class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-                        `;
-                        $replyList.append(li);
-                        // Live update the reply time every minute
-                        const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
-                        if (timeSpan && data.created_at) {
-                            const updateTime = () => {
-                                timeSpan.textContent = moment(data.created_at).fromNow();
-                            };
-                            updateTime();
-                            li._interval = setInterval(updateTime, 60000);
-                        }
-                    }
-                }
-            },
-            error: function(xhr) {
-                console.error('AJAX Error:', xhr.responseText);
-                let errorMsg = 'An error occurred while posting your comment.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMsg = xhr.responseJSON.message;
-                } else if (xhr.responseText) {
-                    try {
-                        const json = JSON.parse(xhr.responseText);
-                        if (json.message) errorMsg = json.message;
-                    } catch (e) {}
-                }
-                let errorBlock = form.closest('.add-comment-form-block').find(
-                    '.comment-error-message');
-                if (errorBlock.length === 0) {
-                    errorBlock = $('<div class="comment-error-message text-danger mt-2"></div>');
-                    form.closest('.add-comment-form-block').append(errorBlock);
-                }
-                errorBlock.text(errorMsg).show();
-                setTimeout(() => errorBlock.fadeOut(), 5000);
-            },
-            complete: function() {
-                form.find('button[type="submit"]').prop('disabled', false);
+                    });
+                window.dispatchEvent(event);
             }
-        });
+        },
+        error: function(xhr) {
+            console.error('AJAX Error:', xhr.responseText);
+            let errorMsg = 'An error occurred while posting your comment.';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                try {
+                    const json = JSON.parse(xhr.responseText);
+                    if (json.message) errorMsg = json.message;
+                } catch (e) {}
+            }
+            let errorBlock = form.closest('.add-comment-form-block').find(
+                '.comment-error-message');
+            if (errorBlock.length === 0) {
+                errorBlock = $('<div class="comment-error-message text-danger mt-2"></div>');
+                form.closest('.add-comment-form-block').append(errorBlock);
+            }
+            errorBlock.text(errorMsg).show();
+            setTimeout(() => errorBlock.fadeOut(), 5000);
+        },
+        complete: function() {
+            form.find('button[type="submit"]').prop('disabled', false);
+        }
+    });
     });
     });
 </script>
