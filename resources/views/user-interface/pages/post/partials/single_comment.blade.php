@@ -79,15 +79,15 @@
                         </div>
                     </div>
                 </div>
-                @if ($comment->replies && $comment->replies->count())
-                    <ul class="list-unstyled ms-4">
+                <ul class="list-unstyled ms-4" id="replies-for-comment-{{ $comment->id }}">
+                    @if ($comment->replies && $comment->replies->count())
                         @foreach ($comment->replies as $reply)
                             @include('user-interface.pages.post.partials.single_comment', [
                                 'comment' => $reply,
                             ])
                         @endforeach
-                    </ul>
-                @endif
+                    @endif
+                </ul>
             </div>
         </div>
     </div>

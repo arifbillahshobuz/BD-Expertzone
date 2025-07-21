@@ -61,31 +61,36 @@
                                 data-bs-target="#subcomment-collapse-{{ $comment->id }}" role="button">Reply</span>
                         </li>
                     </ul>
-                    <div class="add-comment-form-block collapse mt-3" id="subcomment-collapse-{{ $comment->id }}">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <img src="{{ auth()->user()->avatar ?? '/frontend/assets/images/user/1.jpg' }}"
-                                    alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                    <ul class="list-unstyled ms-4" id="replies-for-comment-{{ $comment->id }}">
+                        @if ($comment->replies && $comment->replies->count())
+                            @foreach ($comment->replies as $reply)
+                                @include('user-interface.pages.post.partials.comment_replies', [
+                                    'comments' => collect([$reply]),
+                                ])
+                            @endforeach
+                        @endif
+                        <li class="reply-input-li">
+                            <div class="add-comment-form-block collapse mt-3"
+                                id="subcomment-collapse-{{ $comment->id }}">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ auth()->user()->avatar ?? ('/frontend/assets/images/user/1.jpg' ?? '') }}"
+                                            alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                    </div>
+                                    <div class="add-comment-form">
+                                        <form class="reply-form" data-comment-id="{{ $comment->id }}"
+                                            action="{{ route('comments.reply', $comment) }}" method="POST">
+                                            @csrf
+                                            <input type="text" name="content" class="form-control"
+                                                placeholder="Write a Comment...">
+                                            <button type="submit"
+                                                class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="add-comment-form">
-                                <form class="reply-form" data-comment-id="{{ $comment->id }}"
-                                    action="{{ route('comments.reply', $comment) }}" method="POST">
-                                    @csrf
-                                    <input type="text" name="content" class="form-control"
-                                        placeholder="Write a Comment...">
-                                    <button type="submit"
-                                        class="btn btn-primary font-size-12 text-capitalize px-5">Post</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    @if ($comment->replies && $comment->replies->count())
-                        <ul class="list-unstyled ms-4">
-                            @include('user-interface.pages.post.partials.comment_replies', [
-                                'comments' => $comment->replies,
-                            ])
-                        </ul>
-                    @endif
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -94,55 +99,4 @@
 
 @if ($loop->last)
     </ul>
-@endif
-
-@if ($loop->first)
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).on('submit', '.reply-form', function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var commentId = form.data('comment-id');
-            var input = form.find('input[name="content"]');
-            var content = input.val().trim();
-            if (!content) {
-                input.focus();
-                return false;
-            }
-            form.find('button[type="submit"]').prop('disabled', true);
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    input.val('');
-                },
-                error: function(xhr) {
-                    // Optionally show error
-                },
-                complete: function() {
-                    form.find('button[type="submit"]').prop('disabled', false);
-                }
-            });
-        });
-
-        if (typeof window.Echo !== 'undefined') {
-            window.Echo.channel('comments')
-                .listen('CommentCreated', (e) => {
-                    if (e.parent_id) {
-                        let repliesList = $(`#subcomment-collapse-${e.parent_id}`).closest('.comment-list-action').find(
-                            'ul.list-unstyled.ms-4');
-                        if (repliesList.length === 0) {
-                            $(`#subcomment-collapse-${e.parent_id}`).closest('.comment-list-action').append(
-                                '<ul class="list-unstyled ms-4"></ul>');
-                            repliesList = $(`#subcomment-collapse-${e.parent_id}`).closest('.comment-list-action').find(
-                                'ul.list-unstyled.ms-4');
-                        }
-                        repliesList.append(e.html);
-                    } else {
-                        $('ul#main-comment-list').append(e.html);
-                    }
-                });
-        }
-    </script>
 @endif
