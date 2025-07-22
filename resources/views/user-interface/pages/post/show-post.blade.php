@@ -611,6 +611,7 @@
         });
 
 
+
         $(document).on('click', '.hide-comment-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
