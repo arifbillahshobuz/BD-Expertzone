@@ -142,6 +142,34 @@
                                                         </div>
                                                     </div>
                                                 </a>
+                                                @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
+                                                    <a class="dropdown-item p-3 text-primary" href="#"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#edit-post-modal-{{ $post->id }}">
+                                                        <div class="d-flex align-items-top">
+                                                            <span class="material-symbols-outlined">edit</span>
+                                                            <div class="data ms-2">
+                                                                <h6>Edit Post</h6>
+                                                                <p class="mb-0">Edit this post</p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <form action="{{ route('user.post.destroy', $post) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item p-3 text-danger">
+                                                            <div class="d-flex align-items-top">
+                                                                <span class="material-symbols-outlined">delete</span>
+                                                                <div class="data ms-2">
+                                                                    <h6>Delete Post</h6>
+                                                                    <p class="mb-0">Remove this post permanently</p>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -355,6 +383,170 @@
                 </div>
             </div>
         </div>
+        @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
+            {{-- Edit Post Modal: unique per post --}}
+            <div class="modal fade" id="edit-post-modal-{{ $post->id }}" tabindex="-1"
+                aria-labelledby="editPostModalLabel-{{ $post->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form class="edit-post-form" data-post-id="{{ $post->id }}"
+                            action="{{ route('user.post.update', $post) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editPostModalLabel-{{ $post->id }}">Edit Post</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="edit-post-content-{{ $post->id }}"
+                                        class="form-label">Content</label>
+                                    <textarea class="form-control" id="edit-post-content-{{ $post->id }}" name="content" rows="4">{{ $post->content }}</textarea>
+                                </div>
+                                {{-- You can add media editing here if needed --}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Update Post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+        <script>
+            // AJAX handler for edit post form
+            $(document).on('submit', '.edit-post-form', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var postId = form.data('post-id');
+                var modal = form.closest('.modal');
+                var content = form.find('textarea[name="content"]').val().trim();
+                if (!content) {
+                    form.find('textarea[name="content"]').focus();
+                    return false;
+                }
+                form.find('button[type="submit"]').prop('disabled', true);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success || response.status === 'success') {
+                            // Update post content in DOM
+                            var postCard = $("[data-bs-target='#edit-post-modal-" + postId + "']").closest(
+                                '.social-post');
+                            postCard.find('.mt-4 > p.m-0').text(content);
+                            // Update media if provided in response
+                            if (response.media && Array.isArray(response.media)) {
+                                var $mediaRow = postCard.find('.user-post .row.g-1');
+                                if ($mediaRow.length) {
+                                    $mediaRow.empty();
+                                    var count = response.media.length;
+                                    if (count > 0) {
+                                        // Helper to ensure absolute URL (if not already)
+                                        function absUrl(url) {
+                                            if (/^(https?:)?\//.test(url)) return url;
+                                            // Laravel asset() returns relative, so prefix with base
+                                            var base = window.location.origin ? window.location.origin +
+                                                '/' : '/';
+                                            return base.replace(/\/$/, '') + '/' + url.replace(/^\//, '');
+                                        }
+                                        // First media item
+                                        var file0 = absUrl(response.media[0]);
+                                        var ext0 = file0.split('.').pop().toLowerCase();
+                                        var isVideo0 = ['mp4', 'mov', 'ogg', 'webm', 'qt'].includes(ext0);
+                                        var colClass0 = (count > 1 ? 'col-md-6' : 'col-12');
+                                        var html0 = '<div class="' + colClass0 +
+                                            '"><div class="post-media-item rounded overflow-hidden position-relative" style="height: 250px;">';
+                                        html0 += '<a data-fslightbox="gallery-' + postId + '" href="' +
+                                            file0 + '">';
+                                        if (isVideo0) {
+                                            html0 +=
+                                                '<video controls muted class="d-block w-100 h-100 object-cover" loading="lazy"><source src="' +
+                                                file0 + '" type="video/' + ext0 +
+                                                '">Your browser does not support the video tag.</video>';
+                                        } else {
+                                            html0 += '<img src="' + file0 +
+                                                '" alt="post-image" class="d-block w-100 h-100 object-cover" loading="lazy">';
+                                        }
+                                        html0 += '</a></div></div>';
+                                        $mediaRow.append(html0);
+                                        // Second media item (if exists)
+                                        if (count > 1) {
+                                            var file1 = absUrl(response.media[1]);
+                                            var ext1 = file1.split('.').pop().toLowerCase();
+                                            var isVideo1 = ['mp4', 'mov', 'ogg', 'webm', 'qt'].includes(
+                                                ext1);
+                                            var html1 =
+                                                '<div class="col-md-6"><div class="post-media-item rounded overflow-hidden position-relative" style="height: 250px;">';
+                                            html1 += '<a data-fslightbox="gallery-' + postId + '" href="' +
+                                                file1 + '">';
+                                            if (isVideo1) {
+                                                html1 +=
+                                                    '<video controls muted class="d-block w-100 h-100 object-cover" loading="lazy"><source src="' +
+                                                    file1 + '" type="video/' + ext1 +
+                                                    '">Your browser does not support the video tag.</video>';
+                                            } else {
+                                                html1 += '<img src="' + file1 +
+                                                    '" alt="post-image" class="d-block w-100 h-100 object-cover" loading="lazy">';
+                                            }
+                                            // Overlay if more than 2
+                                            if (count > 2) {
+                                                html1 +=
+                                                    '<div class="post-overlay-count position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75" style="z-index: 1;"><span class="font-size-28">+' +
+                                                    (count - 2) + '</span></div>';
+                                            }
+                                            html1 += '</a></div></div>';
+                                            $mediaRow.append(html1);
+                                        }
+                                        // Hidden links for all other media files for FsLightbox
+                                        for (var i = 2; i < count; i++) {
+                                            var file = absUrl(response.media[i]);
+                                            $mediaRow.parent().append('<a data-fslightbox="gallery-' +
+                                                postId + '" href="' + file + '" class="d-none"></a>');
+                                        }
+                                    }
+                                    // Refresh FsLightbox if available
+                                    if (typeof refreshFsLightbox === 'function') {
+                                        refreshFsLightbox();
+                                    }
+                                }
+                            }
+                            // Hide modal
+                            if (modal.length) {
+                                var bsModal = bootstrap.Modal.getInstance(modal[0]);
+                                if (bsModal) bsModal.hide();
+                            }
+                            // Optionally show a toast or alert
+                            if (window.ToastMagic) {
+                                ToastMagic.success('Post updated successfully!');
+                            }
+                        } else {
+                            alert(response.message || 'Failed to update post.');
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'An error occurred while updating your post.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        } else if (xhr.responseText) {
+                            try {
+                                const json = JSON.parse(xhr.responseText);
+                                if (json.message) errorMsg = json.message;
+                            } catch (e) {}
+                        }
+                        alert(errorMsg);
+                    },
+                    complete: function() {
+                        form.find('button[type="submit"]').prop('disabled', false);
+                    }
+                });
+                return false;
+            });
+        </script>
     @endforeach
 </div>
 

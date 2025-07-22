@@ -32,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //    User Post Routes
     Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
+    Route::put('/user/posts/{post}', [UserPostController::class, 'update'])->name('user.post.update');
+    Route::delete('/user/posts/{post}', [UserPostController::class, 'destroy'])->name('user.post.destroy');
+
 
     // Reaction Routes
     Route::match(['POST', 'DELETE'], '/react/post/{post}', [ReactionController::class, 'reactPost'])
