@@ -8,6 +8,7 @@
     <title>@yield('title')</title>
 
 
+    @include('sweetalert::alert');
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>

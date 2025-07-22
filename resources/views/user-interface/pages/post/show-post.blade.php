@@ -361,10 +361,8 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
-<script type="module">
-    import '/js/echo-comments.js';
-</script>
 
+<!-- Your AJAX/jQuery and AlpineJS code in a regular script block -->
 <script>
     // AlpineJS component definition
     window.commentComponent = function(postId) {
@@ -374,27 +372,25 @@
                 if (document.getElementById(`comment-${data.id}`)) {
                     return;
                 }
-
-                // Update comment count
-                const countSpan = document.querySelector(`.comment-count-${postId}`);
-                if (countSpan) {
-                    let currentCount = parseInt(countSpan.innerText) || 0;
-                    let newCount = currentCount + 1;
-                    countSpan.innerText = `${newCount} Comment${newCount !== 1 ? 's' : ''}`;
+                // Only update comment count for main comments
+                if (!data.parent_id) {
+                    const countSpan = document.querySelector(`.comment-count-${postId}`);
+                    if (countSpan) {
+                        let currentCount = parseInt(countSpan.innerText) || 0;
+                        let newCount = currentCount + 1;
+                        countSpan.innerText = `${newCount} Comment${newCount !== 1 ? 's' : ''}`;
+                    }
                 }
-
                 // Find correct list and prepend the comment or reply
                 let commentList;
                 if (data.parent_id) {
-                    // If it's a reply, check if a reply list exists, else create it
                     let replyListId = `replies-for-comment-${data.parent_id}`;
                     commentList = document.getElementById(replyListId);
                     if (!commentList) {
-                        // Create a new reply list under the parent comment
                         const parentLi = document.getElementById(`comment-${data.parent_id}`);
                         if (parentLi) {
                             commentList = document.createElement('ul');
-                            commentList.className = 'list-unstyled ms-5 mb-2';
+                            commentList.className = 'list-unstyled ms-4';
                             commentList.id = replyListId;
                             parentLi.appendChild(commentList);
                         }
@@ -403,12 +399,19 @@
                     commentList = document.getElementById(`comment-list-${postId}`);
                 }
                 if (!commentList) return;
-
-                const li = document.createElement('li');
-                li.className = 'mb-3 comment-item';
-                li.id = `comment-${data.id}`;
-                // Use the same markup as the Blade comment area for consistency, including actions and reactions
-                li.innerHTML = `
+                // If backend provides rendered HTML, use it (for replies)
+                let li;
+                if (data.html) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = data.html.trim();
+                    li = temp.firstElementChild;
+                    if (!li) return;
+                    li.id = `comment-${data.id}`;
+                } else {
+                    li = document.createElement('li');
+                    li.className = 'mb-3 comment-item';
+                    li.id = `comment-${data.id}`;
+                    li.innerHTML = `
 <div class="comment-list-block">
     <div class="d-flex align-items-center gap-3">
         <div class="comment-list-user-img flex-shrink-0">
@@ -489,8 +492,23 @@
         </div>
     </div>
 </div>
-                `;
-                commentList.appendChild(li);
+                    `;
+                }
+                // For replies, always prepend to the top of the reply list (ul#replies-for-comment-...)
+                if (data.parent_id) {
+                    // Find the correct reply list for this parent comment
+                    let replyListId = `replies-for-comment-${data.parent_id}`;
+                    let replyList = document.getElementById(replyListId);
+                    if (replyList) {
+                        if (replyList.firstChild) {
+                            replyList.insertBefore(li, replyList.firstChild);
+                        } else {
+                            replyList.appendChild(li);
+                        }
+                    }
+                } else {
+                    commentList.prepend(li);
+                }
                 // Live update the comment time every minute
                 const timeSpan = li.querySelector('.fw-medium.small.text-capitalize');
                 if (timeSpan && data.created_at) {
@@ -498,17 +516,13 @@
                         timeSpan.textContent = moment(data.created_at).fromNow();
                     };
                     updateTime();
-                    // Update every minute
                     li._interval = setInterval(updateTime, 60000);
                 }
             },
             init() {
-                // Listener for instant update
                 window.addEventListener(`comment-posted-${postId}`, (event) => {
                     this.addComment(event.detail.comment);
                 });
-
-                // Listener for real-time update from other users
                 if (window.Echo) {
                     window.Echo.private('post.' + postId)
                         .listen('CommentCreated', (e) => {
@@ -519,10 +533,7 @@
         }
     };
 
-    // This code runs once the page is fully loaded
     $(document).ready(function() {
-        // Show/hide comments logic
-        // Facebook-like show more/less comments logic
         function updateCommentButtons($commentList, showCount) {
             var $comments = $commentList.children('li');
             var $showMoreBtn = $commentList.parent().find('.show-more-comments-btn');
@@ -557,12 +568,9 @@
             var $commentList = $('#comment-list-' + postId);
             updateCommentButtons($commentList, 2);
         });
-        // On page load, hide all but first 2 comments and show/hide buttons accordingly
         $('.comment-list').each(function() {
             updateCommentButtons($(this), 2);
         });
-
-        // Comment delete/hide button handlers (AJAX skeleton)
         $(document).on('click', '.delete-comment-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -577,13 +585,11 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Remove the comment and all its replies and reply forms (no reload)
                         var $comment = $('#comment-' + commentId);
                         $comment.find('.comment-item').remove();
                         $("form.reply-form[data-comment-id='" + commentId + "']").closest(
                             '.add-comment-form-block').remove();
                         $comment.remove();
-                        // Optionally, update the comment count
                         var $countSpan = $comment.closest('.comment-area').find(
                             '.comment-count-' + $comment.closest('.comment-area').data(
                                 'post-id'));
@@ -603,108 +609,109 @@
             });
             return false;
         });
-    });
-    $(document).on('click', '.hide-comment-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var commentId = $(this).data('id');
-        $.ajax({
-            url: '/comments/' + commentId + '/hide',
-            method: 'POST',
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#comment-' + commentId).fadeOut(200, function() {
-                        $(this).remove();
-                    });
-                    // Optionally, update the comment count
-                    var $comment = $('#comment-' + commentId);
-                    var $countSpan = $comment.closest('.comment-area').find('.comment-count-' +
-                        $comment.closest('.comment-area').data('post-id'));
-                    if ($countSpan.length) {
-                        let currentCount = parseInt($countSpan.text()) || 1;
-                        let newCount = Math.max(currentCount - 1, 0);
-                        $countSpan.text(newCount + ' Comment' + (newCount !== 1 ? 's' : ''));
-                    }
-                } else {
-                    alert(response.message || 'Failed to hide comment.');
-                }
-            },
-            error: function(xhr) {
-                alert('Failed to hide comment.');
-            }
-        });
-        return false;
-    });
-    // Your other vanilla JS initializations can go here too
-    if (typeof refreshFsLightbox === 'function') {
-        refreshFsLightbox();
-    }
 
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-
-    // AJAX form submission handler with debug log
-    $(document).on('submit', '.reply-form, .main-comment-form', function(e) {
-    e.preventDefault();
-    let form = $(this);
-    let input = form.find('input[name="content"]');
-    let content = input.val().trim();
-    // Debug log to ensure handler is triggered
-    console.log('AJAX handler triggered for comment form', form.attr('class'));
-    if (!content) {
-        input.focus();
-        return false;
-    }
-    form.find('button[type="submit"]').prop('disabled', true);
-    $.ajax({
-        url: form.attr('action'),
-        method: 'POST',
-        data: form.serialize(),
-        success: function(response) {
-            input.val('');
-            // No reload! Just rely on Pusher/Echo event for real-time update
-            // If this is the current user, also dispatch the event for instant feedback
-            if (response.comment) {
-                const event = new CustomEvent(
-                    `comment-posted-${response.comment.post_id}`, {
-                        detail: {
-                            comment: response.comment
+        
+        $(document).on('click', '.hide-comment-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var commentId = $(this).data('id');
+            $.ajax({
+                url: '/comments/' + commentId + '/hide',
+                method: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel
+                        .csrfToken
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#comment-' + commentId).fadeOut(200, function() {
+                            $(this).remove();
+                        });
+                        var $comment = $('#comment-' + commentId);
+                        var $countSpan = $comment.closest('.comment-area').find(
+                            '.comment-count-' + $comment.closest('.comment-area').data(
+                                'post-id'));
+                        if ($countSpan.length) {
+                            let currentCount = parseInt($countSpan.text()) || 1;
+                            let newCount = Math.max(currentCount - 1, 0);
+                            $countSpan.text(newCount + ' Comment' + (newCount !== 1 ? 's' :
+                                ''));
                         }
-                    });
-                window.dispatchEvent(event);
-            }
-        },
-        error: function(xhr) {
-            console.error('AJAX Error:', xhr.responseText);
-            let errorMsg = 'An error occurred while posting your comment.';
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                errorMsg = xhr.responseJSON.message;
-            } else if (xhr.responseText) {
-                try {
-                    const json = JSON.parse(xhr.responseText);
-                    if (json.message) errorMsg = json.message;
-                } catch (e) {}
-            }
-            let errorBlock = form.closest('.add-comment-form-block').find(
-                '.comment-error-message');
-            if (errorBlock.length === 0) {
-                errorBlock = $('<div class="comment-error-message text-danger mt-2"></div>');
-                form.closest('.add-comment-form-block').append(errorBlock);
-            }
-            errorBlock.text(errorMsg).show();
-            setTimeout(() => errorBlock.fadeOut(), 5000);
-        },
-        complete: function() {
-            form.find('button[type="submit"]').prop('disabled', false);
+                    } else {
+                        alert(response.message || 'Failed to hide comment.');
+                    }
+                },
+                error: function(xhr) {
+                    alert('Failed to hide comment.');
+                }
+            });
+            return false;
+        });
+        if (typeof refreshFsLightbox === 'function') {
+            refreshFsLightbox();
         }
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        // AJAX form submission handler with debug log
+        $(document).on('submit', '.reply-form, .main-comment-form', function(e) {
+            e.preventDefault();
+            let form = $(this);
+            let input = form.find('input[name="content"]');
+            let content = input.val().trim();
+            console.log('AJAX handler triggered for comment form', form.attr('class'));
+            if (!content) {
+                input.focus();
+                return false;
+            }
+            form.find('button[type="submit"]').prop('disabled', true);
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    input.val('');
+                    if (response.comment) {
+                        const event = new CustomEvent(
+                            `comment-posted-${response.comment.post_id}`, {
+                                detail: {
+                                    comment: response.comment
+                                }
+                            });
+                        window.dispatchEvent(event);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('AJAX Error:', xhr.responseText);
+                    let errorMsg = 'An error occurred while posting your comment.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        try {
+                            const json = JSON.parse(xhr.responseText);
+                            if (json.message) errorMsg = json.message;
+                        } catch (e) {}
+                    }
+                    let errorBlock = form.closest('.add-comment-form-block').find(
+                        '.comment-error-message');
+                    if (errorBlock.length === 0) {
+                        errorBlock = $(
+                            '<div class="comment-error-message text-danger mt-2"></div>'
+                        );
+                        form.closest('.add-comment-form-block').append(errorBlock);
+                    }
+                    errorBlock.text(errorMsg).show();
+                    setTimeout(() => errorBlock.fadeOut(), 5000);
+                },
+                complete: function() {
+                    form.find('button[type="submit"]').prop('disabled', false);
+                }
+            });
+            return false;
+        });
     });
-    return false;
-    });
-    });
+</script>
+<script type="module">
+    import '/js/echo-comments.js';
 </script>
