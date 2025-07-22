@@ -102,8 +102,8 @@ class CommentController extends Controller
             return response()->json(['success' => true]);
         }
         // For non-AJAX (redirect) requests, show SweetAlert success
-        alert()->success('Deleted!', 'Comment has been deleted.');
-        return redirect()->back();
+        // Do NOT delete on non-AJAX, just return error (to prevent reload)
+        return abort(400, 'AJAX only');
     }
 
     // Hide a comment (AJAX, hard hide, returns JSON)
