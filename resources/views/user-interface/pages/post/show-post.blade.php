@@ -124,24 +124,42 @@
                                                         </div>
                                                     </div>
                                                 </a>
-                                                <a class="dropdown-item p-3" href="#">
-                                                    <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">person_remove</span>
-                                                        <div class="data ms-2">
-                                                            <h6>Unfollow User</h6>
-                                                            <p class="mb-0">Stop seeing posts but stay friends.</p>
+                                                @php
+                                                    $authorId = $post->user_id ?? ($post->user->id ?? null);
+                                                    $isFollowing =
+                                                        auth()->check() &&
+                                                        auth()->user()->following->contains($authorId);
+                                                @endphp
+
+                                                @if (auth()->check() && auth()->id() !== $authorId)
+                                                    <a class="dropdown-item p-3 follow-toggle-btn" href="#"
+                                                        data-user-id="{{ $authorId }}"
+                                                        data-following="{{ $isFollowing ? '1' : '0' }}">
+                                                        <div class="d-flex align-items-top">
+                                                            <span class="material-symbols-outlined">
+                                                                {{ $isFollowing ? 'person_remove' : 'person_add' }}
+                                                            </span>
+                                                            <div class="data ms-2">
+                                                                <h6>{{ $isFollowing ? 'Unfollow User' : 'Follow User' }}
+                                                                </h6>
+                                                                <p class="mb-0">
+                                                                    {{ $isFollowing ? 'Stop seeing posts but stay friends.' : 'See posts from this user.' }}
+                                                                </p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </a>
-                                                <a class="dropdown-item p-3" href="#">
-                                                    <div class="d-flex align-items-top">
-                                                        <span class="material-symbols-outlined">notifications</span>
-                                                        <div class="data ms-2">
-                                                            <h6>Notifications</h6>
-                                                            <p class="mb-0">Turn on notifications for this post</p>
+                                                    </a>
+                                                    <a class="dropdown-item p-3 notification-toggle-btn" href="#"
+                                                        data-user-id="{{ $authorId }}">
+                                                        <div class="d-flex align-items-top">
+                                                            <span class="material-symbols-outlined">notifications</span>
+                                                            <div class="data ms-2">
+                                                                <h6>Notifications</h6>
+                                                                <p class="mb-0">Turn on notifications for this user's
+                                                                    new posts</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </a>
+                                                    </a>
+                                                @endif
                                                 @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
                                                     <a class="dropdown-item p-3 text-primary" href="#"
                                                         data-bs-toggle="modal"
@@ -902,6 +920,59 @@
                 }
             });
             return false;
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '.follow-toggle-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var userId = btn.data('user-id');
+        var isFollowing = btn.data('following') == 1;
+        var url = isFollowing ? '/unfollow/' + userId : '/follow/' + userId;
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                btn.data('following', isFollowing ? 0 : 1);
+                btn.find('.material-symbols-outlined').text(isFollowing ? 'person_add' :
+                    'person_remove');
+                btn.find('h6').text(isFollowing ? 'Follow User' : 'Unfollow User');
+                btn.find('p').text(isFollowing ?
+                    'See posts from this user.' :
+                    'Stop seeing posts but stay friends.');
+                if (window.ToastMagic) {
+                    ToastMagic.success(response.message || (isFollowing ? 'Unfollowed!' :
+                        'Followed!'));
+                }
+            },
+            error: function(xhr) {
+                alert('Action failed. Please try again.');
+            }
+        });
+    });
+
+    $(document).on('click', '.notification-toggle-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var userId = btn.data('user-id');
+        $.ajax({
+            url: '/toggle-notification/' + userId,
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                if (window.ToastMagic) {
+                    ToastMagic.success(response.message || 'Notification preference updated!');
+                }
+            },
+            error: function(xhr) {
+                alert('Failed to update notification preference.');
+            }
         });
     });
 </script>

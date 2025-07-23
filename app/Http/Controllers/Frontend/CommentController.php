@@ -57,21 +57,25 @@ class CommentController extends Controller
             'parent_id' => $comment->id,
         ]);
 
+        // Notify parent comment's user if not replying to self
+        if ($comment['user_id'] && $comment['user_id'] !== Auth::id()) {
+            $comment->user->notify(new \App\Notifications\CommentReplyNotification($reply));
+        }
 
         if ($request->ajax()) {
             $reply->load('user');
             // Prepare data for real-time event (do NOT include HTML to avoid Pusher size limit)
             $data = [
-                'id' => $reply->id,
-                'content' => $reply->content,
+                'id' => $reply['id'],
+                'content' => $reply['content'],
                 'user' => [
-                    'id' => $reply->user->id,
-                    'name' => $reply->user->name,
-                    'avatar' => $reply->user->avatar,
+                    'id' => $reply->user['id'],
+                    'name' => $reply->user['name'],
+                    'avatar' => $reply->user['avatar'],
                 ],
-                'created_at' => $reply->created_at->toIso8601String(),
-                'post_id' => $reply->post_id,
-                'parent_id' => $reply->parent_id,
+                'created_at' => $reply['created_at']->toIso8601String(),
+                'post_id' => $reply['post_id'],
+                'parent_id' => $reply['parent_id'],
             ];
             // Fire the same event as for main comments (no HTML)
             event(new \App\Events\CommentCreated($data));
@@ -95,9 +99,9 @@ class CommentController extends Controller
         // Broadcast real-time event for deletion
         if (request()->ajax()) {
             event(new \App\Events\CommentDeleted([
-                'id' => $comment->id,
-                'parent_id' => $comment->parent_id,
-                'post_id' => $comment->post_id,
+                'id' => $comment['id'],
+                'parent_id' => $comment['parent_id'],
+                'post_id' => $comment['post_id'],
             ]));
             return response()->json(['success' => true]);
         }

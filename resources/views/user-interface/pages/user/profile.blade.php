@@ -1,4 +1,4 @@
-@extends('user-interface.layout.layout');
+@extends('user-interface.layout.layout')
 @section('title')
     User Profile
 @endsection

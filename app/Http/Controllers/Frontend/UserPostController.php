@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Post;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,7 +32,7 @@ class UserPostController extends Controller
                 'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:20480', // 20MB max
             ]);
 
-            $user = auth()->user();
+            $user = Auth::user();
 
             // Media upload (if file exists)
             $mediaPaths = [];
@@ -56,17 +57,26 @@ class UserPostController extends Controller
                 }
             }
 
-            Post::create([
+
+            $post = Post::create([
                 'content' => $request->input('content'),
                 'media' => !empty($mediaPaths) ? $mediaPaths : null,
                 'slug' => Str::slug(Str::limit($request->input('content'), 50)) . '-' . time(),
                 'is_published' => true,
                 'type' => Post::TYPE_USER,
-                'user_id' => $user->id,
+                'user_id' => $user->getKey(),
                 'post_category_id' => null,
                 'published_at' => now(),
                 'is_featured' => false,
             ]);
+
+            // Notify followers who want notifications
+            $followersToNotify = $user->followers()->wherePivot('notify', 1)->get();
+            if ($followersToNotify->count() > 0) {
+                foreach ($followersToNotify as $follower) {
+                    $follower->notify(new \App\Notifications\NewPostNotification($post));
+                }
+            }
 
             ToastMagic::success('Post created successfully!');
             return redirect()->back();
@@ -89,8 +99,8 @@ class UserPostController extends Controller
     public function update(Request $request, Post $post)
     {
         // Only allow the owner to update
-        $ownerId = $post->user_id ?? ($post->user->id ?? null);
-        if (auth()->id() !== $ownerId) {
+        $ownerId = $post->user_id ?? ($post->user ? $post->user->getKey() : null);
+        if (Auth::check() && Auth::id() !== $ownerId) {
             abort(403, 'Unauthorized');
         }
 
@@ -106,8 +116,9 @@ class UserPostController extends Controller
         $mediaPaths = [];
         if (is_array($post->media)) {
             $mediaPaths = $post->media;
-        } elseif (is_string($post->media)) {
-            $mediaPaths = json_decode($post->media, true) ?: [];
+        } elseif (is_string($post->media) && $post->media !== '') {
+            $decoded = json_decode($post->media, true);
+            $mediaPaths = is_array($decoded) ? $decoded : [];
         }
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
@@ -131,14 +142,6 @@ class UserPostController extends Controller
         $post->media = $mediaPaths;
         $post->save();
 
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'content' => $post->content,
-                'media' => $post->media,
-                'post_id' => $post->id,
-            ]);
-        }
         ToastMagic::success('Post updated successfully!');
         return redirect()->back();
     }
@@ -151,8 +154,8 @@ class UserPostController extends Controller
     public function destroy(Post $post)
     {
         // Only allow the owner to delete
-        $ownerId = $post->user_id ?? ($post->user->id ?? null);
-        if (auth()->id() !== $ownerId) {
+        $ownerId = $post->user_id ?? ($post->user ? $post->user->getKey() : null);
+        if (Auth::check() && Auth::id() !== $ownerId) {
             abort(403, 'Unauthorized');
         }
         $post->delete();
