@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $fillable = ['content', 'user_id', 'post_id'];
+    protected $fillable = ['content', 'user_id', 'post_id', 'parent_id'];
 
     public function user()
     {
@@ -22,6 +22,18 @@ class Comment extends Model
     public function reactions()
     {
         return $this->morphMany(PostReaction::class, 'reactable');
+    }
+
+    // Replies relationship (children)
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
+    // Parent relationship
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
     }
 
     public function getReactionCounts()

@@ -7,7 +7,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    @include('sweetalert::alert')
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Ensure all AJAX requests include the CSRF token
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
     @include('user-interface.partial.style')
     @yield('page-style')
 
@@ -36,7 +49,7 @@
     <!-- End Config Options -->
 </head>
 
-<body class="">
+<body>
 
     <!-- loader Start -->
     {{-- <div id="loading">
@@ -105,9 +118,10 @@
     {{-- ToastMagic Scripts --}}
     {!! ToastMagic::scripts() !!}
 
+
     {{-- Fslight box js --}}
     <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
-
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 
 </html>

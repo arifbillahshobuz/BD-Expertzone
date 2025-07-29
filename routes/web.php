@@ -1,12 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\frontend\HomeController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Frontend\ReactionController;
+use App\Http\Controllers\Frontend\FollowController;
 use App\Http\Controllers\Frontend\CommentController;
+use App\Http\Controllers\Frontend\ReactionController;
 use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\UserProfileController;
@@ -32,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //    User Post Routes
     Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
+    Route::put('/user/posts/{post}', [UserPostController::class, 'update'])->name('user.post.update');
+    Route::delete('/user/posts/{post}', [UserPostController::class, 'destroy'])->name('user.post.destroy');
+
 
     // Reaction Routes
     Route::match(['POST', 'DELETE'], '/react/post/{post}', [ReactionController::class, 'reactPost'])
@@ -44,8 +49,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('posts.comments.store');
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])
         ->name('comments.reply');
+
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
+    Route::post('/comments/{comment}/hide', [CommentController::class, 'hide'])
+        ->name('comments.hide');
+
+    Route::post('/follow/{user}', [FollowController::class, 'follow']);
+    Route::post('/unfollow/{user}', [FollowController::class, 'unfollow']);
+    Route::post('/toggle-notification/{user}', [FollowController::class, 'toggleNotification']);
+
+
+    Route::post('/notifications/mark-read', function () {
+        if (Auth::check()) {
+            Auth::user()->unreadNotifications->markAsRead();
+        }
+        return response()->json(['success' => true]);
+    })->name('mark.notifications.read');
+
+
 
 });
 require __DIR__ . '/auth.php';

@@ -55,16 +55,16 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link menu-arrow justify-content-start"
-                                        href="{{route('partner.list')}}" target="_blank">
+                                        href="{{ route('partner.list') }}" target="_blank">
                                         <span class="nav-text">Partner</span>
                                     </a>
-{{--                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">--}}
-{{--                                        @foreach($globalPartners as $partner)--}}
-{{--                                            <li class="nav-item">--}}
-{{--                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a>--}}
-{{--                                            </li>--}}
-{{--                                        @endforeach--}}
-{{--                                    </ul>--}}
+                                    {{--                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData"> --}}
+                                    {{--                                        @foreach ($globalPartners as $partner) --}}
+                                    {{--                                            <li class="nav-item"> --}}
+                                    {{--                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a> --}}
+                                    {{--                                            </li> --}}
+                                    {{--                                        @endforeach --}}
+                                    {{--                                    </ul> --}}
                                 </li>
                             </ul>
                         </div>
@@ -93,8 +93,8 @@
                                         <a class="search-link" href="javascript:void(0);">
                                             <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor"
-                                                    stroke-width="1.5" stroke-linecap="round"
+                                                <circle cx="7.82491" cy="7.82495" r="6.74142"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                                     stroke-linejoin="round" />
                                                 <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor"
                                                     stroke-width="1.5" stroke-linecap="round"
@@ -409,371 +409,302 @@
                     </div>
                 </li>
                 @auth()
-                <li class="nav-item dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="group-drop"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="material-symbols-outlined">group</span>
-                    </a>
-                    <div class="sub-drop sub-drop-large dropdown-menu " aria-labelledby="group-drop">
-                        <div class="card shadow m-0">
-                            <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                <div class="header-title">
-                                    <h5 class="fw-semibold">Friend Request</h5>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="item-header-scroll">
-                                    <div class="iq-friend-request">
-                                        <div
-                                            class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img class="avatar-40 rounded-pill"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/01.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Jaques Amole</h6>
-                                                    <p class="mb-0">40 friends</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <a href="javascript:void(0);"
-                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        add
-                                                    </span>
-                                                </a>
-                                                <a href="javascript:void(0);"
-                                                    class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        close
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="iq-friend-request">
-                                        <div
-                                            class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img class="avatar-40 rounded-pill"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/02.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Lucy Tania</h6>
-                                                    <p class="mb-0">12 friends</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <a href="javascript:void(0);"
-                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        add
-                                                    </span>
-                                                </a>
-                                                <a href="javascript:void(0);"
-                                                    class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        close
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="iq-friend-request">
-                                        <div
-                                            class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img class="avatar-40 rounded-pill"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/03.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class=" ms-3">
-                                                    <h6 class="mb-0 ">Manny Petty</h6>
-                                                    <p class="mb-0">3 friends</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <a href="javascript:void(0);"
-                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        add
-                                                    </span>
-                                                </a>
-                                                <a href="javascript:void(0);"
-                                                    class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        close
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="iq-friend-request">
-                                        <div class="iq-sub-card-big d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <img class="avatar-40 rounded-pill"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/04.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3">
-                                                    <h6 class="mb-0 ">Marsha Mello</h6>
-                                                    <p class="mb-0">15 friends</p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <a href="javascript:void(0);"
-                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        add
-                                                    </span>
-                                                </a>
-                                                <a href="javascript:void(0);"
-                                                    class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1">
-                                                    <span
-                                                        class="material-symbols-outlined font-size-18 align-text-bottom">
-                                                        close
-                                                    </span>
-                                                </a>
-                                            </div>
-                                        </div>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="group-drop"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="material-symbols-outlined">group</span>
+                        </a>
+                        <div class="sub-drop sub-drop-large dropdown-menu " aria-labelledby="group-drop">
+                            <div class="card shadow m-0">
+                                <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
+                                    <div class="header-title">
+                                        <h5 class="fw-semibold">Friend Request</h5>
                                     </div>
                                 </div>
-                                <div class="text-center">
-                                    <button type="button" class="btn btn-primary fw-500 mt-4">View More
-                                        Request</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="mail-drop"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="material-symbols-outlined">mail</i>
-                        <span class="mobile-text d-none ms-3">Message</span>
-                    </a>
-                    <div class="sub-drop dropdown-menu header-notification" aria-labelledby="mail-drop">
-                        <div class="card shadow m-0">
-                            <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                <div class="header-title">
-                                    <h5 class="fw-semibold">All Message</h5>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="item-header-scroll">
-                                    <a href="javascript:void(0);">
-                                        <div
-                                            class="thread d-flex align-items-center justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-40 rounded-pill align-top"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/01.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6>Bni Emma Watson</h6>
-                                                    <small class="fw-500 text-body">Hello how are you?</small>
+                                <div class="card-body">
+                                    <div class="item-header-scroll">
+                                        @forelse(optional(auth()->user()->pendingFriendRequests) as $request)
+                                            <div class="iq-friend-request">
+                                                <div
+                                                    class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="avatar-40 rounded-pill"
+                                                            src="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                            alt="" loading="lazy">
+                                                        <div class="ms-3">
+                                                            <h6 class="mb-0 ">{{ $request->sender->name }}</h6>
+                                                            <p class="mb-0">{{ $request->sender->friends_count ?? 0 }}
+                                                                friends</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <a href="javascript:void(0);"
+                                                            class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1 accept-friend-request"
+                                                            data-id="{{ $request->id }}">
+                                                            <span
+                                                                class="material-symbols-outlined font-size-18 align-text-bottom">add</span>
+                                                        </a>
+                                                        <a href="javascript:void(0);"
+                                                            class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1 decline-friend-request"
+                                                            data-id="{{ $request->id }}">
+                                                            <span
+                                                                class="material-symbols-outlined font-size-18 align-text-bottom">close</span>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <small class="text-body">1 hr. ago</small>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <div
-                                            class="thread d-flex align-items-center justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-40 rounded-pill align-top"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/02.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6>John Travolta</h6>
-                                                    <small class="fw-500 text-body">Yes, same here. Bye.</small>
-                                                </div>
-                                            </div>
-                                            <small class="text-body">4 hr. ago</small>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <div
-                                            class="thread d-flex align-items-center justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-40 rounded-pill align-top"
-                                                    src="{{ asset('frontend/') }}/assets/images/user/03.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6>Maya Didas</h6>
-                                                    <small class="fw-500 text-body">that’s great, see you soon</small>
-                                                </div>
-                                            </div>
-                                            <small class="text-body">9 hr. ago</small>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <div
-                                            class="thread d-flex align-items-center justify-content-between rounded-0">
-                                            <div>
-                                                <img class="avatar-40 rounded-pill align-top"
-                                                    src="{{ asset('frontend/') }}/{{ asset('frontend/') }}/assets/images/user/07.jpg"
-                                                    alt="" loading="lazy">
-                                                <div class="ms-3 d-inline-block">
-                                                    <h6>Paige Turner</h6>
-                                                    <small class="fw-500 text-body">Yes, let’s go.</small>
-                                                </div>
-                                            </div>
-                                            <small class="text-body">1 yr. ago</small>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="m-5 mt-4">
-                                    <button type="button" class="btn btn-primary fw-500 w-100">View All
-                                        Messages</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="javascript:void(0);" class="search-toggle dropdown-toggle d-flex align-items-center"
-                        id="notification-drop" data-bs-toggle="dropdown">
-                        <span class="material-symbols-outlined position-relative">notifications
-                            <span class="bg-primary text-white notification-badge"></span>
-                        </span>
-                    </a>
-                    <div class="sub-drop dropdown-menu header-notification" aria-labelledby="notification-drop">
-                        <div class="card m-0 shadow">
-                            <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                <div class="header-title">
-                                    <h5 class="fw-semibold">Notifications</h5>
-                                </div>
-                                <h6 class="material-symbols-outlined">settings</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="item-header-scroll">
-                                    <a href="javascript:void(0);">
-                                        <div class="d-flex gap-3 mb-4">
-                                            <img class="avatar-32 rounded-pill"
-                                                src="{{ asset('frontend/') }}/assets/images/user/01.jpg"
-                                                alt="">
-                                            <div>
-                                                <h6 class="font-size-14">Pete Sariya <span
-                                                        class="text-body fw-normal">voted for</span> combination of
-                                                    colors from your brand palette </h6>
-                                                <small class="text-body fw-500">1 month ago</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <div class="d-flex gap-3 mb-4">
-                                            <img class="avatar-32 rounded-pill"
-                                                src="{{ asset('frontend/') }}/assets/images/user/02.jpg"
-                                                alt="" loading="lazy">
-                                            <div>
-                                                <h6 class="font-size-14">Dima Davydov <span
-                                                        class="text-body fw-normal">replied to your</span>
-                                                    <span class="text-primary fw-semibold">comment</span>
-                                                </h6>
-                                                <small class="text-body fw-500">1 month ago</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <div class="d-flex gap-3 mb-4">
-                                            <img class="avatar-32 rounded-pill"
-                                                src="{{ asset('frontend/') }}/assets/images/user/03.jpg"
-                                                alt="" loading="lazy">
-                                            <div>
-                                                <h6 class="font-size-14">Esther Howard <span
-                                                        class="text-body fw-normal">reacted comment in to your </span>
-                                                    <span class="text-primary fw-semibold">post</span>.
-                                                </h6>
-                                                <small class="text-body fw-500">19 min ago</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <button type="button" class="btn btn-primary fw-500 w-100">View All
-                                    Notifications</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item d-none d-lg-none">
-                    <a href="app/chat.html" class="dropdown-toggle d-flex align-items-center" id="mail-drop-1"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="material-symbols-outlined">mail</i>
-                        <span class="mobile-text  ms-3">Message</span>
-                    </a>
-                </li>
-                <li class="nav-item dropdown user-dropdown">
-                    <a href="javascript:void(0);" class="d-flex align-items-center dropdown-toggle"
-                        id="drop-down-arrow" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? "" }}"
-                            class="img-fluid rounded-circle avatar-48 border border-2 me-3" alt="user"
-                            loading="lazy">
-                    </a>
-                    <div class="sub-drop dropdown-menu caption-menu" aria-labelledby="drop-down-arrow">
-                        <div class="card shadow-none m-0">
-                            <div class="card-header ">
-                                <div class="header-title">
-                                        <h5 class="mb-0 ">{{ auth()->user()->name ?? 'N/A'}}</h5>
-                                </div>
-                            </div>
-                            <div class="card-body p-0 ">
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <span class="material-symbols-outlined"> line_style </span>
-                                    <div class="ms-3">
-                                        <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
+                                        @empty
+                                            <div class="text-center text-muted py-4">No new friend requests</div>
+                                        @endforelse
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <span class="material-symbols-outlined"> edit_note </span>
-                                    <div class="ms-3">
-                                        <a href="{{ route('user.edit-profile') }}" class="mb-0 h6"> Edit Profile </a>
-                                    </div>
-                                </div>
-                                {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
-                                {{--                                    <span class="material-symbols-outlined"> manage_accounts </span> --}}
-                                {{--                                    <div class="ms-3"> --}}
-                                {{--                                        <a href="app/account-setting.html" class="mb-0 h6"> Account settings </a> --}}
-                                {{--                                    </div> --}}
-                                {{--                                </div> --}}
-                                {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
-                                {{--                                    <span class="material-symbols-outlined"> lock </span> --}}
-                                {{--                                    <div class="ms-3"> --}}
-                                {{--                                        <a href="app/privacy-setting.html" class="mb-0 h6"> Privacy Settings </a> --}}
-                                {{--                                    </div> --}}
-                                {{--                                </div> --}}
-                                <div class="d-flex align-items-center iq-sub-card">
-                                    <span class="material-symbols-outlined"> login </span>
-                                    <div class="ms-3">
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <a href="javascript:;"
-                                                onclick="event.preventDefault(); this.closest('form').submit();"
-                                                class="mb-0 h6">{{ __('Sign out') }}</a>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center iq-sub-card border-0">
-                                    <span class="material-symbols-outlined"> line_style </span>
-                                    <div class="ms-3">
-                                        <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-primary fw-500 mt-4">View More
+                                            Request</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="mail-drop"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-symbols-outlined">mail</i>
+                            <span class="mobile-text d-none ms-3">Message</span>
+                        </a>
+                        <div class="sub-drop dropdown-menu header-notification" aria-labelledby="mail-drop">
+                            <div class="card shadow m-0">
+                                <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
+                                    <div class="header-title">
+                                        <h5 class="fw-semibold">All Message</h5>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="item-header-scroll">
+                                        <a href="javascript:void(0);">
+                                            <div
+                                                class="thread d-flex align-items-center justify-content-between rounded-0">
+                                                <div>
+                                                    <img class="avatar-40 rounded-pill align-top"
+                                                        src="{{ asset('frontend/') }}/assets/images/user/01.jpg"
+                                                        alt="" loading="lazy">
+                                                    <div class="ms-3 d-inline-block">
+                                                        <h6>Bni Emma Watson</h6>
+                                                        <small class="fw-500 text-body">Hello how are you?</small>
+                                                    </div>
+                                                </div>
+                                                <small class="text-body">1 hr. ago</small>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);">
+                                            <div
+                                                class="thread d-flex align-items-center justify-content-between rounded-0">
+                                                <div>
+                                                    <img class="avatar-40 rounded-pill align-top"
+                                                        src="{{ asset('frontend/') }}/assets/images/user/02.jpg"
+                                                        alt="" loading="lazy">
+                                                    <div class="ms-3 d-inline-block">
+                                                        <h6>John Travolta</h6>
+                                                        <small class="fw-500 text-body">Yes, same here. Bye.</small>
+                                                    </div>
+                                                </div>
+                                                <small class="text-body">4 hr. ago</small>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);">
+                                            <div
+                                                class="thread d-flex align-items-center justify-content-between rounded-0">
+                                                <div>
+                                                    <img class="avatar-40 rounded-pill align-top"
+                                                        src="{{ asset('frontend/') }}/assets/images/user/03.jpg"
+                                                        alt="" loading="lazy">
+                                                    <div class="ms-3 d-inline-block">
+                                                        <h6>Maya Didas</h6>
+                                                        <small class="fw-500 text-body">that’s great, see you soon</small>
+                                                    </div>
+                                                </div>
+                                                <small class="text-body">9 hr. ago</small>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);">
+                                            <div
+                                                class="thread d-flex align-items-center justify-content-between rounded-0">
+                                                <div>
+                                                    <img class="avatar-40 rounded-pill align-top"
+                                                        src="{{ asset('frontend/') }}/{{ asset('frontend/') }}/assets/images/user/07.jpg"
+                                                        alt="" loading="lazy">
+                                                    <div class="ms-3 d-inline-block">
+                                                        <h6>Paige Turner</h6>
+                                                        <small class="fw-500 text-body">Yes, let’s go.</small>
+                                                    </div>
+                                                </div>
+                                                <small class="text-body">1 yr. ago</small>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="m-5 mt-4">
+                                        <button type="button" class="btn btn-primary fw-500 w-100">View All
+                                            Messages</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a href="javascript:void(0);" class="search-toggle dropdown-toggle d-flex align-items-center"
+                                id="notification-drop" data-bs-toggle="dropdown">
+                                <span class="material-symbols-outlined position-relative">notifications
+                                    @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                                    @if ($unreadCount > 0)
+                                        <span class="bg-primary text-white notification-badge">{{ $unreadCount }}</span>
+                                    @endif
+                                </span>
+                            </a>
+                            <div class="sub-drop dropdown-menu header-notification" aria-labelledby="notification-drop">
+                                <div class="card m-0 shadow">
+                                    <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
+                                        <div class="header-title">
+                                            <h5 class="fw-semibold">Notifications</h5>
+                                        </div>
+                                        <h6 class="material-symbols-outlined">settings</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="item-header-scroll" id="notification-list">
+                                            @forelse(auth()->user()->unreadNotifications->take(10) as $notification)
+                                                <a
+                                                    href="{{ route('user.profile', ['id' => $notification->data['user_id'] ?? null]) }}">
+                                                    <div class="d-flex gap-3 mb-4">
+                                                        <img class="avatar-32 rounded-pill"
+                                                            src="{{ $notification->data['avatar'] ?? asset('frontend/assets/images/user/1.jpg') }}"
+                                                            alt="">
+                                                        <div>
+                                                            <h6 class="font-size-14">
+                                                                @if (isset($notification->data['type']) && $notification->data['type'] === 'follow')
+                                                                    <span
+                                                                        class="fw-semibold">{{ $notification->data['follower_name'] ?? 'Someone' }}</span>
+                                                                    started following you.
+                                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'new_post')
+                                                                    <span
+                                                                        class="fw-semibold">{{ $notification->data['user_name'] ?? 'Someone' }}</span>
+                                                                    posted: <span
+                                                                        class="text-primary">{{ Str::limit($notification->data['content'] ?? '', 40) }}</span>
+                                                                @else
+                                                                    {{ $notification->data['message'] ?? 'You have a new notification.' }}
+                                                                @endif
+                                                            </h6>
+                                                            <small
+                                                                class="text-body fw-500">{{ $notification->created_at->diffForHumans() }}</small>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @empty
+                                                <div class="text-center text-muted py-4">No new notifications</div>
+                                            @endforelse
+                                        </div>
+                                        <button type="button" class="btn btn-primary fw-500 w-100"
+                                            onclick="markAllNotificationsRead()">View All Notifications</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <audio id="notification-sound" src="{{ asset('frontend/assets/sounds/notification.mp3') }}"
+                            preload="auto"></audio>
+                        <script>
+                            // Play sound when a new notification arrives via Echo
+                            if (window.Echo && window.Laravel && window.Laravel.userId) {
+                                window.Echo.private('App.Models.User.' + window.Laravel.userId)
+                                    .notification((notification) => {
+                                        document.getElementById('notification-sound').play();
+                                        // Optionally, update notification list dynamically here
+                                        // location.reload(); // or use AJAX to update notification list
+                                    });
+                            }
+
+                            function markAllNotificationsRead() {
+                                fetch("{{ route('mark.notifications.read') }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        'Accept': 'application/json',
+                                    },
+                                }).then(() => location.reload());
+                            }
+                        </script>
+                    @endauth
+                    <li class="nav-item d-none d-lg-none">
+                        <a href="app/chat.html" class="dropdown-toggle d-flex align-items-center" id="mail-drop-1"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-symbols-outlined">mail</i>
+                            <span class="mobile-text  ms-3">Message</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown user-dropdown">
+                        <a href="javascript:void(0);" class="d-flex align-items-center dropdown-toggle"
+                            id="drop-down-arrow" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? '' }}"
+                                class="img-fluid rounded-circle avatar-48 border border-2 me-3" alt="user"
+                                loading="lazy">
+                        </a>
+                        <div class="sub-drop dropdown-menu caption-menu" aria-labelledby="drop-down-arrow">
+                            <div class="card shadow-none m-0">
+                                <div class="card-header ">
+                                    <div class="header-title">
+                                        <h5 class="mb-0 ">{{ auth()->user()->name ?? 'N/A' }}</h5>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 ">
+                                    <div class="d-flex align-items-center iq-sub-card border-0">
+                                        <span class="material-symbols-outlined"> line_style </span>
+                                        <div class="ms-3">
+                                            <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center iq-sub-card border-0">
+                                        <span class="material-symbols-outlined"> edit_note </span>
+                                        <div class="ms-3">
+                                            <a href="{{ route('user.edit-profile') }}" class="mb-0 h6"> Edit Profile </a>
+                                        </div>
+                                    </div>
+                                    {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
+                                    {{--                                    <span class="material-symbols-outlined"> manage_accounts </span> --}}
+                                    {{--                                    <div class="ms-3"> --}}
+                                    {{--                                        <a href="app/account-setting.html" class="mb-0 h6"> Account settings </a> --}}
+                                    {{--                                    </div> --}}
+                                    {{--                                </div> --}}
+                                    {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
+                                    {{--                                    <span class="material-symbols-outlined"> lock </span> --}}
+                                    {{--                                    <div class="ms-3"> --}}
+                                    {{--                                        <a href="app/privacy-setting.html" class="mb-0 h6"> Privacy Settings </a> --}}
+                                    {{--                                    </div> --}}
+                                    {{--                                </div> --}}
+                                    <div class="d-flex align-items-center iq-sub-card">
+                                        <span class="material-symbols-outlined"> login </span>
+                                        <div class="ms-3">
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <a href="javascript:;"
+                                                    onclick="event.preventDefault(); this.closest('form').submit();"
+                                                    class="mb-0 h6">{{ __('Sign out') }}</a>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center iq-sub-card border-0">
+                                        <span class="material-symbols-outlined"> line_style </span>
+                                        <div class="ms-3">
+                                            <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 @endauth
                 @guest()
-                <li class="nav-item dropdown">
-                    <a href="{{route('login')}}" class="dropdown-toggle d-flex align-items-center">
-                        <span>Login</span>
-                    </a>
-                </li>
+                    <li class="nav-item dropdown">
+                        <a href="{{ route('login') }}" class="dropdown-toggle d-flex align-items-center">
+                            <span>Login</span>
+                        </a>
+                    </li>
                 @endguest
             </ul>
         </div>
