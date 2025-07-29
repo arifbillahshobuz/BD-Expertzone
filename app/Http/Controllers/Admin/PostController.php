@@ -1,24 +1,22 @@
 <?php
-declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
-use App\Models\Designation;
-use App\Models\Partner;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use App\Models\PostCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
-class PartnerController extends Controller
+class PostController extends Controller
 {
-    public function index(): View|RedirectResponse
+        public function index(): View|RedirectResponse
     {
         try {
-            $designations = Designation::all();
-            $partners = Partner::with('designation:id,title')->get();
-            return view('admin.pages.partner.list', compact(['partners','designations']));
+            $posts = Post::where("type", "=","1")->with('category')->get();
+            $postCategories = PostCategory::select('id','title')->get();
+            return view('admin.pages.post.list', compact(['posts','postCategories']));
         } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Failed to load partner page');
         }

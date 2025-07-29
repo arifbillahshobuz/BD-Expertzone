@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\PostCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::delete('/delete/{designation}', [PartnerController::class, 'destroy'])->name('destroy');
         Route::post('/update/{partner}', [PartnerController::class, 'update'])->name('update');
         Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
+    });
+    // post routes incomplete
+    Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
+        Route::get('/', [PostController::class, 'index'])->name('index');
+        Route::post('/store', [PostController::class, 'store'])->name('store');
+        Route::put('/update/{designation}', [PostController::class, 'update'])->name('update');
+        Route::delete('/delete/{designation}', [PostController::class, 'destroy'])->name('destroy');
     });
     // post category routes
     Route::group(['prefix' => 'post-category', 'as' => 'post.category.'], function () {
