@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "7fd433bf800a7d3bb98adabbb61bf945",
-=======
-    "content-hash": "4ad32c33037658d5f49d196fe5f5c30d",
->>>>>>> 59cd27ad778417a8d1717c815bd28ec952c67e88
+    "content-hash": "1f328af52418b07ef8fe11879444a591",
     "packages": [
         {
             "name": "brick/math",
@@ -1121,16 +1117,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.19.3",
+            "version": "v12.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4e6ec689ef704bb4bd282f29d9dd658dfb4fb262"
+                "reference": "ac8c4e73bf1b5387b709f7736d41427e6af1c93b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4e6ec689ef704bb4bd282f29d9dd658dfb4fb262",
-                "reference": "4e6ec689ef704bb4bd282f29d9dd658dfb4fb262",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/ac8c4e73bf1b5387b709f7736d41427e6af1c93b",
+                "reference": "ac8c4e73bf1b5387b709f7736d41427e6af1c93b",
                 "shasum": ""
             },
             "require": {
@@ -1332,7 +1328,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-06-18T12:56:23+00:00"
+            "time": "2025-07-22T15:41:55+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -3228,7 +3224,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.12.9"
             },
             "time": "2025-06-23T02:35:06+00:00"
-<<<<<<< HEAD
         },
         {
             "name": "pusher/pusher-php-server",
@@ -3290,8 +3285,6 @@
                 "source": "https://github.com/pusher/pusher-http-php/tree/7.2.7"
             },
             "time": "2025-01-06T10:56:20+00:00"
-=======
->>>>>>> 59cd27ad778417a8d1717c815bd28ec952c67e88
         },
         {
             "name": "ralouphie/getallheaders",

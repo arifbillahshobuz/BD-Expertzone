@@ -74,8 +74,8 @@
                                 id="subcomment-collapse-{{ $comment->id }}">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="flex-shrink-0">
-                                        <img src="{{ auth()->user()->avatar ?? ('/frontend/assets/images/user/1.jpg' ?? '') }}"
-                                            alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                        <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                                            class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                     </div>
                                     <div class="add-comment-form">
                                         <form class="reply-form" data-comment-id="{{ $comment->id }}"

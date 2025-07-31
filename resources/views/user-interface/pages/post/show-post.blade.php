@@ -129,6 +129,16 @@
                                                     $isFollowing =
                                                         auth()->check() &&
                                                         auth()->user()->following->contains($authorId);
+                                                    $isFriend =
+                                                        auth()->check() && auth()->user()->friends->contains($authorId);
+                                                    $pendingRequest =
+                                                        auth()->check() &&
+                                                        auth()
+                                                            ->user()
+                                                            ->friendRequestsSent()
+                                                            ->where('receiver_id', $authorId)
+                                                            ->where('status', 'pending')
+                                                            ->exists();
                                                 @endphp
 
                                                 @if (auth()->check() && auth()->id() !== $authorId)
@@ -159,6 +169,31 @@
                                                             </div>
                                                         </div>
                                                     </a>
+                                                    @if (!$isFriend && !$pendingRequest)
+                                                        <a class="dropdown-item p-3 send-friend-request-btn"
+                                                            href="#" data-user-id="{{ $authorId }}">
+                                                            <div class="d-flex align-items-top">
+                                                                <span
+                                                                    class="material-symbols-outlined">person_add</span>
+                                                                <div class="data ms-2">
+                                                                    <h6>Send Friend Request</h6>
+                                                                    <p class="mb-0">Connect with this user as a
+                                                                        friend.</p>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    @elseif ($pendingRequest)
+                                                        <a class="dropdown-item p-3 text-muted" href="#">
+                                                            <div class="d-flex align-items-top">
+                                                                <span
+                                                                    class="material-symbols-outlined">hourglass_top</span>
+                                                                <div class="data ms-2">
+                                                                    <h6>Friend Request Sent</h6>
+                                                                    <p class="mb-0">Waiting for user to accept.</p>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    @endif
                                                 @endif
                                                 @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
                                                     <a class="dropdown-item p-3 text-primary" href="#"

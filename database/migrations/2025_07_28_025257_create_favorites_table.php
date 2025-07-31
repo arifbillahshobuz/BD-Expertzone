@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chats', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 50);
-            $table->foreignId('user_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('favorite_id')->constrained('users');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chats');
+        Schema::dropIfExists('favorites');
     }
 };

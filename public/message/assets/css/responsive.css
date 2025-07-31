@@ -1,0 +1,379 @@
+@media (min-width: 1400px) and (max-width: 1600px) {
+    .wsus__user_list_area_height {
+        /* max-height: 400px; */
+    }
+
+    .wsus__chat_area_body {
+        /* height: 675px; */
+    }
+
+    .wsus__chat_area {
+        width: 50%;
+    }
+
+    .wsus__chat_info {
+        width: 25%;
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 31.9%;
+    }
+
+    .wsus__user_list_area .top::after,
+    .wsus__user_list_area .top::before,
+    .wsus__save_message .top::after,
+    .wsus__save_message .top::before,
+    .wsus__favourite_user .top::after,
+    .wsus__favourite_user .top::before {
+        width: 35%;
+    }
+
+    .wsus__chat_info_details .photo_gallery::before,
+    .wsus__chat_info_details .photo_gallery::after {
+        width: 32%;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1399.99px) {
+    .wsus__user_list {
+        width: 30%;
+    }
+
+    .wsus__chat_area {
+        width: 50%;
+    }
+
+    .wsus__chat_app.show_info .wsus__chat_area {
+        width: 70%;
+    }
+
+    .wsus__user_list_area .top::after,
+    .wsus__user_list_area .top::before,
+    .wsus__save_message .top::after,
+    .wsus__save_message .top::before,
+    .wsus__favourite_user .top::after,
+    .wsus__favourite_user .top::before {
+        width: 35%;
+    }
+
+    .wsus__user_list_area_height {
+        /* max-height: 400px; */
+    }
+
+    .wsus__single_chat .venobox img {
+        width: 200px !important;
+        height: 130px !important;
+    }
+
+    .wsus__chat_area_body {
+        /* height: 670px; */
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 48%;
+    }
+
+    .wsus__chat_info_details .photo_gallery::before,
+    .wsus__chat_info_details .photo_gallery::after {
+        width: 25%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.99px) {
+
+    .wsus__user_list {
+        width: 30%;
+    }
+
+    .wsus__chat_area {
+        width: 45%;
+    }
+
+    .wsus__chat_info {
+        width: 25%;
+    }
+
+    .wsus__chat_app.show_info .wsus__chat_area {
+        width: 70%;
+    }
+
+    .wsus__user_list_item .time {
+        top: 12px;
+        right: 20px;
+    }
+
+    .wsus__user_list_area_height {
+        /* max-height: 350px; */
+    }
+
+    .wsus__chat_area_body {
+        /* height: 620px; */
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 31%;
+    }
+
+    .wsus__single_chat .venobox img {
+        width: 210px !important;
+        height: 130px !important;
+    }
+
+    .wsus__chat_info_gallery li .venobox {
+        height: 45px;
+    }
+
+    .wsus__user_list_area .top::after,
+    .wsus__user_list_area .top::before,
+    .wsus__save_message .top::after,
+    .wsus__save_message .top::before,
+    .wsus__favourite_user .top::after,
+    .wsus__favourite_user .top::before {
+        width: 30%;
+    }
+
+    .wsus__chat_area_footer .footer_message .img {
+        max-width: 150px;
+    }
+
+    .wsus__chat_info_details .photo_gallery::before,
+    .wsus__chat_info_details .photo_gallery::after {
+        width: 25%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.99px) {
+
+    .wsus__user_list {
+        width: 40%;
+    }
+
+    .wsus__chat_area {
+        width: 60% !important;
+    }
+
+    .wsus__chat_area_body {
+        /* height: 620px; */
+    }
+
+    .wsus__single_chat .venobox img {
+        width: 180px !important;
+        height: 110px !important;
+    }
+
+    .wsus__chat_area_footer .footer_message .img {
+        max-width: 140px;
+    }
+
+    .wsus__user_list_area_height {
+        /* max-height: 350px; */
+    }
+
+    .show_small_info .wsus__chat_area {
+        display: none;
+    }
+
+    .show_small_info .wsus__chat_info {
+        width: 60% !important;
+        display: block !important;
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 24%;
+    }
+
+    .wsus__chat_info {
+        display: none;
+    }
+
+    .wsus__user_list_area .top::after,
+    .wsus__user_list_area .top::before,
+    .wsus__save_message .top::after,
+    .wsus__save_message .top::before,
+    .wsus__favourite_user .top::after,
+    .wsus__favourite_user .top::before {
+        width: 30%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.99px) {
+    .wsus__user_list {
+        width: 100%;
+        border-right: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+    }
+
+    .wsus__user_list_area_height {
+        /* max-height: 370px; */
+    }
+
+    .wsus__chat_area {
+        width: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 6;
+    }
+
+    .wsus__chat_area_header {
+        padding: 10px 10px;
+    }
+
+    .wsus__single_chat .venobox img {
+        width: 160px !important;
+        height: 100px !important;
+    }
+
+    .wsus__chat_area_body {
+        /* height: 660px; */
+    }
+
+    .wsus__chat_area_footer {
+        padding: 10px;
+    }
+
+    .wsus__chat_area_footer .footer_message .img {
+        max-width: 120px;
+    }
+
+    .wsus__chat_area_header .back_to_list {
+        display: block;
+    }
+
+    .wsus__chat_info {
+        width: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 4;
+        display: block !important;
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 19%;
+    }
+
+    .show_small_chat .wsus__user_list {
+        display: none;
+    }
+
+    .show_small_info .wsus__chat_area {
+        display: none;
+    }
+}
+
+@media (max-width: 575.99px) {
+    .wsus__user_list {
+        width: 100%;
+        border-right: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+    }
+
+    .wsus__user_list_area .top::after,
+    .wsus__user_list_area .top::before,
+    .wsus__save_message .top::after,
+    .wsus__save_message .top::before,
+    .wsus__favourite_user .top::after,
+    .wsus__favourite_user .top::before {
+        width: 35%;
+    }
+
+    .wsus__user_list_area_height {
+        /* max-height: 370px; */
+    }
+
+    .wsus__chat_area {
+        width: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 6;
+    }
+
+    .wsus__chat_area_header .header_left {
+        gap: 5px;
+    }
+
+    .wsus__chat_area_header .header_left img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .wsus__chat_area_header .header_left h4 {
+        font-size: 14px;
+    }
+
+    .wsus__chat_area_header .header_right a {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+    }
+
+    .wsus__chat_area_header {
+        padding: 10px 10px;
+    }
+
+    .wsus__single_chat .venobox img {
+        width: 160px !important;
+        height: 100px !important;
+    }
+
+    .wsus__chat_area_body {
+        /* height: 670px; */
+    }
+
+    .emojionearea .emojionearea-picker.emojionearea-picker-position-top {
+        left: -120px;
+    }
+
+    .wsus__chat_area_footer {
+        padding: 10px;
+    }
+
+    .wsus__chat_area_footer .footer_message .img {
+        max-width: 120px;
+    }
+
+    .wsus__chat_area_header .back_to_list {
+        display: block;
+    }
+
+    .wsus__chat_info {
+        width: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 4;
+        display: block !important;
+    }
+
+    .wsus__chat_info_gallery li {
+        width: 32%;
+    }
+
+    .show_small_chat .wsus__user_list {
+        display: none;
+    }
+
+    .show_small_info .wsus__chat_area {
+        display: none;
+    }
+
+    .wsus__user_list_item .time {
+        top: 15px;
+        font-size: 12px;
+    }
+
+    .wsus__chat_info_details .photo_gallery::before,
+    .wsus__chat_info_details .photo_gallery::after {
+        width: 30%;
+    }
+
+}
