@@ -36,7 +36,7 @@
                 </li>
                 @auth()
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('user.profile')}}" role="button">
+                    <a class="nav-link" href="{{route('user.profile', ['username' => $user->username])}}" role="button">
                         <i class="icon material-symbols-outlined">
                             person
                         </i>

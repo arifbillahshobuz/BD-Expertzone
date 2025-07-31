@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\Designation;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 class UserSeeder extends Seeder
 {
     /**
@@ -13,8 +15,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // You can use the factory to create users or manually insert them
+        \DB::disableQueryLog(); // গতি বাড়ানোর জন্য query log বন্ধ
 
+       
         // Alternatively, you can create a specific user
         User::insert(
             [
@@ -36,5 +39,6 @@ class UserSeeder extends Seeder
                 ]
             ]
         );
+        User::factory(500)->create();
     }
 }

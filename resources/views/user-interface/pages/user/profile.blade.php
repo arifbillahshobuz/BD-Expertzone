@@ -5,37 +5,42 @@
 
 @section('content')
     <div class="container position-relative p-0">
-        <div class="header-cover-img" style="width: 100%; overflow: hidden; position: relative;">
-            <img src="{{ asset(optional(auth()->user()->profile)->cover_photo ?? 'frontend/assets/images/page-img/profile-bg1.jpg') }}"
-                class="img-fluid w-100" style="object-fit: cover; height: 300px;" alt="Cover Photo">
-            <!-- Edit Icon -->
+    <div class="header-cover-img" style="width: 100%; overflow: hidden; position: relative;">
+        <img src="{{ asset(optional($user->profile)->cover_photo ?? 'frontend/assets/images/page-img/profile-bg1.jpg') }}"
+            class="img-fluid w-100" style="object-fit: cover; height: 300px;" alt="Cover Photo">
+
+        @if ($isOwnProfile)
+            <!-- Edit Icon: Only show if viewing own profile -->
             <button class="btn btn-sm bg-primary rounded-pill position-absolute" style="top: 15px; right: 15px;"
                 data-bs-toggle="modal" data-bs-target="#coverPhotoModal">
                 <span class="material-symbols-outlined">edit</span>
             </button>
-        </div>
+        @endif
     </div>
+</div>
 
-    <!-- Cover Photo Modal -->
-    <div class="modal fade" id="coverPhotoModal" tabindex="-1" aria-labelledby="coverPhotoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('user.update-cover-photo') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="coverPhotoModalLabel">Update Cover Photo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="file" name="cover_photo" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </form>
-            </div>
+   @if ($isOwnProfile)
+<!-- Cover Photo Modal: Only show if viewing own profile -->
+<div class="modal fade" id="coverPhotoModal" tabindex="-1" aria-labelledby="coverPhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('user.update-cover-photo') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="coverPhotoModalLabel">Update Cover Photo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="cover_photo" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+@endif
 
     <div class="row">
         <div class="col-sm-12">
@@ -114,12 +119,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
                             <h5 class="d-flex align-items-center justify-content-center gap-1 mb-2">
                                 {{ auth()->user()->name ?? 'N/A'}} <span
                                     class="badge  bg-primary rounded-pill material-symbols-outlined font-size-14 p-0">done</span>
