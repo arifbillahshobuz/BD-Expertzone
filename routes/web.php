@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\Frontend\ChatController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Frontend\FollowController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Frontend\ReactionController;
 use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\UserProfileController;
+
 Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -66,6 +69,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
         return response()->json(['success' => true]);
     })->name('mark.notifications.read');
+
+
+
+    // Messenger Routes
+    Route::get('messenger', [MessageController::class, 'index'])->name('messenger.index');
+    // search route
+    Route::get('messenger/search', [MessageController::class, 'search'])->name('messenger.search');
+    // fetch user by id
+    Route::get('messenger/id-info', [MessageController::class, 'fetchIdInfo'])->name('messenger.id-info');
+    // send message
+    Route::post('messenger/send-message', [MessageController::class, 'sendMessage'])->name('messenger.send-message');
+    // fetch message
+    Route::get('messenger/fetch-messages', [MessageController::class, 'fetchMessages'])->name('messenger.fetch-messages');
+    // fetch contacts
+    Route::get('messenger/fetch-contacts', [MessageController::class, 'fetchContacts'])->name('messenger.fetch-contacts');
+    Route::get('messenger/update-contact-item', [MessageController::class, 'updateContactItem'])->name('messenger.update-contact-item');
+    Route::post('messenger/make-seen', [MessageController::class, 'makeSeen'])->name('messenger.make-seen');
+    // favorite routes
+    Route::post('messenger/favorite', [MessageController::class, 'favorite'])->name('messenger.favorite');
+    Route::get('messenger/fetch-favorite', [MessageController::class, 'fetchFavoritesList'])->name('messenger.fetch-favorite');
+    Route::delete('messenger/delete-message', [MessageController::class, 'deleteMessage'])->name('messenger.delete-message');
 
 
 

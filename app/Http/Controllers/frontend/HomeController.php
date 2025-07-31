@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\frontend;
+namespace App\Http\Controllers\Frontend;
 
 use App\Models\Post;
 use App\Models\Partner;

@@ -423,7 +423,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="item-header-scroll">
-                                        @forelse(optional(auth()->user()->pendingFriendRequests) as $request)
+                                        @forelse(auth()->user()->friendRequestsReceived()->where('status', 'pending')->get() as $request)
                                             <div class="iq-friend-request">
                                                 <div
                                                     class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">

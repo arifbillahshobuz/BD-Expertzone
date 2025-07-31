@@ -2,18 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    // Friend requests sent by this user
+    public function friendRequestsSent()
+    {
+        return $this->hasMany(FriendRequest::class, 'sender_id');
+    }
+
+    // Friend requests received by this user
+    public function friendRequestsReceived()
+    {
+        return $this->hasMany(FriendRequest::class, 'receiver_id');
+    }
+
+    /**
+     * Get all friends for the user.
+     */
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            ->withTimestamps();
+    }
 
     // Users this user is following
     public function following()
@@ -27,19 +47,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(User::class, 'followers', 'followed_id', 'follower_id');
     }
 
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
+    }
+
     // Notification preference for following (pivot)
     public function followingWithNotifications()
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'followed_id')
             ->withPivot('notify');
     }
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
 
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
     }
+
+    /**
+     * Get the user's chats.
+     */
+
+
 
     /**
      * The attributes that are mass assignable.
