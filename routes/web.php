@@ -2,11 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Frontend\MessageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Frontend\ChatController;
 use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Frontend\UserController;
+
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Frontend\FollowController;
 use App\Http\Controllers\Frontend\CommentController;

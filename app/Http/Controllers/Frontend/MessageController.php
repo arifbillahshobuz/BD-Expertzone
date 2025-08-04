@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
 use Log;
 use Pusher\Pusher;
@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Traits\FileUploadTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 use Symfony\Component\Mailer\Event\MessageEvent as EventMessageEvent;
 
 class MessageController extends Controller
@@ -254,5 +255,14 @@ class MessageController extends Controller
 
         return $ids;
     }
+
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return View
+     */
+
 }
 ;
