@@ -35,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
         }
             $partners = Partner::with('designation')->get();
             $view->with('globalPartners', $partners);
-            $user = User::where('username', $username)->firstOrFail();
         });
     }
 }

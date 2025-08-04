@@ -8,18 +8,15 @@
     <div class="header-cover-img" style="width: 100%; overflow: hidden; position: relative;">
         <img src="{{ asset(optional($user->profile)->cover_photo ?? 'frontend/assets/images/page-img/profile-bg1.jpg') }}"
             class="img-fluid w-100" style="object-fit: cover; height: 300px;" alt="Cover Photo">
-
-        @if ($isOwnProfile)
             <!-- Edit Icon: Only show if viewing own profile -->
             <button class="btn btn-sm bg-primary rounded-pill position-absolute" style="top: 15px; right: 15px;"
                 data-bs-toggle="modal" data-bs-target="#coverPhotoModal">
                 <span class="material-symbols-outlined">edit</span>
             </button>
-        @endif
     </div>
 </div>
 
-   @if ($isOwnProfile)
+ 
 <!-- Cover Photo Modal: Only show if viewing own profile -->
 <div class="modal fade" id="coverPhotoModal" tabindex="-1" aria-labelledby="coverPhotoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -40,7 +37,7 @@
         </div>
     </div>
 </div>
-@endif
+
 
     <div class="row">
         <div class="col-sm-12">

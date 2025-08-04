@@ -33,6 +33,8 @@ class UserProfileController extends Controller
     {
         // Find user by username
     // $user = User::where('username', $username)->firstOrFail();
+    $user = Auth::user();
+
 
     // // Get that user's posts with related data
     // $posts = Post::with(['user', 'reactions.user'])
@@ -42,7 +44,7 @@ class UserProfileController extends Controller
     //     ->paginate(10);
 
     // // Check if logged-in user is viewing their own profile
-    // $isOwnProfile = auth()->check() && auth()->user()->id === $user->id;
+    $isOwnProfile = auth()->check() && auth()->user()->id === $user->id;
 
     // return view('user-interface.pages.user.profile', compact('user', 'posts', 'isOwnProfile'));
     $posts = Post::with(['user', 'reactions.user'])
@@ -50,7 +52,7 @@ class UserProfileController extends Controller
     ->published() // ✅ Assuming this is a scope
     ->latest()
     ->paginate(10);
-        return view('user-interface.pages.user.profile',compact('posts'));
+        return view('user-interface.pages.user.profile',compact('posts','user'));
     }
 
 
