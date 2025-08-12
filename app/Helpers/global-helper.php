@@ -1,7 +1,5 @@
 <?php
 
-
-
 /** calculate human readable time */
 if (!function_exists('timeAgo')) {
     function timeAgo($timestamp)

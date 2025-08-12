@@ -60,15 +60,12 @@
     }
 
     .stylish-toggle-btn .material-symbols-outlined {
-        font-size: 1.3em;
-        vertical-align: middle;
-        color: inherit;
-        transition: color 0.2s;
+        font-size: 1.25rem;
     }
 </style>
 
 <div class="row social-post-container">
-    @foreach ($posts as $post)
+    <div class="col-sm-12 social-post">
         <div class="col-sm-12 social-post">
             <div class="card card-block card-stretch card-height">
                 <div class="card-body">
@@ -208,8 +205,7 @@
                                                         </div>
                                                     </a>
                                                     <form action="{{ route('user.post.destroy', $post) }}"
-                                                        method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                        method="POST" class="delete-post-form">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item p-3 text-danger">
@@ -600,7 +596,7 @@
                 return false;
             });
         </script>
-    @endforeach
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -820,39 +816,85 @@
             e.preventDefault();
             e.stopPropagation();
             var commentId = $(this).data('id');
-            if (!confirm('Are you sure you want to delete this comment?')) return false;
-            $.ajax({
-                url: '/comments/' + commentId,
-                method: 'DELETE',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel
-                        .csrfToken
+
+            // Use SweetAlert2 for delete confirmation
+            Swal.fire({
+                title: 'Delete Comment?',
+                text: 'Are you sure you want to delete this comment?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Delete!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal2-horizontal-layout'
                 },
-                success: function(response) {
-                    if (response.success) {
-                        var $comment = $('#comment-' + commentId);
-                        $comment.find('.comment-item').remove();
-                        $("form.reply-form[data-comment-id='" + commentId + "']").closest(
-                            '.add-comment-form-block').remove();
-                        $comment.remove();
-                        var $countSpan = $comment.closest('.comment-area').find(
-                            '.comment-count-' + $comment.closest('.comment-area').data(
-                                'post-id'));
-                        if ($countSpan.length) {
-                            let currentCount = parseInt($countSpan.text()) || 1;
-                            let newCount = Math.max(currentCount - 1, 0);
-                            $countSpan.text(newCount + ' Comment' + (newCount !== 1 ? 's' :
-                                ''));
+                buttonsStyling: true,
+                allowOutsideClick: false,
+                width: '450px',
+                padding: '1.5rem'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/comments/' + commentId,
+                        method: 'DELETE',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content') ||
+                                window.Laravel
+                                .csrfToken
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Comment has been deleted successfully.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+
+                                var $comment = $('#comment-' + commentId);
+                                $comment.find('.comment-item').remove();
+                                $("form.reply-form[data-comment-id='" + commentId +
+                                    "']").closest(
+                                    '.add-comment-form-block').remove();
+                                $comment.remove();
+                                var $countSpan = $comment.closest('.comment-area')
+                                    .find(
+                                        '.comment-count-' + $comment.closest(
+                                            '.comment-area').data(
+                                            'post-id'));
+                                if ($countSpan.length) {
+                                    let currentCount = parseInt($countSpan
+                                        .text()) || 1;
+                                    let newCount = Math.max(currentCount - 1, 0);
+                                    $countSpan.text(newCount + ' Comment' + (
+                                        newCount !== 1 ? 's' :
+                                        ''));
+                                }
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.message ||
+                                        'Failed to delete comment.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to delete comment. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
                         }
-                    } else {
-                        alert(response.message || 'Failed to delete comment.');
-                    }
-                },
-                error: function(xhr) {
-                    alert('Failed to delete comment.');
+                    });
                 }
             });
-            return false;
         });
 
 
@@ -1010,7 +1052,143 @@
             }
         });
     });
+
+    // Friend Request functionality
+    $(document).on('click', '.send-friend-request-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var userId = btn.data('user-id');
+
+        // Disable button to prevent multiple clicks
+        btn.addClass('disabled').css('pointer-events', 'none');
+
+        $.ajax({
+            url: '/friend-request/send/' + userId,
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update the button to show "Friend Request Sent" state
+                    btn.removeClass('send-friend-request-btn').addClass('text-muted');
+                    btn.find('.material-symbols-outlined').text('hourglass_top');
+                    btn.find('h6').text('Friend Request Sent');
+                    btn.find('p').text('Waiting for user to accept.');
+
+                    if (window.ToastMagic) {
+                        ToastMagic.success('Friend request sent successfully!');
+                    }
+                } else {
+                    // Re-enable button on failure
+                    btn.removeClass('disabled').css('pointer-events', 'auto');
+                    alert(response.error || 'Failed to send friend request.');
+                }
+            },
+            error: function(xhr) {
+                // Re-enable button on error
+                btn.removeClass('disabled').css('pointer-events', 'auto');
+                let errorMsg = 'Failed to send friend request.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg = xhr.responseJSON.error;
+                }
+                alert(errorMsg);
+            }
+        });
+    });
+
+    $(document).on('click', '.accept-friend-request-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var requestId = btn.data('request-id');
+
+        $.ajax({
+            url: '/friend-request/accept/' + requestId,
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Remove the friend request from the UI
+                    btn.closest('.friend-request-item').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+
+                    if (window.ToastMagic) {
+                        ToastMagic.success('Friend request accepted!');
+                    }
+                } else {
+                    alert(response.error || 'Failed to accept friend request.');
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'Failed to accept friend request.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg = xhr.responseJSON.error;
+                }
+                alert(errorMsg);
+            }
+        });
+    });
+
+    $(document).on('click', '.decline-friend-request-btn', function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var requestId = btn.data('request-id');
+
+        $.ajax({
+            url: '/friend-request/decline/' + requestId,
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Remove the friend request from the UI
+                    btn.closest('.friend-request-item').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+
+                    if (window.ToastMagic) {
+                        ToastMagic.success('Friend request declined.');
+                    }
+                } else {
+                    alert(response.error || 'Failed to decline friend request.');
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'Failed to decline friend request.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg = xhr.responseJSON.error;
+                }
+                alert(errorMsg);
+            }
+        });
+    });
+
+    // SweetAlert2 handler for post delete
+    $(document).on('submit', '.delete-post-form', function(e) {
+        e.preventDefault();
+        var form = $(this);
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete Comment?',
+            text: 'Are you sure you want to delete this comment?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete!',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.off('submit').submit();
+            }
+        });
+    });
 </script>
+
 <script type="module">
     import '/js/echo-comments.js';
 </script>

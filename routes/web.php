@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\MessageController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Frontend\HomeController;
 
 use App\Http\Controllers\Admin\DashboardController;
@@ -13,28 +12,47 @@ use App\Http\Controllers\Frontend\ReactionController;
 use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\UserProfileController;
+use App\Http\Controllers\Frontend\FriendController;
+use App\Models\User;
 
-Route::middleware('auth')->group(function () {
-    Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-    });
-});
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
 Route::get('/partner', [HomeController::class, 'partnerList'])->name('partner.list');
+
+// Demo route for chat popup
+Route::get('/chat-popup-demo', function () {
+    return view('demo.chat-popup-demo');
+})->name('chat.popup.demo');
+
+// Demo route for SweetAlert test
+Route::get('/sweetalert-test', function () {
+    return view('demo.sweetalert-test');
+})->name('sweetalert.test');
+
+// Demo route for SweetAlert alignment test
+Route::get('/sweetalert-alignment-test', function () {
+    return view('demo.sweetalert-alignment-test');
+})->name('sweetalert.alignment.test');
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    //    User Profile Routes
-    Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');
+    // User Profile Routes (specific first)
     Route::get('profile/edit', [UserProfileController::class, 'editProfile'])->name('user.edit-profile');
     Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile-update');
     Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('user.change-password');
-
+    Route::get('/profile/cv/download', [UserProfileController::class, 'downloadCV'])->name('user.cv.download');
     Route::post('update-cover-photo', [UserProfileController::class, 'updateCoverPhoto'])->name('user.update-cover-photo');
     Route::post('update-profile-photo', [UserProfileController::class, 'updateProfilePhoto'])->name('user.update-profile-photo');
 
+    // Own profile
+    Route::get('profile', [UserProfileController::class, 'userProfile'])->name('user.profile');
+
+    // Unified profile route: accepts numeric id OR username
+    Route::get('profile/{identifier}', [UserProfileController::class, 'showByIdentifier'])
+        ->where('identifier', '[A-Za-z0-9._-]+') // reserved words like 'edit' already matched above
+        ->name('user.profile.show');
+
     //    User Post Routes
+    Route::get('/posts/{post}', [UserPostController::class, 'show'])->name('posts.show');
     Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
     Route::put('/user/posts/{post}', [UserPostController::class, 'update'])->name('user.post.update');
     Route::delete('/user/posts/{post}', [UserPostController::class, 'destroy'])->name('user.post.destroy');
@@ -61,6 +79,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/unfollow/{user}', [FollowController::class, 'unfollow']);
     Route::post('/toggle-notification/{user}', [FollowController::class, 'toggleNotification']);
 
+    // Friend Request Routes
+    Route::post('/friend-request/send/{receiverId}', [FriendController::class, 'sendRequest'])->name('friend.request.send');
+    Route::post('/friend-request/accept/{requestId}', [FriendController::class, 'acceptRequest'])->name('friend.request.accept');
+    Route::post('/friend-request/decline/{requestId}', [FriendController::class, 'declineRequest'])->name('friend.request.decline');
+    Route::get('/friend-requests', [FriendController::class, 'getPendingRequests'])->name('friend.requests');
+    Route::get('/friends', [FriendController::class, 'getFriends'])->name('friends.list');
+    Route::delete('/friends/{friendId}', [FriendController::class, 'removeFriend'])->name('friend.remove');
+
 
     Route::post('/notifications/mark-read', function () {
         if (Auth::check()) {
@@ -69,10 +95,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return response()->json(['success' => true]);
     })->name('mark.notifications.read');
 
+    Route::post('/notifications/mark-read/{id}', function ($id) {
+        if (Auth::check()) {
+            $notification = Auth::user()->unreadNotifications()->find($id);
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+        return response()->json(['success' => true]);
+    })->name('mark.notification.read');
+
 
 
     // Messenger Routes
     Route::get('messenger', [MessageController::class, 'index'])->name('messenger.index');
+
+    Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');
     // search route
     Route::get('messenger/search', [MessageController::class, 'search'])->name('messenger.search');
     // fetch user by id
@@ -89,6 +127,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('messenger/favorite', [MessageController::class, 'favorite'])->name('messenger.favorite');
     Route::get('messenger/fetch-favorite', [MessageController::class, 'fetchFavoritesList'])->name('messenger.fetch-favorite');
     Route::delete('messenger/delete-message', [MessageController::class, 'deleteMessage'])->name('messenger.delete-message');
+
+    // Comment Notification Redirect Route
+    Route::get('/notification/comment/{post}/{comment}', function ($postId, $commentId) {
+        // Optionally, mark notification as read here if notification id is passed as query param
+        return redirect()->route('posts.show', ['post' => $postId]) . '#comment-' . $commentId;
+    })->name('notification.comment');
 
 
 

@@ -21,7 +21,12 @@ class UserProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = auth()->user();
+        $cvRequired = !($user->profile && $user->profile->cv);
+
         return [
+            'name' => 'sometimes|string|max:255',
+            'username' => 'sometimes|string|max:255|unique:users,username,' . $user->id,
             'gender' => 'required|in:male,female',
             'blood_group' => 'required|string|max:10|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
             'language' => 'required|string|max:10',
@@ -33,7 +38,8 @@ class UserProfileUpdateRequest extends FormRequest
             'present_address' => 'required|string|max:255',
             'permanent_address' => 'required|string|max:255',
             'designation_id' => 'required|exists:designations,id',
-            'cv' => 'required|file|mimes:pdf|max:2048',
+            'cv' => ($cvRequired ? 'required' : 'nullable') . '|file|mimes:pdf|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }

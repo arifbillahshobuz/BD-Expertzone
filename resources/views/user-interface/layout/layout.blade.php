@@ -11,6 +11,8 @@
     @include('sweetalert::alert')
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <script>
         // Ensure all AJAX requests include the CSRF token
         $(function() {
@@ -118,6 +120,8 @@
     {{-- ToastMagic Scripts --}}
     {!! ToastMagic::scripts() !!}
 
+    <!-- SweetAlert2 script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- Fslight box js --}}
     <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
