@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
+    public function test()
+    {
+            return view('layouts.guest');
+    }
     public function home()
     {
         $jobCategories = PostCategory::where('title', '=', 'government')->get();

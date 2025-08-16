@@ -90,8 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('messenger/fetch-favorite', [MessageController::class, 'fetchFavoritesList'])->name('messenger.fetch-favorite');
     Route::delete('messenger/delete-message', [MessageController::class, 'deleteMessage'])->name('messenger.delete-message');
 
-
-
 });
+
+
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
