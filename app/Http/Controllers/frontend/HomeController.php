@@ -16,15 +16,25 @@ class HomeController extends Controller
     }
     public function home()
     {
-        $jobCategories = PostCategory::where('title', '=', 'government')->get();
-        $posts = Post::with(['user', 'reactions.user'])
+
+
+//        dd($adminPosts);
+//        $posts = Post::with(['user', 'reactions.user'])
+//            ->latest()
+//            ->published()
+//            ->paginate(10);
+        $posts = Post::with([
+            'user:id,name,username,avatar,email,phone,password,role,designation_id',
+            'reactions',
+            'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id'
+        ])
+            ->where('type', 0)
             ->latest()
             ->published()
+            ->select('id','content','media','slug','is_published','type','published_at','user_id','post_category_id','is_featured')
             ->paginate(10);
-
         // $post = $posts->first();
         // dd($post->media);
-
         $partners = Partner::all();
         return view('user-interface.app', compact('partners', 'posts'));
     }

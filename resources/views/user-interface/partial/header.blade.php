@@ -1,3 +1,4 @@
+
 <div class="iq-top-navbar border-bottom">
     <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar p-lg-0 mt-0">
         <div class="container-fluid navbar-inner  ">
@@ -34,10 +35,13 @@
                                         <span class="nav-text">Spatial job</span>
                                     </a>
                                     <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="../dashboard/store-category-list.html">Category
-                                                List</a>
-                                        </li>
+                                        @foreach($adminPosts as $post)
+                                            @if($post->category->title=== 'China Student visa' || $post->category->title=== 'China Medical visa')
+                                                <li class="nav-item">
+                                                    <a class="nav-link " href="../dashboard/store-category-list.html">{!! $post->content !!}</a>
+                                                </li>
+                                            @endif
+                                        @endforeach
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -47,10 +51,13 @@
                                         <span class="nav-text">Government job</span>
                                     </a>
                                     <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="../dashboard/store-category-list.html">Category
-                                                List</a>
+                                        @foreach($adminPosts as $post)
+                                            @if($post->category->title=== 'Government Jobs')
+                                                <li class="nav-item">
+                                            <a class="nav-link " href="../dashboard/store-category-list.html">{!! $post->content !!}</a>
                                         </li>
+                                            @endif
+                                        @endforeach
                                     </ul>
                                 </li>
                                 <li class="nav-item">

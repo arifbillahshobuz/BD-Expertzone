@@ -56,7 +56,7 @@
                     <select name="designation_id" id="designation" class="form-select {{ $errors->has('designation_id') ? 'is-invalid' : '' }}">
                         <option value="">Select Designation</option>
                         @foreach ($designations as $designation)
-                            <option value="{{ $designation->id }}" >
+                            <option value="{{ $designation->id }}" {{ old('designation_id') == $designation->id ? 'selected' : '' }}>
                                 {{ $designation->title }}
                             </option>
                         @endforeach

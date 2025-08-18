@@ -26,24 +26,22 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($posts as $partner)
+                                @foreach($posts as $post)
                                     <tr>
-                                        <td>{{ "$partner->content" ?? 'N/A'}}</td>
-                                        <td><img src="{{ asset($mediaFiles[1]) }}"
-                                                 width="50" height="50">
-                                        </td>
-                                        <td>{{ $partner->published_at ?? 'N/A'}}</td>
-                                        <td>{{ $partner->category->title ?? 'N/A'}}</td>
+                                        <td>{!! $post->content ?? 'N/A' !!}</td>
+{{--                                        <td><img src="{{ asset('uploads/post/' . $post->media) }}" alt="story-img" width="100"></td>--}}
+                                        <td>{{ $post->published_at ?? 'N/A'}}</td>
+                                        <td>{{ $post->category->title ?? 'N/A'}}</td>
                                         <td>
                                             <!-- Edit Button -->
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $partner->id }}">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $post->id }}">
                                                 <i class="ti ti-edit"></i> {{ __('Edit') }}
                                             </button>
-                                            <form action="{{ route('admin.partner.destroy', $partner->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.post.destroy', $post->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this Partner?');"
+                                                        onclick="return confirm('Are you sure you want to delete this post?');"
                                                         class="btn btn-danger">
                                                     <i class="ti ti-trash"></i>
                                                     {{ __('Delete') }}

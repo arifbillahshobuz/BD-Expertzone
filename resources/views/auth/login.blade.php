@@ -16,7 +16,7 @@
             <form class="mt-5" method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group text-start">
-                    <h6 class="form-label fw-bold">Username or Email Address</h6>
+                    <h6 class="form-label fw-bold">Email Address</h6>
                     <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
                            placeholder="Your Full Name" value="{{ old('email') }}" name="email">
                     @if ($errors->has('email'))
@@ -25,19 +25,19 @@
                 </div>
 
                 <div class="form-group text-start">
-                    <h6 class="form-label fw-bold">Enter Your Password</h6>
+                    <h6 class="form-label fw-bold">Password</h6>
                     <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                           placeholder="Password" name="password">
+                           placeholder="Enter Your Password" name="password">
                     @if ($errors->has('password'))
                         <span class="text-danger">{{ $errors->first('password') }}</span>
                     @endif
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between">
-                    <div class="form-check d-inline-block m-0">
-                        <input type="checkbox" class="form-check-input" name="remember">
-                        <h6 class="form-check-label fw-bold">Remember Me</h6>
-                    </div>
+{{--                    <div class="form-check d-inline-block m-0">--}}
+{{--                        <input type="checkbox" class="form-check-input" name="remember">--}}
+{{--                        <h6 class="form-check-label fw-bold">Remember Me</h6>--}}
+{{--                    </div>--}}
                     <a href="{{ route('password.request') }}" class="font-italic">Forgot Password?</a>
                 </div>
                 <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign

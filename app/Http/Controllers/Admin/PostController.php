@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 class PostController extends Controller
 {
-        public function index(): View|RedirectResponse
+    public function index(): View|RedirectResponse
     {
         try {
             $posts = Post::where("type", "=","1")->with('category')->get();
@@ -38,14 +40,14 @@ class PostController extends Controller
             ], 500);
         }
     }
-    public function destroy( Partner $partner) : \Illuminate\Http\RedirectResponse
+    public function destroy( Post $post) : \Illuminate\Http\RedirectResponse
     {
         try {
-            $partner->delete();
-            if (file_exists(public_path('upload/partner/' . $partner->image))) {
-                unlink(public_path('upload/partner/' . $partner->image));
+            $post->delete();
+            if (file_exists(public_path('uploads/post/' . $post->media))) {
+                unlink(public_path('uploads/post/' . $post->media));
             }
-            return redirect()->route('admin.partner.index')->with('success', 'partner deleted successfully.');
+            return redirect()->route('admin.post.index')->with('success', 'Post deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete Post Category.');
         }
@@ -53,36 +55,31 @@ class PostController extends Controller
     public function store(Request $request): RedirectResponse
     {
         try {
-//            dd($request->all());
             $request->validate([
-                'first_name' => 'required|string|max:50',
-                'last_name' => 'nullable|string|max:50',
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:partners,email'],
-                'phone' => 'required|string',
-                'image' => 'required',
-                'address' => 'nullable|string|max:100',
-                'company' => 'nullable|string|max:50',
-                'designation_id' => 'required',
+                'content' => 'required',
+                'media' => 'required',
+                'post_category_id' => 'required',
             ]);
             $fileName = null;
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
+            if ($request->hasFile('media')) {
+                $file = $request->file('media');
                 $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("uploads/partner", $fileName);
+                $file->move(public_path('uploads/post'), $fileName);
             }
-            Partner::create([
-                'first_name' => $request->input('first_name'),
-                'last_name' => $request->input('last_name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'address' => $request->input('address'),
-                'company' => $request->input('company'),
-                'designation_id' => $request->input('designation_id'),
-                'image' => $fileName
+            Post::create([
+                'content' => $request->input('content'),
+                'media' => $fileName,
+                'slug' => Str::slug(Str::words(strip_tags($request->input('content')), 10, ''), '-'),
+                'is_published' => true,
+                'type' => 1,
+                'user_id' => Auth::id(),
+                'post_category_id' => $request->input('post_category_id'),
+                'is_featured' => true,
+                'published_at' => now(),
             ]);
 
-            return redirect()->route('admin.partner.index')
-                ->with('success', 'Partner created successfully');
+            return redirect()->route('admin.post.index')
+                ->with('success', 'Post created successfully');
         } catch (Exception $exception) {
             return redirect()->back()
                 ->with('error', $exception->getMessage())
