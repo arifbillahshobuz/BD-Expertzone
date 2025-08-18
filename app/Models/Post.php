@@ -109,7 +109,7 @@ class Post extends Model
     public function getUserReaction(User $user = null)
     {
         if (!$user) {
-            $user = auth()->user();
+            $user = Auth::user();
         }
 
         return $user ? $this->reactions()->where('user_id', $user->id)->first() : null;

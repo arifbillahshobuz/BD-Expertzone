@@ -85,7 +85,7 @@
         @if(isset($sameDesignationUsers) && $sameDesignationUsers->count())
             @foreach($sameDesignationUsers as $user)
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('user.profile', $user->id) }}">
+                    <a class="nav-link" href="{{ route('user.profile.show', $user->username) }}">
                         <i class="icon material-symbols-outlined filled">fiber_manual_record</i>
                         <i class="sidenav-mini-icon">FR</i>
                         <span class="item-name">{{ $user->name }}</span>

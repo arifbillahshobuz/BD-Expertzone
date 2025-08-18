@@ -57,8 +57,20 @@
                                         <div class="col-md-12">
                                             <div class="profile-img-edit">
                                                 <img class="profile-pic" id="avatar-preview"
-                                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? '' }}"
+                                                    src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
                                                     width="150px" height="150px" alt="profile-pic" loading="lazy">
+                                                <div class="p-image mt-2">
+                                                    <input class="file-upload @error('avatar') is-invalid @enderror"
+                                                        type="file" name="avatar" accept="image/*" id="avatar-input" />
+                                                    <label for="avatar-input" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-camera"></i> Choose Avatar
+                                                    </label>
+                                                    <small class="text-danger d-block">
+                                                        @error('avatar')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </small>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -180,31 +192,81 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="cv" class="form-label">Your CV (PDF):</label>
-                                            <input type="file" class="form-control" id="cv" name="cv"
-                                                accept=".pdf">
+                                            <label for="cv" class="form-label">
+                                                @if (Auth::user()->profile && Auth::user()->profile->cv)
+                                                    Upload New CV (PDF) - Optional:
+                                                @else
+                                                    Your CV (PDF) - Required:
+                                                @endif
+                                            </label>
+
+                                            <!-- Current CV Display -->
+                                            @if (Auth::user()->profile && Auth::user()->profile->cv)
+                                                <div class="current-cv-section mb-3 p-3 border rounded bg-light">
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-file-pdf text-danger fs-3 me-2"></i>
+                                                            <div>
+                                                                <h6 class="mb-1">Current CV</h6>
+                                                                <small
+                                                                    class="text-muted">{{ basename(Auth::user()->profile->cv) }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <a href="{{ asset(Auth::user()->profile->cv) }}"
+                                                                target="_blank"
+                                                                class="btn btn-outline-primary btn-sm me-2">
+                                                                <i class="fas fa-eye"></i> View
+                                                            </a>
+                                                            <a href="{{ route('user.cv.download') }}"
+                                                                class="btn btn-success btn-sm">
+                                                                <i class="fas fa-download"></i> Download
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            <!-- CV Upload Input -->
+                                            <input type="file" class="form-control @error('cv') is-invalid @enderror"
+                                                id="cv" name="cv" accept=".pdf">
+                                            @if (Auth::user()->profile && Auth::user()->profile->cv)
+                                                <small class="form-text text-muted">Upload a new CV to replace the current
+                                                    one.
+                                                    Leave empty to keep current CV. Only PDF files are allowed.</small>
+                                            @else
+                                                <small class="form-text text-muted">Please upload your CV. Only PDF files
+                                                    are allowed.</small>
+                                            @endif
+
                                             <small class="text-danger">
                                                 @error('cv')
                                                     {{ $message }}
                                                 @enderror
                                             </small>
-                                            <div class="mt-2" id="cv-filename-preview">
-                                                @if (Auth::user()->profile && Auth::user()->profile->cv)
-                                                    Currently: <a
-                                                        href="{{ asset('storage/' . Auth::user()->profile->cv ?? '') }}"
-                                                        target="_blank">{{ basename(Auth::user()->profile->cv) }}</a>
-                                                @else
-                                                    No CV uploaded.
-                                                @endif
+
+                                            <!-- New CV Preview -->
+                                            <div class="mt-2 d-none" id="cv-preview-section">
+                                                <div class="p-3 border rounded bg-info bg-opacity-10">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-file-pdf text-info fs-3 me-2"></i>
+                                                        <div>
+                                                            <h6 class="mb-1 text-info">New CV Selected</h6>
+                                                            <small class="text-muted" id="cv-filename-preview"></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label for="designation_id" class="form-label">Designation:</label>
-                                            <select name="designation_id" id="designation_id" class="form-select">
+                                            <select name="designation_id" id="designation_id"
+                                                class="form-select @error('designation_id') is-invalid @enderror">
+                                                <option value="">Select Designation</option>
                                                 @foreach ($designations as $designation)
                                                     <option value="{{ $designation->id }}"
-                                                        {{ old('designation_id') == $designation->id ? 'selected' : '' ?? auth()->user()->profile->designation_id == $designation->id }}>
+                                                        {{ (old('designation_id') ?? (auth()->user()->profile->designation_id ?? '')) == $designation->id ? 'selected' : '' }}>
                                                         {{ $designation->title }}
                                                     </option>
                                                 @endforeach
@@ -220,13 +282,13 @@
                                             <label class="form-label">Relationship:</label>
                                             <select class="form-select @error('relationship') is-invalid @enderror"
                                                 name="relationship">
-                                                <option value="">Select</option>
+                                                <option value="">Select Relationship Status</option>
                                                 <option value="unmarried"
-                                                    {{ old('relationship') == 'unmarried' ? 'selected' : '' ?? (auth()->user()->profile->relationship ?? '') }}>
+                                                    {{ (old('relationship') ?? (auth()->user()->profile->relationship ?? '')) == 'unmarried' ? 'selected' : '' }}>
                                                     Unmarried
                                                 </option>
                                                 <option value="married"
-                                                    {{ old('relationship') == 'married' ? 'selected' : '' ?? (auth()->user()->profile->relationship ?? '') }}>
+                                                    {{ (old('relationship') ?? (auth()->user()->profile->relationship ?? '')) == 'married' ? 'selected' : '' }}>
                                                     Married
                                                 </option>
                                             </select>
@@ -235,7 +297,6 @@
                                                     {{ $message }}
                                                 @enderror
                                             </small>
-
                                         </div>
 
                                         <div class="form-group col-sm-12">
@@ -251,7 +312,8 @@
 
                                         <div class="form-group col-sm-6">
                                             <label class="form-label">Present Address:</label>
-                                            <textarea class="form-control" name="present_address" rows="3" style="line-height: 15px;">{{ auth()->user()->profile->present_address ?? '' }}</textarea>
+                                            <textarea class="form-control @error('present_address') is-invalid @enderror" name="present_address" rows="3"
+                                                style="line-height: 15px;">{{ old('present_address') ?? (auth()->user()->profile->present_address ?? '') }}</textarea>
                                             <small class="text-danger">
                                                 @error('present_address')
                                                     {{ $message }}
@@ -262,7 +324,7 @@
                                         <div class="form-group col-sm-6">
                                             <label class="form-label">Permanent Address:</label>
                                             <textarea class="form-control @error('permanent_address') is-invalid @enderror" name="permanent_address"
-                                                rows="3" style="line-height: 15px;">{{ auth()->user()->profile->permanent_address ?? '' }}</textarea>
+                                                rows="3" style="line-height: 15px;">{{ old('permanent_address') ?? (auth()->user()->profile->permanent_address ?? '') }}</textarea>
                                             <small class="text-danger">
                                                 @error('permanent_address')
                                                     {{ $message }}
@@ -440,4 +502,95 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('page-script')
+    <script>
+        // Avatar preview functionality
+        document.getElementById('avatar-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatar-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // CV file preview
+        document.getElementById('cv').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('cv-filename-preview');
+            if (file) {
+                preview.innerHTML = `Selected: <strong>${file.name}</strong>`;
+            } else {
+                preview.innerHTML =
+                    '@if (Auth::user()->profile && Auth::user()->profile->cv) Currently: <a href="{{ asset('storage/' . Auth::user()->profile->cv) }}" target="_blank">{{ basename(Auth::user()->profile->cv) }}</a> @else No CV uploaded. @endif';
+            }
+        });
+
+        // Form validation
+        document.querySelector('form[action="{{ route('user.profile-update') }}"]').addEventListener('submit', function(
+            e) {
+            let isValid = true;
+            const requiredFields = ['name', 'username'];
+
+            requiredFields.forEach(function(fieldName) {
+                const field = document.getElementById(fieldName);
+                if (field && !field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                    // Add error message if not exists
+                    if (!field.nextElementSibling || !field.nextElementSibling.classList.contains(
+                            'text-danger')) {
+                        const errorMsg = document.createElement('small');
+                        errorMsg.className = 'text-danger';
+                        errorMsg.textContent =
+                            `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required.`;
+                        field.parentNode.appendChild(errorMsg);
+                    }
+                } else if (field) {
+                    field.classList.remove('is-invalid');
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to first error
+                const firstError = document.querySelector('.is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    firstError.focus();
+                }
+            }
+        });
+
+        // Remove validation error on input
+        document.querySelectorAll('input, select, textarea').forEach(function(element) {
+            element.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+                // Remove custom error messages
+                const nextElement = this.nextElementSibling;
+                if (nextElement && nextElement.classList.contains('text-danger') && nextElement.tagName ===
+                    'SMALL') {
+                    nextElement.remove();
+                }
+            });
+        });
+
+        // Handle tab switching with session state
+        @if (session('tab'))
+            // Auto-switch to the tab that has validation errors
+            const errorTab = '{{ session('tab') }}';
+            const tabLink = document.querySelector(`a[href="#${errorTab}"]`);
+            if (tabLink) {
+                const tab = new bootstrap.Tab(tabLink);
+                tab.show();
+            }
+        @endif
+    </script>
 @endsection

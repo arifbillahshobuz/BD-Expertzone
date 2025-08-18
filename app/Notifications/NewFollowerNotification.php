@@ -30,6 +30,7 @@ class NewFollowerNotification extends Notification implements ShouldQueue
             'type' => 'follow',
             'follower_id' => $this->follower->getKey(),
             'follower_name' => $this->follower->name,
+            'follower_username' => $this->follower->username,
             'avatar' => $this->follower->avatar ? asset($this->follower->avatar) : asset('frontend/assets/images/user/1.jpg'),
         ];
     }

@@ -16,6 +16,31 @@ use Illuminate\Validation\ValidationException;
 class UserPostController extends Controller
 {
 
+    /**
+     * Show a single post with comments.
+     *
+     * @param Post $post
+     * @return \Illuminate\View\View
+     */
+    public function show(Post $post)
+    {
+        // Load post with relationships
+        $post->load([
+            'user',
+            'reactions.user',
+            'comments.user',
+            'comments.replies.user'
+        ]);
+
+        // Also fetch recent posts for sidebar or related posts
+        $posts = Post::with(['user', 'reactions.user'])
+            ->latest()
+            ->published()
+            ->take(10)
+            ->get();
+
+        return view('user-interface.pages.post.show-post', compact('post', 'posts'));
+    }
 
     /**
      * Store a new user post.
@@ -75,6 +100,17 @@ class UserPostController extends Controller
             if ($followersToNotify->count() > 0) {
                 foreach ($followersToNotify as $follower) {
                     $follower->notify(new \App\Notifications\NewPostNotification($post));
+                }
+            }
+
+            // Notify friends about the new post
+            $friends = $user->friends()->get();
+            if ($friends->count() > 0) {
+                foreach ($friends as $friend) {
+                    // Don't notify if they're already notified as a follower
+                    if (!$followersToNotify->contains($friend)) {
+                        $friend->notify(new \App\Notifications\NewPostNotification($post));
+                    }
                 }
             }
 

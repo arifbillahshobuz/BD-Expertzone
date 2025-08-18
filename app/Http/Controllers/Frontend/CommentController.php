@@ -7,6 +7,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewCommentNotification;
 
 class CommentController extends Controller
 {
@@ -21,6 +22,11 @@ class CommentController extends Controller
             'user_id' => Auth::id(),
             'content' => $request->input('content'),
         ]);
+
+        // Notify post owner about new comment (if not commenting on own post)
+        if ($post->user_id !== Auth::id()) {
+            $post->user->notify(new \App\Notifications\NewCommentNotification($comment));
+        }
 
         if ($request->ajax()) {
             $comment->load('user'); // Eager load the user relationship
@@ -60,6 +66,11 @@ class CommentController extends Controller
         // Notify parent comment's user if not replying to self
         if ($comment['user_id'] && $comment['user_id'] !== Auth::id()) {
             $comment->user->notify(new \App\Notifications\CommentReplyNotification($reply));
+        }
+
+        // Also notify post owner if they're not the comment author and not the one replying
+        if ($comment->post->user_id !== Auth::id() && $comment->post->user_id !== $comment['user_id']) {
+            $comment->post->user->notify(new \App\Notifications\CommentReplyNotification($reply));
         }
 
         if ($request->ajax()) {

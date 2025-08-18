@@ -1,3 +1,49 @@
+<!-- Chat Popup Modal -->
+<div class="chat-popup-modal" id="chat-popup-modal" data-user-id="" style="display:none;"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Dynamically load chat popup content and logic
+    window.openChatPopup = function(userId, userName, userAvatar, isOnline = false) {
+        fetch('/messenger/popup?user_id=' + encodeURIComponent(userId))
+            .then(response => response.text())
+            .then(html => {
+                const modal = document.getElementById('chat-popup-modal');
+                modal.innerHTML = html;
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                setTimeout(() => {
+                    const input = modal.querySelector('input[name="message"]');
+                    if (input) input.focus();
+                }, 300);
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops! Something went wrong',
+                    text: 'Could not load chat popup. Please try again.'
+                });
+            });
+    };
+    // Close popup on outside click or ESC
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('chat-popup-modal');
+        if (modal && modal.classList.contains('show') && !modal.contains(e.target) && !e.target.closest(
+                '.chat-tabs-content')) {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        }
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('chat-popup-modal');
+            if (modal && modal.classList.contains('show')) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+            }
+        }
+    });
+</script>
+
 <div class="right-sidebar-mini right-sidebar">
     <div class="right-sidebar-panel p-0">
         <div class="card shadow-none m-0 h-100">
@@ -41,21 +87,44 @@
                     <div class="tab-content right-sidebar-tabs-content" id="right-sidebar-tabs">
                         <div class="tab-pane fade show active" id="nav-friends" role="tabpanel"
                             aria-labelledby="nav-friends-tab" tabindex="0">
-                            <div class="d-flex align-items-center justify-content-between chat-tabs-content border-bottom"
-                                data-target="chat-popup-modal">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="iq-profile-avatar status-online">
-                                        <img class="rounded-circle avatar-50"
-                                            src="{{ asset('frontend/') }}/assets/images/user/02.jpg" alt="user-img"
-                                            loading="lazy">
+                            @if (isset($friends) && count($friends))
+                                @foreach ($friends as $friend)
+                                    <div class="d-flex align-items-center justify-content-between chat-tabs-content border-bottom"
+                                        onclick="openChatPopup({{ $friend->id }}, '{{ addslashes($friend->name) }}', '{{ $friend->avatar_url }}', {{ $friend->is_online ? 'true' : 'false' }})"
+                                        style="cursor: pointer;" title="Start chat with {{ $friend->name }}">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div
+                                                class="iq-profile-avatar {{ $friend->is_online ? 'status-online' : 'status-offline' }}">
+                                                <img class="rounded-circle avatar-50" src="{{ $friend->avatar_url }}"
+                                                    alt="user-img" loading="lazy">
+                                            </div>
+                                            <div>
+                                                <h6 class="font-size-14 mb-0 fw-semibold">{{ $friend->name }}</h6>
+                                                <p class="mb-0 font-size-12 fw-medium">
+                                                    {{ $friend->last_message ?? 'No messages yet.' }}</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="font-size-12 fw-medium">{{ $friend->last_message_time ?? '' }}</span>
                                     </div>
-                                    <div>
-                                        <h6 class="font-size-14 mb-0 fw-semibold">Paul Molive</h6>
-                                        <p class="mb-0 font-size-12 fw-medium">hey! how are you?</p>
+                                @endforeach
+                            @else
+                                <div class="d-flex align-items-center justify-content-between chat-tabs-content border-bottom"
+                                    style="cursor: pointer;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="iq-profile-avatar status-offline">
+                                            <img class="rounded-circle avatar-50"
+                                                src="{{ asset('frontend/assets/images/default-avatar.jpg') }}"
+                                                alt="user-img" loading="lazy">
+                                        </div>
+                                        <div>
+                                            <h6 class="font-size-14 mb-0 fw-semibold">No Friends</h6>
+                                            <p class="mb-0 font-size-12 fw-medium">No messages yet.</p>
+                                        </div>
                                     </div>
+                                    <span class="font-size-12 fw-medium"></span>
                                 </div>
-                                <span class="font-size-12 fw-medium">1Day</span>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

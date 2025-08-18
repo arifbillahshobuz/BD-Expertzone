@@ -26,6 +26,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(FriendRequest::class, 'receiver_id');
     }
 
+    // Alias methods for consistency
+    public function sentFriendRequests()
+    {
+        return $this->friendRequestsSent();
+    }
+
+    public function receivedFriendRequests()
+    {
+        return $this->friendRequestsReceived();
+    }
+
     /**
      * Get all friends for the user.
      */
@@ -62,6 +73,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    /**
+     * Get the user's posts.
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the user's designation.
+     */
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class);
     }
 
     /**
@@ -106,5 +133,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'username';
     }
 }

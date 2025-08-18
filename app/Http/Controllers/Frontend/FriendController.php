@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
 use App\Models\User;
-use App\Models\FriendRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\FriendRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\FriendRequestNotification;
+use App\Notifications\FriendRequestAcceptedNotification;
 
 class FriendController extends Controller
 {
@@ -24,11 +27,21 @@ class FriendController extends Controller
         if ($exists) {
             return response()->json(['error' => 'Request already sent'], 400);
         }
-        FriendRequest::create([
+
+        $friendRequest = FriendRequest::create([
             'sender_id' => $senderId,
             'receiver_id' => $receiverId,
             'status' => 'pending',
         ]);
+
+        // Send notification to the receiver
+        $receiver = User::find($receiverId);
+        $sender = Auth::user();
+
+        if ($receiver) {
+            $receiver->notify(new FriendRequestNotification($sender, $friendRequest));
+        }
+
         return response()->json(['success' => 'Friend request sent']);
     }
 
@@ -47,6 +60,15 @@ class FriendController extends Controller
                 ['user_id' => $friendRequest->receiver_id, 'friend_id' => $friendRequest->sender_id, 'created_at' => now(), 'updated_at' => now()],
             ]);
         });
+
+        // Send notification to the sender that their request was accepted
+        $sender = User::find($friendRequest->sender_id);
+        $accepter = Auth::user();
+
+        if ($sender) {
+            $sender->notify(new FriendRequestAcceptedNotification($accepter));
+        }
+
         return response()->json(['success' => 'Friend request accepted']);
     }
 
@@ -59,5 +81,46 @@ class FriendController extends Controller
         }
         $friendRequest->update(['status' => 'declined']);
         return response()->json(['success' => 'Friend request declined']);
+    }
+
+    // Get pending friend requests for the current user
+    public function getPendingRequests()
+    {
+        $friendRequests = FriendRequest::where('receiver_id', Auth::id())
+            ->where('status', 'pending')
+            ->with('sender')
+            ->latest()
+            ->get();
+
+        return view('user-interface.pages.friend-requests', compact('friendRequests'));
+    }
+
+    // Get friends list for the current user
+    public function getFriends()
+    {
+        $friends = Auth::user()->friends()->get();
+        return view('user-interface.pages.friends', compact('friends'));
+    }
+
+    // Remove a friend
+    public function removeFriend(Request $request, $friendId)
+    {
+        $userId = Auth::id();
+
+        DB::transaction(function () use ($userId, $friendId) {
+            // Remove both directions of the friendship
+            DB::table('friends')
+                ->where([
+                    ['user_id', $userId],
+                    ['friend_id', $friendId]
+                ])
+                ->orWhere([
+                    ['user_id', $friendId],
+                    ['friend_id', $userId]
+                ])
+                ->delete();
+        });
+
+        return response()->json(['success' => 'Friend removed successfully']);
     }
 }

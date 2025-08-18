@@ -26,13 +26,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::put('/update/{designation}', [DesignationController::class, 'update'])->name('update');
         Route::delete('/delete/{designation}', [DesignationController::class, 'destroy'])->name('destroy');
     });
-    // partner routes incomplete
+    // partner routes
     Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
         Route::get('/', [PartnerController::class, 'index'])->name('index');
         Route::post('/store', [PartnerController::class, 'store'])->name('store');
-        Route::put('/update/{designation}', [PartnerController::class, 'update'])->name('update');
-        Route::delete('/delete/{designation}', [PartnerController::class, 'destroy'])->name('destroy');
-        Route::post('/update/{partner}', [PartnerController::class, 'update'])->name('update');
+        Route::put('/update/{partner}', [PartnerController::class, 'update'])->name('update');
         Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
     });
     // post routes incomplete
@@ -50,7 +48,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::delete('/delete/{postcategory}', [PostCategoryController::class, 'destroy'])->name('destroy');
     });
 });
-
 
 
 
