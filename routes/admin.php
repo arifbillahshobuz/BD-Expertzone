@@ -33,13 +33,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::put('/update/{partner}', [PartnerController::class, 'update'])->name('update');
         Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
     });
-    // post routes incomplete
-    Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
-        Route::get('/', [PostController::class, 'index'])->name('index');
-        Route::post('/store', [PostController::class, 'store'])->name('store');
-        Route::put('/update/{post}', [PostController::class, 'update'])->name('update');
-        Route::delete('/delete/{post}', [PostController::class, 'destroy'])->name('destroy');
-    });
+        // post routes incomplete
+        Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
+            Route::get('/', [PostController::class, 'index'])->name('index');
+            Route::post('/store', [PostController::class, 'store'])->name('store');
+            Route::put('/update/{post}', [PostController::class, 'update'])->name('update');
+            Route::delete('/delete/{post}', [PostController::class, 'destroy'])->name('destroy');
+        });
     // post category routes
     Route::group(['prefix' => 'post-category', 'as' => 'post.category.'], function () {
         Route::get('/', [PostCategoryController::class, 'index'])->name('index');
