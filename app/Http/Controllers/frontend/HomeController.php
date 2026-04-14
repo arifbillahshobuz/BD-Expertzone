@@ -13,31 +13,78 @@ class HomeController extends Controller
 
     public function test()
     {
-            return view('layouts.guest');
+        return view('layouts.guest');
     }
     public function home()
     {
+        $user = auth()->user();
+        $currentPage = request()->get('page', 1);
+        $feedAdminPosts = collect();
+        if ($currentPage == 1) {
+            $feedAdminPosts = Post::with([
+                'user:id,name,username,avatar,email,phone,password,role,designation_id',
+                'reactions',
+                'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id',
+                'comments',
+                'comments.user'
+            ])
+                ->where('post_type', 'admin')
+                ->latest()
+                ->published()
+                ->take(7)
+                ->get();
+        }
 
-
-//        dd($adminPosts);
-//        $posts = Post::with(['user', 'reactions.user'])
-//            ->latest()
-//            ->published()
-//            ->paginate(10);
         $posts = Post::with([
             'user:id,name,username,avatar,email,phone,password,role,designation_id',
             'reactions',
-            'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id'
+            'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id',
+            'comments',
+            'comments.user'
         ])
-            ->where('type', 0)
+            ->where('post_type', 'user')
             ->latest()
             ->published()
-            ->select('id','content','media','slug','is_published','type','published_at','user_id','post_category_id','is_featured')
+            ->select('id', 'content', 'media', 'slug', 'is_published', 'type', 'post_type', 'published_at', 'user_id', 'post_category_id', 'is_featured')
             ->paginate(10);
-        // $post = $posts->first();
-        // dd($post->media);
+
         $partners = Partner::all();
-        return view('user-interface.app', compact('partners', 'posts'));
+
+        $friends = collect();
+        $friendRequests = collect();
+        $jobPosts = collect();
+
+        if ($user) {
+            // Get friends
+            $friends = $user->friends()->take(10)->get();
+
+            // Get pending friend requests
+            $friendRequests = \App\Models\FriendRequest::where('receiver_id', $user->id)
+                ->where('status', 'pending')
+                ->with('sender')
+                ->latest()
+                ->take(5)
+                ->get();
+
+            // Get job-based posts (Always include admin, and add user posts matching designation)
+            $jobPosts = Post::with('user')
+                ->where(function ($query) use ($user) {
+                    if ($user->designation_id) {
+                        $query->whereHas('user', function ($q) use ($user) {
+                            $q->where('designation_id', $user->designation_id)
+                                ->where('id', '!=', $user->id);
+                        })->where('post_type', 'user');
+                    }
+                    
+                    $query->orWhere('post_type', 'admin');
+                })
+                ->latest()
+                ->published()
+                ->take(10)
+                ->get();
+        }
+
+        return view('user-interface.app', compact('partners', 'posts', 'friends', 'friendRequests', 'jobPosts', 'feedAdminPosts'));
     }
 
     public function show($id)

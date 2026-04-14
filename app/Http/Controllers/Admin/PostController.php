@@ -16,9 +16,9 @@ class PostController extends Controller
     public function index(): View|RedirectResponse
     {
         try {
-            $posts = Post::where("type", "=","1")->with('category')->get();
-            $postCategories = PostCategory::select('id','title')->get();
-            return view('admin.pages.post.list', compact(['posts','postCategories']));
+            $posts = Post::where("type", "=", "1")->with('category')->get();
+            $postCategories = PostCategory::select('id', 'title')->get();
+            return view('admin.pages.post.list', compact(['posts', 'postCategories']));
         } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Failed to load partner page');
         }
@@ -40,7 +40,7 @@ class PostController extends Controller
             ], 500);
         }
     }
-    public function destroy( Post $post) : \Illuminate\Http\RedirectResponse
+    public function destroy(Post $post): \Illuminate\Http\RedirectResponse
     {
         try {
             $post->delete();
@@ -63,15 +63,16 @@ class PostController extends Controller
             $fileName = null;
             if ($request->hasFile('media')) {
                 $file = $request->file('media');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
+                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/post'), $fileName);
             }
             Post::create([
                 'content' => $request->input('content'),
-                'media' => $fileName,
+                'media' => $fileName ? ['uploads/post/' . $fileName] : null,
                 'slug' => Str::slug(Str::words(strip_tags($request->input('content')), 10, ''), '-'),
                 'is_published' => true,
                 'type' => 1,
+                'post_type' => 'admin',
                 'user_id' => Auth::id(),
                 'post_category_id' => $request->input('post_category_id'),
                 'is_featured' => true,
@@ -87,48 +88,40 @@ class PostController extends Controller
         }
     }
 
-    public function update(Request $request, Partner $partner): RedirectResponse
+    public function update(Request $request, Post $post): RedirectResponse
     {
         try {
             $request->validate([
-                'first_name' => 'required|string|max:50',
-                'last_name' => 'nullable|string|max:50',
-                'email' => ['required'],
-                'phone' => 'required|string',
-                'address' => 'nullable|string|max:100',
-                'company' => 'nullable|string|max:50',
-                'designation_id' => 'required',
+                'content' => 'required',
+                'post_category_id' => 'required',
             ]);
-            $fileName = $partner->image;
 
-            if ($request->hasFile('image')) {
-                $request->validate([
-                    'image' => 'required'
-                ]);
-                if (file_exists(public_path('uploads/partner/' . $fileName))) {
-                    unlink(public_path('uploads/partner/' . $fileName));
+            $fileName = is_array($post->media) ? str_replace('uploads/post/', '', $post->media[0]) : $post->media;
+
+            if ($request->hasFile('media')) {
+                if ($post->media) {
+                    $oldFile = is_array($post->media) ? str_replace('uploads/post/', '', $post->media[0]) : $post->media;
+                    if (file_exists(public_path('uploads/post/' . $oldFile))) {
+                        unlink(public_path('uploads/post/' . $oldFile));
+                    }
                 }
-                $file = $request->file('image');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis').'.'.$file->getClientOriginalExtension();
-                $file->move("uploads/partner/", $fileName);
+                $file = $request->file('media');
+                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis') . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/post'), $fileName);
             }
 
-            $partner->update([
-                'first_name' => $request->input('first_name'),
-                'last_name' => $request->input('last_name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'address' => $request->input('address'),
-                'company' => $request->input('company'),
-                'designation_id' => $request->input('designation_id'),
-                'image' => $fileName
+            $post->update([
+                'content' => $request->input('content'),
+                'media' => $fileName ? ['uploads/post/' . $fileName] : null,
+                'post_category_id' => $request->input('post_category_id'),
+                'slug' => Str::slug(Str::words(strip_tags($request->input('content')), 10, ''), '-'),
             ]);
 
-            return redirect()->route('admin.partner.index')
-                ->with('success', 'Partner updated successfully');
+            return redirect()->route('admin.post.index')
+                ->with('success', 'Post updated successfully');
         } catch (Exception $exception) {
             return redirect()->back()
-                ->with('error', 'Failed to update partner')
+                ->with('error', $exception->getMessage())
                 ->withInput();
         }
     }

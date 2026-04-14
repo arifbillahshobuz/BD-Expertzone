@@ -26,6 +26,86 @@ class MessageController extends Controller
         return view('messenger.index', compact('favoriteList'));
     }
 
+    /** Show chat popup for a specific user */
+    function popup(Request $request)
+    {
+        $otherUser = User::findOrFail($request->user_id);
+        $messages = Message::where(function ($q) use ($otherUser) {
+                $q->where('from_id', Auth::id())->where('to_id', $otherUser->id);
+            })->orWhere(function ($q) use ($otherUser) {
+                $q->where('from_id', $otherUser->id)->where('to_id', Auth::id());
+            })->with('sender:id,name,avatar')
+            ->orderBy('created_at', 'asc')
+            ->take(50)->get();
+
+        // Mark received messages as seen
+        Message::where('from_id', $otherUser->id)
+            ->where('to_id', Auth::id())
+            ->where('seen', 0)
+            ->update(['seen' => 1]);
+
+        return view('messenger.components.popup', compact('otherUser', 'messages'));
+    }
+
+    /** Send a quick message from the sidebar popup */
+    function quickSend(Request $request)
+    {
+        $request->validate([
+            'to_id'   => 'required|integer|exists:users,id',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        $message = Message::create([
+            'from_id' => Auth::id(),
+            'to_id'   => $request->to_id,
+            'body'    => $request->message,
+            'seen'    => 0,
+        ]);
+
+        $message->load('sender:id,name,avatar');
+
+        // Broadcast event so it works in real-time
+        MessageEvent::dispatch($message, Auth::id());
+
+        return response()->json([
+            'success' => true,
+            'message' => [
+                'id'         => $message->id,
+                'body'       => $message->body,
+                'from_id'    => $message->from_id,
+                'created_at' => $message->created_at->format('H:i'),
+                'sender'     => $message->sender,
+            ]
+        ]);
+    }
+
+    /** Search users for chat sidebar */
+    function userSearch(Request $request)
+    {
+        $query = $request->get('query');
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        $users = User::where('id', '!=', Auth::id())
+            ->where(function($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('username', 'LIKE', "%{$query}%");
+            })
+            ->take(10)
+            ->get()
+            ->map(function($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'avatar_url' => $user->avatar ? asset($user->avatar) : asset('frontend/assets/images/user/1.jpg'),
+                    'is_online' => $user->isOnline()
+                ];
+            });
+
+        return response()->json($users);
+    }
+
     /** Search user profiles */
     function search(Request $request)
     {

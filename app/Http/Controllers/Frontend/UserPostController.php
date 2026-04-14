@@ -32,14 +32,40 @@ class UserPostController extends Controller
             'comments.replies.user'
         ]);
 
-        // Also fetch recent posts for sidebar or related posts
-        $posts = Post::with(['user', 'reactions.user'])
-            ->latest()
-            ->published()
-            ->take(10)
-            ->get();
+        $user = auth()->user();
+        $partners = \App\Models\Partner::all();
+        $friends = collect();
+        $friendRequests = collect();
+        $jobPosts = collect();
+        $feedAdminPosts = collect();
 
-        return view('user-interface.pages.post.show-post', compact('post', 'posts'));
+        // Admin posts for top of feed
+        $feedAdminPosts = Post::with([
+            'user:id,name,username,avatar,email,phone,password,role,designation_id',
+            'reactions', 'comments', 'comments.user'
+        ])->where('post_type', 'admin')->latest()->published()->take(7)->get();
+
+        if ($user) {
+            $friends = $user->friends()->take(10)->get();
+            $friendRequests = \App\Models\FriendRequest::where('receiver_id', $user->id)
+                ->where('status', 'pending')
+                ->with('sender')->latest()->take(5)->get();
+
+            $jobPosts = Post::with('user')
+                ->where(function ($query) use ($user) {
+                    if ($user->designation_id) {
+                        $query->whereHas('user', function ($q) use ($user) {
+                            $q->where('designation_id', $user->designation_id)
+                                ->where('id', '!=', $user->id);
+                        })->where('post_type', 'user');
+                    }
+                    $query->orWhere('post_type', 'admin');
+                })->latest()->published()->take(10)->get();
+        }
+
+        return view('user-interface.pages.post.single', compact(
+            'post', 'partners', 'friends', 'friendRequests', 'jobPosts', 'feedAdminPosts'
+        ));
     }
 
     /**
@@ -89,6 +115,7 @@ class UserPostController extends Controller
                 'slug' => Str::slug(Str::limit($request->input('content'), 50)) . '-' . time(),
                 'is_published' => true,
                 'type' => Post::TYPE_USER,
+                'post_type' => 'user',
                 'user_id' => $user->getKey(),
                 'post_category_id' => null,
                 'published_at' => now(),
@@ -135,8 +162,10 @@ class UserPostController extends Controller
     public function update(Request $request, Post $post)
     {
         // Only allow the owner to update
-        $ownerId = $post->user_id ?? ($post->user ? $post->user->getKey() : null);
-        if (Auth::check() && Auth::id() !== $ownerId) {
+        if (Auth::id() !== $post->user_id) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
             abort(403, 'Unauthorized');
         }
 
@@ -149,14 +178,18 @@ class UserPostController extends Controller
         $post->content = $request->input('content');
 
         // Handle new media uploads
-        $mediaPaths = [];
-        if (is_array($post->media)) {
-            $mediaPaths = $post->media;
-        } elseif (is_string($post->media) && $post->media !== '') {
-            $decoded = json_decode($post->media, true);
-            $mediaPaths = is_array($decoded) ? $decoded : [];
-        }
         if ($request->hasFile('media')) {
+            // Delete old media files from disk if replacing
+            if ($post->media && is_array($post->media)) {
+                foreach ($post->media as $oldFile) {
+                    $oldPath = public_path($oldFile);
+                    if (file_exists($oldPath) && is_file($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+            }
+
+            $mediaPaths = [];
             foreach ($request->file('media') as $file) {
                 if ($file->isValid()) {
                     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -168,15 +201,19 @@ class UserPostController extends Controller
                     $mediaPaths[] = 'uploads/post/' . $filename;
                 }
             }
+            $post->media = $mediaPaths;
         }
 
-        // Remove media if requested (expects array of paths in remove_media[])
-        if ($request->has('remove_media')) {
-            $mediaPaths = array_diff($mediaPaths, $request->input('remove_media', []));
-        }
-
-        $post->media = $mediaPaths;
         $post->save();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated successfully!',
+                'media' => $post->media,
+                'content' => $post->content
+            ]);
+        }
 
         ToastMagic::success('Post updated successfully!');
         return redirect()->back();
@@ -190,10 +227,20 @@ class UserPostController extends Controller
     public function destroy(Post $post)
     {
         // Only allow the owner to delete
-        $ownerId = $post->user_id ?? ($post->user ? $post->user->getKey() : null);
-        if (Auth::check() && Auth::id() !== $ownerId) {
+        if (Auth::id() !== $post->user_id) {
             abort(403, 'Unauthorized');
         }
+
+        // Delete associated media files from disk
+        if ($post->media && is_array($post->media)) {
+            foreach ($post->media as $file) {
+                $filePath = public_path($file);
+                if (file_exists($filePath) && is_file($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+
         $post->delete();
         ToastMagic::success('Post deleted successfully!');
         return redirect()->back();

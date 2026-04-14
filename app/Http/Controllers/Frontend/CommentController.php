@@ -131,4 +131,30 @@ class CommentController extends Controller
         $comment->delete();
         return response()->json(['success' => true]);
     }
+
+    // Update a comment
+    public function update(Request $request, Comment $comment)
+    {
+        if (!Auth::check() || Auth::id() !== $comment->user_id) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $comment->update([
+            'content' => $request->input('content'),
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment updated successfully!',
+                'content' => $comment->content
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Comment updated successfully!');
+    }
 }

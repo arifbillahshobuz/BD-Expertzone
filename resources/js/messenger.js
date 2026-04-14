@@ -601,6 +601,12 @@ window.Echo.join("online")
         userInactive(user.id);
     });
 
+function closeSearch() {
+    $(".wsus__user_list").removeClass("show_search_list");
+    $(".user_search").val("");
+    $(".user_search_list_result").html("");
+}
+
 function updateUserActiveList() {
     $(".messenger-list-item").each(function (index, value) {
         let id = $(this).data("id");
@@ -690,6 +696,11 @@ $(document).ready(function () {
     // click action for messenger list item
     $("body").on("click", ".messenger-list-item", function () {
         const dataId = $(this).attr("data-id");
+        if (!dataId) return;
+
+        // Close search list if open
+        closeSearch();
+
         updateSelectedContent(dataId);
         setMessengerId(dataId);
         IDinfo(dataId);

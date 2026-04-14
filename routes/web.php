@@ -13,8 +13,13 @@ use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\UserProfileController;
 use App\Http\Controllers\Frontend\FriendController;
+use App\Http\Controllers\Frontend\SearchController;
 use App\Models\User;
 
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+Route::post('/search/recent/save', [SearchController::class, 'saveRecent'])->name('search.recent.save');
+Route::post('/search/recent/delete', [SearchController::class, 'deleteRecent'])->name('search.recent.delete');
+Route::post('/search/recent/clear', [SearchController::class, 'clearRecent'])->name('search.recent.clear');
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
 Route::get('/partner', [HomeController::class, 'partnerList'])->name('partner.list');
@@ -74,6 +79,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('comments.destroy');
     Route::post('/comments/{comment}/hide', [CommentController::class, 'hide'])
         ->name('comments.hide');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])
+        ->name('comments.update');
 
     Route::post('/follow/{user}', [FollowController::class, 'follow']);
     Route::post('/unfollow/{user}', [FollowController::class, 'unfollow']);
@@ -109,6 +116,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Messenger Routes
     Route::get('messenger', [MessageController::class, 'index'])->name('messenger.index');
+    Route::get('messenger/popup', [MessageController::class, 'popup'])->name('messenger.popup');
+    Route::post('messenger/quick-send', [MessageController::class, 'quickSend'])->name('messenger.quick-send');
+    Route::get('messenger/user-search', [MessageController::class, 'userSearch'])->name('messenger.user-search');
 
     Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');
     // search route

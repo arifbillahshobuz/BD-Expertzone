@@ -86,20 +86,46 @@ class FriendController extends Controller
     // Get pending friend requests for the current user
     public function getPendingRequests()
     {
-        $friendRequests = FriendRequest::where('receiver_id', Auth::id())
+        $user = Auth::user();
+        $friendRequests = FriendRequest::where('receiver_id', $user->id)
             ->where('status', 'pending')
             ->with('sender')
             ->latest()
             ->get();
 
-        return view('user-interface.pages.friend-requests', compact('friendRequests'));
+        // Get IDs to exclude from suggestions
+        $userId = $user->id;
+        $friendIds = DB::table('friends')->where('user_id', $userId)->pluck('friend_id')->toArray();
+        $pendingRequestedIds = DB::table('friend_requests')->where('sender_id', $userId)->where('status', 'pending')->pluck('receiver_id')->toArray();
+        $pendingReceivedIds = DB::table('friend_requests')->where('receiver_id', $userId)->where('status', 'pending')->pluck('sender_id')->toArray();
+        
+        $excludedIds = array_merge([$userId], $friendIds, $pendingRequestedIds, $pendingReceivedIds);
+
+        // Fetch suggested friends
+        $suggestedFriends = User::whereNotIn('id', $excludedIds)->inRandomOrder()->take(8)->get();
+
+        return view('user-interface.pages.friend-requests', compact('friendRequests', 'suggestedFriends'));
     }
 
     // Get friends list for the current user
     public function getFriends()
     {
-        $friends = Auth::user()->friends()->get();
-        return view('user-interface.pages.friends', compact('friends'));
+        $user = Auth::user();
+        $friends = $user->friends()->get();
+        $friendCount = $friends->count();
+
+        // Get IDs to exclude from suggestions
+        $userId = $user->id;
+        $friendIds = DB::table('friends')->where('user_id', $userId)->pluck('friend_id')->toArray();
+        $pendingRequestedIds = DB::table('friend_requests')->where('sender_id', $userId)->where('status', 'pending')->pluck('receiver_id')->toArray();
+        $pendingReceivedIds = DB::table('friend_requests')->where('receiver_id', $userId)->where('status', 'pending')->pluck('sender_id')->toArray();
+        
+        $excludedIds = array_merge([$userId], $friendIds, $pendingRequestedIds, $pendingReceivedIds);
+
+        // Fetch suggested friends
+        $suggestedFriends = User::whereNotIn('id', $excludedIds)->inRandomOrder()->take(8)->get();
+
+        return view('user-interface.pages.friends', compact('friends', 'friendCount', 'suggestedFriends'));
     }
 
     // Remove a friend

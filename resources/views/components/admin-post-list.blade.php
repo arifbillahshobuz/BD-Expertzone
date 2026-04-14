@@ -29,7 +29,15 @@
                                 @foreach($posts as $post)
                                     <tr>
                                         <td>{!! $post->content ?? 'N/A' !!}</td>
-{{--                                        <td><img src="{{ asset('uploads/post/' . $post->media) }}" alt="story-img" width="100"></td>--}}
+                                        <td>
+                                            @if($post->media && is_array($post->media) && isset($post->media[0]))
+                                                <img src="{{ asset($post->media[0]) }}" alt="post-img" width="100">
+                                            @elseif($post->media && !is_array($post->media))
+                                                <img src="{{ asset('uploads/post/' . $post->media) }}" alt="post-img" width="100">
+                                            @else
+                                                <span class="text-muted">No Media</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $post->published_at ?? 'N/A'}}</td>
                                         <td>{{ $post->category->title ?? 'N/A'}}</td>
                                         <td>

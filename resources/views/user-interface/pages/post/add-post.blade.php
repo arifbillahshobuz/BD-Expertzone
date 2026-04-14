@@ -163,7 +163,7 @@
                             <div class="modal-body">
                                 <div class="d-flex align-items-center">
                                     <div class="user-img">
-                                        <img src="{{ auth()->user()->avatar ?? '' }}" alt="userimg"
+                                        <img src="{{ auth()->check() ? (auth()->user()->avatar ?? asset('frontend/assets/images/user/1.jpg')) : asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
                                             class="avatar-60 rounded-circle img-fluid" loading="lazy">
                                     </div>
                                     <div class="post-text ms-3 w-100">

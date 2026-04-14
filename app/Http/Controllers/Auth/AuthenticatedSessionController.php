@@ -28,7 +28,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if (Auth::user()->role === 'admin') {
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            // Ensure Spatie permissions are synced
+            if (!$user->hasRole('admin')) {
+                $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+                $user->assignRole($role);
+            }
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('home');

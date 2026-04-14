@@ -24,6 +24,7 @@ class Post extends Model
         'slug',
         'is_published',
         'type',
+        'post_type',
         'user_id',
         'post_category_id',
         'published_at',

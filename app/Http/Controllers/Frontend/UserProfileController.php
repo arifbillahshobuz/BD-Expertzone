@@ -58,8 +58,8 @@ class UserProfileController extends Controller
         $stats = [
             'posts_count' => $user->posts()->published()->count(),
             'friends_count' => $user->friends()->count(),
-            'followers_count' => $user->followers()->count(),
-            'following_count' => $user->following()->count(),
+            'followers_count' => \App\Models\FriendRequest::where('receiver_id', $user->id)->where('status', 'pending')->count(),
+            'following_count' => \App\Models\FriendRequest::where('sender_id', $user->id)->where('status', 'pending')->count(),
             'total_views' => 0, // You can implement view counting later
         ];
 
@@ -78,6 +78,34 @@ class UserProfileController extends Controller
             $friendshipStatus = $this->getFriendshipStatus(Auth::user(), $user);
         }
 
+        // Get all photos for the user
+        $photos = collect();
+        $userPostsWithMedia = Post::where('user_id', $user->id)
+            ->whereNotNull('media')
+            ->latest()
+            ->get();
+
+        foreach ($userPostsWithMedia as $post) {
+            $media = $post->media;
+            if (is_string($media)) {
+                $media = json_decode($media, true);
+            }
+
+            if (is_array($media)) {
+                foreach ($media as $path) {
+                    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $photos->push([
+                            'url' => $path,
+                            'post_id' => $post->id,
+                            'owner_username' => $user->username
+                        ]);
+                    }
+                }
+            }
+        }
+        $photos = $photos->take(24); // Show more photos than just 12
+
         return view('user-interface.pages.user.profile', compact(
             'user',
             'posts',
@@ -85,7 +113,8 @@ class UserProfileController extends Controller
             'recentFriends',
             'closeFriends',
             'isOwnProfile',
-            'friendshipStatus'
+            'friendshipStatus',
+            'photos'
         ));
     }
 

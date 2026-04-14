@@ -5,13 +5,24 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Frontend\PostCategoryController;
 use Illuminate\Support\Facades\Route;
-
 
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
+
+    // Role management
+    Route::resource('roles', RoleController::class);
+    // Permission management
+    Route::resource('permissions', PermissionController::class);
 
     // Admin profile routes
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {

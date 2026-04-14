@@ -33,3 +33,32 @@ if (!function_exists('truncate')) {
         return \Str::limit($str, $limit, '...');
     }
 }
+
+/** Get Global Setting */
+if (!function_exists('getSetting')) {
+    function getSetting($key, $default = null)
+    {
+        return \Illuminate\Support\Facades\Cache::remember('setting_' . $key, 86400, function () use ($key, $default) {
+            $setting = \App\Models\Setting::where('key', $key)->first();
+            return $setting ? $setting->value : $default;
+        });
+    }
+}
+
+/** Hex to RGB */
+if (!function_exists('hexToRgb')) {
+    function hexToRgb($hex)
+    {
+        $hex = str_replace("#", "", $hex);
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+        } else {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        }
+        return "$r, $g, $b";
+    }
+}

@@ -9,7 +9,20 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['seen'];
+    protected $fillable = ['from_id', 'to_id', 'body', 'attachment', 'seen'];
 
+    protected $casts = [
+        'attachment' => 'array',
+        'seen'       => 'boolean',
+    ];
 
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'from_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'to_id');
+    }
 }

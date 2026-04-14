@@ -5,8 +5,12 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <h1 class="navbar-brand navbar-brand-autodark">
-            <a href="javascript:;">
-                <img src="" width="110" height="32" alt="" class="navbar-brand-image">
+            <a href="{{ route('admin.dashboard') }}">
+                @if(getSetting('app_logo'))
+                    <img src="{{ asset(getSetting('app_logo')) }}" width="110" height="32" alt="{{ getSetting('app_name') }}" class="navbar-brand-image">
+                @else
+                    {{ getSetting('app_name', 'Admin') }}
+                @endif
             </a>
         </h1>
         <div class="navbar-nav flex-row d-lg-none">
@@ -134,8 +138,8 @@
                        href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
                        aria-expanded="true">
                             <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                <i class="ti ti-list sidebar-icon"></i>
+                                class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-settings sidebar-icon"></i>
                             </span>
                         <span class="nav-link-title">
                                 {{ __('Post Category') }}
@@ -152,6 +156,40 @@
                             </div>
                         </div>
                     </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#navbar-role" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="true">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="ti ti-shield sidebar-icon"></i>
+                        </span>
+                        <span class="nav-link-title">Access Control</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-columns">
+                            <div class="dropdown-menu-column">
+                                @can('role-list')
+                                <a class="dropdown-item" href="{{ route('admin.roles.index') }}">
+                                    Roles
+                                </a>
+                                @endcan
+                                @can('permission-list')
+                                <a class="dropdown-item" href="{{ route('admin.permissions.index') }}">
+                                    Permissions
+                                </a>
+                                @endcan
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.settings.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="ti ti-settings sidebar-icon"></i>
+                        </span>
+                        <span class="nav-link-title">Global Settings</span>
+                    </a>
                 </li>
             </ul>
         </div>
