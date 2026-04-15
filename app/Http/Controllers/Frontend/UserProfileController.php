@@ -74,8 +74,15 @@ class UserProfileController extends Controller
 
         // Check friendship status if viewing another user's profile
         $friendshipStatus = null;
+        $activeFriendRequest = null;
         if (!$isOwnProfile && Auth::check()) {
             $friendshipStatus = $this->getFriendshipStatus(Auth::user(), $user);
+            if ($friendshipStatus == 'request_received') {
+                $activeFriendRequest = \App\Models\FriendRequest::where('sender_id', $user->id)
+                    ->where('receiver_id', Auth::id())
+                    ->where('status', 'pending')
+                    ->first();
+            }
         }
 
         // Get all photos for the user
@@ -114,6 +121,7 @@ class UserProfileController extends Controller
             'closeFriends',
             'isOwnProfile',
             'friendshipStatus',
+            'activeFriendRequest',
             'photos'
         ));
     }
@@ -201,14 +209,15 @@ class UserProfileController extends Controller
                 $validatedData['cv'] = 'uploads/cvs/' . $cvFilename;
             }
 
-            // Update user's basic info (name, username)
+            // Update user's basic info (name, username, avatar)
             $user->update([
                 'name' => $validatedData['name'] ?? $user->name,
                 'username' => $validatedData['username'] ?? $user->username,
+                'avatar' => $validatedData['avatar'] ?? $user->avatar,
             ]);
 
             // Remove user table fields from profile data
-            unset($validatedData['name'], $validatedData['username']);
+            unset($validatedData['name'], $validatedData['username'], $validatedData['avatar']);
 
             // Update or create profile
             $user->profile()->updateOrCreate(

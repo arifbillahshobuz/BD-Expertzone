@@ -76,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
                 ->where('post_type', 'admin')
                 ->where('is_featured', true)
                 ->orderBy('created_at', 'DESC')
-                ->select('id','content','media','slug','user_id','post_category_id')
+                ->select('id','content','media','slug','user_id','post_category_id','created_at','updated_at')
                 ->get();
 
             $view->with('adminPosts', $adminPosts);

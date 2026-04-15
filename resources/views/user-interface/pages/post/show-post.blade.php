@@ -418,7 +418,11 @@
                                             </svg>
                                         </span>
                                         <span class="mb-0 d-inline-block text-capitalize fw-medium"></span>
-                                        <p class="mb-0"></p>
+                                        <p class="mb-0">
+                                            <a href="{{ route('posts.show', $post->id) }}" class="text-muted small">
+                                                {{ optional($post->created_at)->diffForHumans() ?? 'Just now' }}
+                                            </a>
+                                        </p>
                                     </div>
                                     <div class="card-post-toolbar">
                                         <div class="dropdown">
@@ -428,6 +432,15 @@
                                                 more_horiz
                                             </span>
                                             <div class="dropdown-menu m-0 p-0">
+                                                <a class="dropdown-item p-3" href="{{ route('posts.show', $post->id) }}">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">visibility</span>
+                                                        <div class="data ms-2">
+                                                            <h6>View Post</h6>
+                                                            <p class="mb-0">Open this post in a separate page</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
                                                 <a class="dropdown-item p-3" href="#">
                                                     <div class="d-flex align-items-top">
                                                         <span class="material-symbols-outlined">save</span>
@@ -731,10 +744,15 @@
                             <div class="add-comment-form-block mt-3 pt-3 border-top">
                                 <div class="d-flex align-items-start gap-2">
                                     <div class="flex-shrink-0">
-                                        <a href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
-                                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                        @auth
+                                            <a href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
+                                                <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                    alt="userimg" class="avatar-40 rounded-circle object-cover" loading="lazy">
+                                            </a>
+                                        @else
+                                            <img src="{{ asset('frontend/assets/images/user/1.jpg') }}"
                                                 alt="userimg" class="avatar-40 rounded-circle object-cover" loading="lazy">
-                                        </a>
+                                        @endauth
                                     </div>
                                     <div class="flex-grow-1">
                                         <form class="main-comment-form"

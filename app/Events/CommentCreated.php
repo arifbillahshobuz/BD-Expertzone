@@ -39,6 +39,11 @@ class CommentCreated implements ShouldBroadcastNow
         return new PrivateChannel('post.' . $this->postId);
     }
 
+    public function broadcastAs(): string
+    {
+        return 'CommentCreated';
+    }
+
     public function broadcastWith()
     {
         if ($this->chatId) {

@@ -52,7 +52,7 @@ class PartnerController extends Controller
             return redirect()->back()->with('error', 'Failed to delete Post Category.');
         }
     }
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         try {
 //            dd($request->all());
@@ -83,16 +83,32 @@ class PartnerController extends Controller
                 'image' => $fileName
             ]);
 
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Partner created successfully',
+                    'redirect' => route('admin.partner.index')
+                ]);
+            }
+
             return redirect()->route('admin.partner.index')
                 ->with('success', 'Partner created successfully');
+        } catch (ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
+            throw $e;
         } catch (Exception $exception) {
+            if ($request->ajax()) {
+                return response()->json(['message' => $exception->getMessage()], 500);
+            }
             return redirect()->back()
-                ->with('error', $exception->getMessage())
+                ->with('error', 'Something went wrong: ' . $exception->getMessage())
                 ->withInput();
         }
     }
 
-    public function update(Request $request, Partner $partner): RedirectResponse
+    public function update(Request $request, Partner $partner): RedirectResponse|JsonResponse
     {
         try {
             $request->validate([
@@ -129,9 +145,25 @@ class PartnerController extends Controller
                 'image' => $fileName
             ]);
 
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Partner updated successfully',
+                    'redirect' => route('admin.partner.index')
+                ]);
+            }
+
             return redirect()->route('admin.partner.index')
                 ->with('success', 'Partner updated successfully');
+        } catch (ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
+            throw $e;
         } catch (Exception $exception) {
+            if ($request->ajax()) {
+                return response()->json(['message' => $exception->getMessage()], 500);
+            }
             return redirect()->back()
                 ->with('error', 'Failed to update partner')
                 ->withInput();

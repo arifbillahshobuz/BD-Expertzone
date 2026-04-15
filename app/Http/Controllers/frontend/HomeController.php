@@ -45,7 +45,7 @@ class HomeController extends Controller
             ->where('post_type', 'user')
             ->latest()
             ->published()
-            ->select('id', 'content', 'media', 'slug', 'is_published', 'type', 'post_type', 'published_at', 'user_id', 'post_category_id', 'is_featured')
+            ->select('id', 'content', 'media', 'slug', 'is_published', 'type', 'post_type', 'published_at', 'created_at', 'updated_at', 'user_id', 'post_category_id', 'is_featured')
             ->paginate(10);
 
         $partners = Partner::all();
@@ -56,7 +56,7 @@ class HomeController extends Controller
 
         if ($user) {
             // Get friends
-            $friends = $user->friends()->take(10)->get();
+            $friends = $user->friends()->latest()->take(5)->get();
 
             // Get pending friend requests
             $friendRequests = \App\Models\FriendRequest::where('receiver_id', $user->id)

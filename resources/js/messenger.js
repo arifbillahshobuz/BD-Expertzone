@@ -567,7 +567,7 @@ function playNotificationSound() {
 }
 
 // Listen to message cannel
-window.Echo.private("message." + auth_id).listen("Message", (e) => {
+window.Echo.private("message." + auth_id).listen(".Message", (e) => {
     console.log(e);
     if (getMessengerId() != e.from_id) {
         updateContactItem(e.from_id);

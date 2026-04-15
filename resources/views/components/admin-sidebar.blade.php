@@ -43,27 +43,29 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                    aria-label="Open user menu">
-                    <span class="avatar avatar-sm"></span>
+                    <span class="avatar avatar-sm" style="background-image: url({{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }})"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div>dfgfdg</div>
+                        <div>{{ auth()->user()->name }}</div>
                         <div class="mt-1 small text-secondary">Admin</div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-
-                    <a href="" class="dropdown-item"></a>
+                    <a href="{{ route('admin.profile.edit') }}" class="dropdown-item">{{ __('Profile') }}</a>
                     <div class="dropdown-divider"></div>
-                    <a href="" class="dropdown-item">{{ __('Proflie') }}</a>
-                    <form method="POST" action="">>{{ __('Logout') }}</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="javascript:;" onclick="event.preventDefault(); this.closest('form').submit();"
+                           class="dropdown-item">{{ __('Logout') }}</a>
                     </form>
                 </div>
             </div>
         </div>
         <div class="collapse navbar-collapse" id="sidebar-menu">
             <ul class="navbar-nav pt-lg-3">
+                @can('dashboard-view')
                 <li class="nav-item">
                     <a class="nav-link "
-                       href="">
+                       href="{{ route('admin.dashboard') }}">
                         <span
                             class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
                             <i class="ti ti-home sidebar-icon"></i>
@@ -73,18 +75,37 @@
                         </span>
                     </a>
                 </li>
+                @endcan
+                @can('user-list')
+                <li class="nav-item">
+                    <a class="nav-link "
+                       href="{{ route('admin.users.index') }}">
+                        <span
+                            class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="ti ti-users sidebar-icon"></i>
+                        </span>
+                        <span class="nav-link-title">
+                            Users
+                        </span>
+                    </a>
+                </li>
+                @endcan
+                @can('designation-list')
                 <li class="nav-item">
                     <a class="nav-link "
                        href="{{ route('admin.designation.index') }}">
                         <span
-                            class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                            <i class="ti ti-home sidebar-icon"></i>
+                            class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="ti ti-briefcase sidebar-icon"></i>
                         </span>
                         <span class="nav-link-title">
                             Designation
                         </span>
                     </a>
                 </li>
+                @endcan
+                
+                @can('partner-list')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle }}"
                        href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
@@ -109,16 +130,19 @@
                         </div>
                     </div>
                 </li>
+                @endcan
+
+                @can('post-list')
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle }}"
+                    <a class="nav-link dropdown-toggle"
                        href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
                        aria-expanded="true">
                             <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/layout-2 -->
-                                <i class="ti ti-list sidebar-icon"></i>
+                                class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-news sidebar-icon"></i>
                             </span>
                         <span class="nav-link-title">
-                                {{ __('Post') }}
+                                {{ __('Post Management') }}
                             </span>
                     </a>
                     <div
@@ -126,13 +150,22 @@
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
                                 <a class="dropdown-item"
-                                   href="{{route('admin.post.index')}}">
-                                    {{ __('Post') }}
+                                   href="{{route('admin.posts.index')}}">
+                                    {{ __('All Posts') }}
                                 </a>
+                                @can('post-create')
+                                <a class="dropdown-item"
+                                   href="{{route('admin.posts.create')}}">
+                                    {{ __('Create Post') }}
+                                </a>
+                                @endcan
                             </div>
                         </div>
                     </div>
                 </li>
+                @endcan
+
+                @can('post-category-list')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle }}"
                        href="#navbar-layout" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
@@ -157,7 +190,9 @@
                         </div>
                     </div>
                 </li>
+                @endcan
 
+                @can('role-list')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#navbar-role" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="true">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -168,11 +203,12 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                @can('role-list')
                                 <a class="dropdown-item" href="{{ route('admin.roles.index') }}">
                                     Roles
                                 </a>
-                                @endcan
+                                <a class="dropdown-item" href="{{ route('admin.roles.assign.index') }}">
+                                    Assign Role
+                                </a>
                                 @can('permission-list')
                                 <a class="dropdown-item" href="{{ route('admin.permissions.index') }}">
                                     Permissions
@@ -182,7 +218,9 @@
                         </div>
                     </div>
                 </li>
+                @endcan
 
+                @can('setting-manage')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.settings.index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -191,6 +229,7 @@
                         <span class="nav-link-title">Global Settings</span>
                     </a>
                 </li>
+                @endcan
             </ul>
         </div>
     </div>
@@ -235,10 +274,10 @@
             <div class="nav-item dropdown">
                 <a href="javascript:;" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                    aria-label="Open user menu" aria-expanded="false">
-                    <span class="avatar avatar-sm" ></span>
+                    <span class="avatar avatar-sm" style="background-image: url({{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }})"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div>admin</div>
-                        <div class="mt-1 small text-secondary">admin@gmail.com</div>
+                        <div>{{ auth()->user()->name }}</div>
+                        <div class="mt-1 small text-secondary">{{ auth()->user()->email }}</div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

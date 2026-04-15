@@ -12,7 +12,7 @@ window.Echo = new Echo({
 
 // Listen for new comments/replies on each post
 window.listenForComments = function (postId) {
-    window.Echo.private("post." + postId).listen("CommentCreated", (e) => {
+    window.Echo.private("post." + postId).listen(".CommentCreated", (e) => {
         // If parent_id is null, it's a main comment
         if (!e.parent_id) {
             const commentList = document.getElementById(

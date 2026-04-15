@@ -440,7 +440,55 @@
                         }
                     });
                 };
+            });
+        </script>
+    @else
+        <script>
+            // Global Login Guard for Guest Users
+            window.showLoginGuard = function(action = "perform this action") {
+                Swal.fire({
+                    title: 'Login Required',
+                    text: `Please login to ${action} and join our community!`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Login Now',
+                    confirmButtonColor: 'var(--bs-primary)',
+                    cancelButtonText: 'Maybe later',
+                    customClass: {
+                        confirmButton: 'btn btn-primary rounded-pill px-4',
+                        cancelButton: 'btn btn-outline-secondary rounded-pill px-4'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route("login") }}';
+                    }
+                });
+            };
 
+            $(document).ready(function() {
+                // Intercept Post Reactions, Shares, and Comments for Guests
+                $(document).on('click', '.reaction-block-post, .like-data, .reaction-form button, .total-comment-block, .share-block a, .dropdown-toggle[role="button"]', function(e) {
+                    if (!window.Laravel || window.Laravel.userId === null) {
+                        // Only intercept if it's part of a social action (like, comment, share)
+                        const $this = $(this);
+                        if ($this.closest('.comment-area').length || $this.closest('.like-block').length || $this.closest('.share-block').length) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.showLoginGuard("interact with posts");
+                        }
+                    }
+                });
+
+                // Intercept Comment Input for Guests
+                $(document).on('click focus keydown', '.add-comment-input, .main-comment-form input', function(e) {
+                    if (!window.Laravel || window.Laravel.userId === null) {
+                        e.preventDefault();
+                        $(this).blur();
+                        window.showLoginGuard("post comments");
+                        return false;
+                    }
+                });
             });
         </script>
     @endauth
@@ -453,28 +501,35 @@
         $(document).ready(function() {
             if (typeof window.Echo !== 'undefined') {
                 window.Echo.private('message.' + {{ auth()->id() }})
-                    .listen('Message', (e) => {
+                    .listen('.Message', (e) => {
                         console.log('New message received:', e);
                         
-                        // 1. Check if the popup for this sender is open
-                        const $modal = $('#chat-popup-modal');
-                        const isModalOpen = $modal.hasClass('show');
-                        const openUserId = $('#chat-popup-inner').find('.name').closest('.chat-popup-header').siblings('.chat-popup-body').attr('data-with-user-id');
-                        
-                        // We need to add data-with-user-id to the body in popup.blade.php
+                        // 1. Update Chat Popup if open for this user
                         const activeChatId = window.activePopupUserId; 
+                        const popupBody = document.getElementById('popup-msg-body');
+                        
+                        if (activeChatId == e.from_id && popupBody) {
+                            // Remove empty state if exists
+                            const empty = popupBody.querySelector('.chat-empty');
+                            if (empty) empty.remove();
 
-                        if (activeChatId == e.from_id) {
-                            // 1. Try to update Sidebar Chat Window
-                            const $sidebarMessages = $('#sidebar-chat-messages');
-                            if ($sidebarMessages.length && $('#sidebar-chat-view').is(':visible')) {
-                                $('#no-chat-msg').remove();
-                                $sidebarMessages.append(`<div class="sidebar-msg them">${e.body} <span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span></div>`);
-                                $sidebarMessages.scrollTop($sidebarMessages[0].scrollHeight);
-                            }
+                            const div = document.createElement('div');
+                            div.className = 'chat-bubble them';
+                            div.innerHTML = (e.body ? e.body.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '') + 
+                                            '<span class="msg-time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</span>';
+                            popupBody.appendChild(div);
+                            popupBody.scrollTop = popupBody.scrollHeight;
                         }
 
-                        // 2. ALWAYS Update Sidebar History List (if function exists)
+                        // 2. Update Sidebar Chat Window if applicable
+                        const $sidebarMessages = $('#sidebar-chat-messages');
+                        if (activeChatId == e.from_id && $sidebarMessages.length && $('#sidebar-chat-view').is(':visible')) {
+                            $('#no-chat-msg').remove();
+                            $sidebarMessages.append(`<div class="sidebar-msg them">${e.body} <span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span></div>`);
+                            $sidebarMessages.scrollTop($sidebarMessages[0].scrollHeight);
+                        }
+
+                        // 3. ALWAYS Update Sidebar History List (if function exists)
                         if (typeof window.updateSidebarContactList === 'function') {
                             window.updateSidebarContactList(
                                 e.from_id, 
@@ -486,24 +541,77 @@
                             );
                         }
 
-                        // 3. Falling back to notification if not in active chat view
+                        // 4. Show Notification if the chat window for this user isn't open
+                        if (activeChatId != e.from_id) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'info',
+                                title: 'New message from ' + (e.sender_name || 'a friend'),
+                                showConfirmButton: false,
+                                timer: 4000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.style.cursor = 'pointer';
+                                    toast.addEventListener('click', () => {
+                                        if (typeof window.openChatPopup === 'function') {
+                                            window.openChatPopup(e.from_id);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                // 5. General Notifications Listener (Friend Requests, New Posts, etc.)
+                window.Echo.private('App.Models.User.' + {{ auth()->id() }})
+                    .notification((notification) => {
+                        console.log('Global notification received:', notification);
+                        
+                        let title = 'New Notification';
+                        let icon = 'info';
+                        let text = notification.message || 'You have a new update';
+                        let redirectUrl = '#';
+
+                        // Customize based on notification type
+                        if (notification.type === 'friend_request') {
+                            title = 'Friend Request';
+                            icon = 'question';
+                            redirectUrl = '{{ route("friend.requests") }}';
+                        } else if (notification.type === 'friend_request_accepted') {
+                            title = 'Friend Request Accepted';
+                            icon = 'success';
+                            redirectUrl = '{{ route("user.profile", "") }}/' + notification.user_id;
+                        } else if (notification.type === 'new_post') {
+                            title = 'New Post from ' + (notification.user_name || 'Friend');
+                            icon = 'info';
+                            redirectUrl = notification.url || '#';
+                        }
+
                         Swal.fire({
+                            title: title,
+                            text: text,
+                            icon: icon,
                             toast: true,
                             position: 'top-end',
-                            icon: 'info',
-                            title: 'New message from ' + (e.sender_name || 'a friend'),
-                            showConfirmButton: false,
-                            timer: 4000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.style.cursor = 'pointer';
-                                toast.addEventListener('click', () => {
-                                    if (typeof window.openChatPopup === 'function') {
-                                        window.openChatPopup(e.from_id);
-                                    }
-                                });
+                            showConfirmButton: true,
+                            confirmButtonText: 'View',
+                            showCancelButton: true,
+                            cancelButtonText: 'Dismiss',
+                            timer: 10000,
+                            timerProgressBar: true
+                        }).then((result) => {
+                            if (result.isConfirmed && redirectUrl !== '#') {
+                                window.location.href = redirectUrl;
                             }
                         });
+
+                        // Optionally update notification count badge if it exists
+                        const $badge = $('.notification-count-badge');
+                        if ($badge.length) {
+                            let count = parseInt($badge.text()) || 0;
+                            $badge.text(count + 1).show();
+                        }
                     });
             }
         });

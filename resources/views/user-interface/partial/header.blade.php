@@ -235,129 +235,56 @@
                         </a>
                         <div class="sub-drop sub-drop-large dropdown-menu " aria-labelledby="group-drop">
                             <div class="card shadow m-0">
-                                <div class="card-header px-0 pb-0 mx-5 border-bottom">
-                                    <ul class="nav nav-tabs justify-content-center w-100" id="friendTabs" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="requests-tab" data-bs-toggle="tab"
-                                                data-bs-target="#requests-content" type="button" role="tab">
-                                                Friend Requests
-                                                @php $pendingRequests = auth()->user()->friendRequestsReceived()->where('status', 'pending')->count(); @endphp
-                                                @if ($pendingRequests > 0)
-                                                    <span class="badge bg-primary ms-1">{{ $pendingRequests }}</span>
-                                                @endif
-                                            </button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="friends-tab" data-bs-toggle="tab"
-                                                data-bs-target="#friends-content" type="button" role="tab">
-                                                Friends
-                                                @php $friendsCount = auth()->user()->friends()->count(); @endphp
-                                                @if ($friendsCount > 0)
-                                                    <span class="badge bg-success ms-1">{{ $friendsCount }}</span>
-                                                @endif
-                                            </button>
-                                        </li>
-                                    </ul>
+                                <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
+                                    <div class="header-title">
+                                        <h5 class="fw-semibold">
+                                            Friend Requests
+                                            @php $pendingRequests = auth()->user()->friendRequestsReceived()->where('status', 'pending')->count(); @endphp
+                                            @if ($pendingRequests > 0)
+                                                <span class="badge bg-primary ms-1 badge-pill">{{ $pendingRequests }}</span>
+                                            @endif
+                                        </h5>
+                                    </div>
+                                    <a href="{{ route('friend.requests') }}" class="text-primary fw-500">View All</a>
                                 </div>
                                 <div class="card-body">
-                                    <div class="tab-content" id="friendTabsContent">
-                                        <!-- Friend Requests Tab -->
-                                        <div class="tab-pane fade show active" id="requests-content" role="tabpanel">
-                                            <div class="item-header-scroll" id="friend-requests-list">
-                                                @forelse(auth()->user()->friendRequestsReceived()->where('status', 'pending')->get() as $request)
-                                                    <div class="iq-friend-request" data-request-id="{{ $request->id }}">
-                                                        <div
-                                                            class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                                            <div class="d-flex align-items-center">
-                                                                <img class="avatar-40 rounded-pill"
-                                                                    src="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                                    alt="" loading="lazy">
-                                                                <div class="ms-3">
-                                                                    <h6 class="mb-0">{{ $request->sender->name }}</h6>
-                                                                    <p class="mb-0">
-                                                                        {{ $request->sender->friends()->count() }}
-                                                                        friends</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex align-items-center">
-                                                                <a href="javascript:void(0);"
-                                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1 accept-friend-request-header-btn"
-                                                                    data-request-id="{{ $request->id }}"
-                                                                    data-sender-id="{{ $request->sender->id }}"
-                                                                    data-sender-name="{{ $request->sender->name }}"
-                                                                    data-sender-username="{{ $request->sender->username }}"
-                                                                    data-sender-avatar="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}">
-                                                                    <span
-                                                                        class="material-symbols-outlined font-size-18 align-text-bottom">add</span>
-                                                                </a>
-                                                                <a href="javascript:void(0);"
-                                                                    class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1 decline-friend-request-header-btn"
-                                                                    data-request-id="{{ $request->id }}">
-                                                                    <span
-                                                                        class="material-symbols-outlined font-size-18 align-text-bottom">close</span>
-                                                                </a>
-                                                            </div>
+                                    <div class="item-header-scroll" id="friend-requests-list">
+                                        @forelse(auth()->user()->friendRequestsReceived()->where('status', 'pending')->take(10)->get() as $request)
+                                            <div class="iq-friend-request" data-request-id="{{ $request->id }}">
+                                                <div class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="avatar-40 rounded-pill"
+                                                            src="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                            alt="" loading="lazy">
+                                                        <div class="ms-3">
+                                                            <h6 class="mb-0">{{ $request->sender->name }}</h6>
+                                                            <p class="mb-0 small text-muted">{{ $request->sender->friends()->count() }} friends</p>
                                                         </div>
                                                     </div>
-                                                @empty
-                                                    <div class="text-center text-muted py-4" id="no-requests-message">No
-                                                        new friend requests</div>
-                                                @endforelse
-                                            </div>
-                                            <div class="text-center">
-                                                <a href="{{ route('friend.requests') }}"
-                                                    class="btn btn-primary fw-500 mt-4">View All Requests</a>
-                                            </div>
-                                        </div>
-
-                                        <!-- Friends Tab -->
-                                        <div class="tab-pane fade" id="friends-content" role="tabpanel">
-                                            <div class="item-header-scroll" id="friends-list">
-                                                @forelse(auth()->user()->friends()->take(8)->get() as $friend)
-                                                    <div class="iq-friend-item" data-friend-id="{{ $friend->id }}">
-                                                        <div
-                                                            class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                                            <div class="d-flex align-items-center">
-                                                                <img class="avatar-40 rounded-pill"
-                                                                    src="{{ asset($friend->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                                    alt="" loading="lazy">
-                                                                <div class="ms-3">
-                                                                    <h6 class="mb-0">{{ $friend->name }}</h6>
-                                                                    <p class="mb-0">{{ $friend->friends()->count() }}
-                                                                        friends</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex align-items-center">
-                                                                <a href="{{ route('user.profile.show', $friend->username) }}"
-                                                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1 friend-profile-btn"
-                                                                    title="View Profile"
-                                                                    data-friend-id="{{ $friend->id }}"
-                                                                    data-friend-name="{{ $friend->name }}">
-                                                                    <span
-                                                                        class="material-symbols-outlined font-size-18 align-text-bottom">person</span>
-                                                                </a>
-                                                                <a href="javascript:void(0);"
-                                                                    class="me-3 rounded bg-info-subtle border-0 d-inline-block px-1 friend-chat-btn"
-                                                                    title="Send Message"
-                                                                    data-friend-id="{{ $friend->id }}"
-                                                                    data-friend-name="{{ $friend->name }}"
-                                                                    data-friend-avatar="{{ asset($friend->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                                    data-friend-online="{{ $friend->isOnline() ? '1' : '0' }}">
-                                                                    <span
-                                                                        class="material-symbols-outlined font-size-18 align-text-bottom">chat</span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="rounded bg-primary-subtle border-0 d-inline-flex p-1 accept-friend-request-header-btn"
+                                                            data-request-id="{{ $request->id }}"
+                                                            data-sender-id="{{ $request->sender->id }}"
+                                                            data-sender-name="{{ $request->sender->name }}"
+                                                            data-sender-username="{{ $request->sender->username }}"
+                                                            data-sender-avatar="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}">
+                                                            <span class="material-symbols-outlined font-size-18">add</span>
+                                                        </a>
+                                                        <a href="javascript:void(0);"
+                                                            class="rounded bg-danger-subtle border-0 d-inline-flex p-1 decline-friend-request-header-btn"
+                                                            data-request-id="{{ $request->id }}">
+                                                            <span class="material-symbols-outlined font-size-18">close</span>
+                                                        </a>
                                                     </div>
-                                                @empty
-                                                    <div class="text-center text-muted py-4">No friends yet</div>
-                                                @endforelse
+                                                </div>
                                             </div>
-                                            <div class="text-center">
-                                                <a href="{{ route('friends.list') }}"
-                                                    class="btn btn-primary fw-500 mt-4">View All Friends</a>
+                                        @empty
+                                            <div class="text-center text-muted py-5" id="no-requests-message">
+                                                <span class="material-symbols-outlined font-size-40 d-block mb-2">person_add</span>
+                                                No new friend requests
                                             </div>
-                                        </div>
+                                        @endforelse
                                     </div>
                                 </div>
                             </div>
@@ -567,19 +494,7 @@
                                         <div class="ms-3">
                                             <a href="{{ route('user.edit-profile') }}" class="mb-0 h6"> Edit Profile </a>
                                         </div>
-                                    </div>
-                                    {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
-                                    {{--                                    <span class="material-symbols-outlined"> manage_accounts </span> --}}
-                                    {{--                                    <div class="ms-3"> --}}
-                                    {{--                                        <a href="app/account-setting.html" class="mb-0 h6"> Account settings </a> --}}
-                                    {{--                                    </div> --}}
-                                    {{--                                </div> --}}
-                                    {{--                                <div class="d-flex align-items-center iq-sub-card border-0"> --}}
-                                    {{--                                    <span class="material-symbols-outlined"> lock </span> --}}
-                                    {{--                                    <div class="ms-3"> --}}
-                                    {{--                                        <a href="app/privacy-setting.html" class="mb-0 h6"> Privacy Settings </a> --}}
-                                    {{--                                    </div> --}}
-                                    {{--                                </div> --}}
+                                    </div>                              
                                     <div class="d-flex align-items-center iq-sub-card">
                                         <span class="material-symbols-outlined"> login </span>
                                         <div class="ms-3">
@@ -590,13 +505,7 @@
                                                     class="mb-0 h6">{{ __('Sign out') }}</a>
                                             </form>
                                         </div>
-                                    </div>
-                                    <div class="d-flex align-items-center iq-sub-card border-0">
-                                        <span class="material-symbols-outlined"> line_style </span>
-                                        <div class="ms-3">
-                                            <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
@@ -778,6 +687,11 @@
                 var senderAvatar = btn.data('sender-avatar');
 
                 console.log('Request ID:', requestId, 'Notification ID:', notificationId);
+                
+                if (!requestId) {
+                    alert('Friend request ID missing. Please refresh the page.');
+                    return;
+                }
 
                 btn.prop('disabled', true);
 
@@ -1278,54 +1192,6 @@
                 friendsList.find('.iq-friend-item').first().hide().fadeIn(300);
             }
 
-            // Friend request handlers from notifications dropdown
-            $(document).on('click', '.accept-friend-request-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = $(this);
-                var requestId = btn.data('request-id');
-                var notificationId = btn.data('notification-id');
-
-                btn.prop('disabled', true);
-
-                $.ajax({
-                    url: '/friend-request/accept/' + requestId,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Remove the notification
-                            btn.closest('.friend-request-notification').fadeOut(300,
-                                function() {
-                                    $(this).remove();
-                                    updateNotificationBadge();
-                                });
-
-                            // Mark notification as read
-                            if (notificationId) {
-                                markNotificationAsRead(notificationId);
-                            }
-
-                            if (window.ToastMagic) {
-                                ToastMagic.success('Friend request accepted!');
-                            }
-                        } else {
-                            alert(response.error || 'Failed to accept friend request.');
-                            btn.prop('disabled', false);
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Failed to accept friend request.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        alert(errorMsg);
-                        btn.prop('disabled', false);
-                    }
-                });
-            });
 
             // Helper function to mark individual notification as read
             function markNotificationAsRead(notificationId) {

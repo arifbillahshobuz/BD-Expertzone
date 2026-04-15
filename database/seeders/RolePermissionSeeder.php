@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
 
         // Create permissions
         $permissions = [
+            'dashboard-view',
             'role-list',
             'role-create',
             'role-edit',
@@ -37,6 +38,19 @@ class RolePermissionSeeder extends Seeder
             'post-create',
             'post-edit',
             'post-delete',
+            'post-category-list',
+            'post-category-create',
+            'post-category-edit',
+            'post-category-delete',
+            'designation-list',
+            'designation-create',
+            'designation-edit',
+            'designation-delete',
+            'partner-list',
+            'partner-create',
+            'partner-edit',
+            'partner-delete',
+            'setting-manage',
         ];
 
         foreach ($permissions as $permission) {

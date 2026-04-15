@@ -15,15 +15,25 @@ use Illuminate\Foundation\Configuration\Middleware;
         ->withMiddleware(function (Middleware $middleware) {
             $middleware->web(append: [
                 \App\Http\Middleware\MaintenanceModeMiddleware::class,
+                \App\Http\Middleware\UserOnlineMiddleware::class,
             ]);
             $middleware->alias([
                 'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
                 'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
                 'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+                'admin.access' => \App\Http\Middleware\AdminAccess::class,
             ]);
         })
         ->withExceptions(function (Exceptions $exceptions) {
             $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
                 return back()->withErrors(['error' => 'The uploaded file is too large. Please upload a smaller file (Max 2MB).']);
+            });
+
+            $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, \Illuminate\Http\Request $request) {
+                return redirect()->back()->with('error', 'You do not have the required permissions.');
+            });
+
+            $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, \Illuminate\Http\Request $request) {
+                return redirect()->back()->with('error', 'Access Denied: You do not have permission for this action.');
             });
         })->create();

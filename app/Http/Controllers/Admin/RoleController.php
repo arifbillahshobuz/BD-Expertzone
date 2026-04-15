@@ -15,6 +15,9 @@ class RoleController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->hasAnyPermission(['role-list', 'role-create', 'role-edit', 'role-delete'])) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $roles = Role::orderBy('id', 'DESC')->get();
         return view('admin.roles.index', compact('roles'));
     }
@@ -24,6 +27,9 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->hasPermissionTo('role-create')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $permissions = Permission::get();
         return view('admin.roles.create', compact('permissions'));
     }
@@ -33,13 +39,18 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermissionTo('role-create')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $request->validate([
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
 
         $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+        // Convert permission IDs from strings to integers to avoid "permission named ID" error
+        $permissions = array_map('intval', $request->input('permission'));
+        $role->syncPermissions($permissions);
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role created successfully');
@@ -63,6 +74,9 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->hasPermissionTo('role-edit')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $role = Role::find($id);
         $permissions = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
@@ -77,6 +91,9 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!auth()->user()->hasPermissionTo('role-edit')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $request->validate([
             'name' => 'required',
             'permission' => 'required',
@@ -86,7 +103,7 @@ class RoleController extends Controller
         $role->name = $request->input('name');
         $role->save();
 
-        $role->syncPermissions($request->input('permission'));
+        $role->syncPermissions(array_map('intval', $request->input('permission')));
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully');
@@ -97,6 +114,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        if (!auth()->user()->hasPermissionTo('role-delete')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         DB::table("roles")->where('id', $id)->delete();
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role deleted successfully');

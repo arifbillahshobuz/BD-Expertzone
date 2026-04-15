@@ -29,17 +29,18 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request,): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'username' => ['required', 'string', 'lowercase', 'max:255', 'unique:' . User::class],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-                'phone' => ['required', 'string', 'max:20','min:11'],
+                'phone' => ['required', 'string', 'max:20', 'min:11'],
                 'designation_id' => ['required', 'exists:designations,id'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
+
             $user = User::create([
                 'name' => $request->input('name'),
                 'username' => $request->input('username'),
@@ -47,15 +48,28 @@ class RegisteredUserController extends Controller
                 'phone' => $request->input('phone'),
                 'designation_id' => $request->input('designation_id'),
                 'password' => Hash::make($request->input('password')),
+                'role' => 'user', // Explicitly set role column
             ]);
+
+            // Assign Spatie 'user' role automatically
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
+            $user->assignRole($role);
+
             event(new Registered($user));
+
             Auth::login($user);
-            return redirect(route('admin.dashboard', absolute: false));
-        }  catch (\Illuminate\Validation\ValidationException $e) {
+
+            // Consistency with AuthenticatedSessionController
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('home');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to create designation.');
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
-
     }
 }

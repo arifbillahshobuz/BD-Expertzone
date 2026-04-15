@@ -93,6 +93,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the user's comments.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the user's reactions.
+     */
+    public function reactions()
+    {
+        return $this->hasMany(PostReaction::class);
+    }
+
+    /**
      * Get the user's chats.
      */
 

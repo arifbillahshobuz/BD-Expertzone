@@ -1,191 +1,178 @@
 <div class="page-wrapper">
+    <div class="page-header d-print-none mb-4">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="page-pretitle text-uppercase fw-bold text-muted small mb-1">Content Management</div>
+                    <h2 class="page-title fw-black h1">Post Categories</h2>
+                    <p class="text-secondary mt-1">Organize your blog and social posts into dynamic categories.</p>
+                </div>
+                <div class="col-auto ms-auto">
+                    @can('post-category-create')
+                    <button type="button" class="btn btn-indigo d-none d-sm-inline-block rounded-pill px-4 shadow-sm text-white" data-bs-toggle="modal" data-bs-target="#createPostCategoryModal">
+                        <i class="ti ti-folder-plus me-1"></i> New Category
+                    </button>
+                    @endcan
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="page-body">
         <div class="container-xl">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">{{ __('All Post Categories') }}</h3>
-                    <div class="card-actions">
-                        <!-- Button to trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#createPostCategoryModal">
-                            <i class="ti ti-plus"></i>
-                            {{ __('Add new') }}
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card">
-                        <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($postCategories as $postCategory)
-                                        <tr>
-                                            <td>{{ $postCategory->title }}</td>
-                                            <td>{{ $postCategory->created_at->format('d M Y') }}</td>
-                                            <td>
-                                                <!-- Edit Button -->
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $postCategory->id }}">
-                                                    <i class="ti ti-edit"></i> {{ __('Edit') }}
+            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-vcenter card-table table-hover" id="post-category-table">
+                            <thead>
+                                <tr class="bg-indigo-lt">
+                                    <th class="ps-4 py-3 fw-bold text-indigo text-uppercase small" style="letter-spacing: 0.05em;">Category Name</th>
+                                    <th class="py-3 fw-bold text-indigo text-uppercase small" style="letter-spacing: 0.05em;">Visibility</th>
+                                    <th class="py-3 fw-bold text-indigo text-uppercase small" style="letter-spacing: 0.05em;">Metadata</th>
+                                    <th class="w-1 no-sort pe-4 py-3 fw-bold text-indigo text-uppercase small text-end">Management</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($postCategories as $postCategory)
+                                    <tr class="transition-all">
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-shape bg-indigo-lt rounded-circle me-3 d-flex align-items-center justify-content-center border border-indigo-lt" style="width: 42px; height: 42px;">
+                                                    <i class="ti ti-category-2 fs-2 text-indigo"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark fs-3">{{ $postCategory->title }}</div>
+                                                    <div class="text-secondary extra-small">{{ Str::slug($postCategory->title) }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-purple-lt px-2 py-1 rounded-pill fw-bold">Public</span>
+                                        </td>
+                                        <td class="text-muted small">
+                                            <div class="d-flex flex-column">
+                                                <span><i class="ti ti-calendar-time me-1"></i>{{ $postCategory->created_at ? $postCategory->created_at->diffForHumans() : 'Date N/A' }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="pe-4 text-end">
+                                            <div class="btn-list justify-content-end">
+                                                @can('post-category-edit')
+                                                <button type="button" class="btn btn-icon btn-ghost-indigo rounded-circle" data-bs-toggle="modal" data-bs-target="#editModal{{ $postCategory->id }}" title="Edit Category">
+                                                    <i class="ti ti-settings fs-2"></i>
                                                 </button>
-                                                <form
-                                                    action="{{ route('admin.post.category.destroy', $postCategory->id) }}"
-                                                    method="POST" class="d-inline">
+                                                @endcan
+                                                @can('post-category-delete')
+                                                <button type="button" class="btn btn-icon btn-ghost-danger rounded-circle delete-category-btn" data-id="{{ $postCategory->id }}" title="Delete Category">
+                                                    <i class="ti ti-trash fs-2"></i>
+                                                </button>
+                                                <form id="delete-form-{{ $postCategory->id }}" action="{{ route('admin.post.category.destroy', $postCategory->id) }}" method="POST" style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger delete-category-btn">
-                                                        <i class="ti ti-trash"></i>
-                                                        {{ __('Delete') }}
-                                                    </button>
                                                 </form>
-                                                @include('components.post-category-edit-modal')
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                                @endcan
+                                            </div>
+                                            @include('components.post-category-edit-modal')
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="card-footer text-end">
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        $('.dataTable').DataTable();
-    });
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <style>
+        .transition-all { transition: all 0.2s ease; }
+        #post-category-table tr:hover { background-color: #f5f3ff !important; box-shadow: inset 4px 0 0 #4263eb; }
+        .dataTables_wrapper .dataTables_filter { margin: 1.5rem; }
+        .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate { margin: 1.5rem; }
+        #post-category-table_filter input { 
+            border-radius: 12px; 
+            padding: 10px 20px; 
+            border: 1px solid #e2e8f0; 
+            background: #f8fafc;
+            min-width: 300px;
+        }
+        #post-category-table_filter input:focus { 
+            border-color: #4263eb;
+            box-shadow: 0 4px 12px rgba(66, 99, 235, 0.08);
+            background: #fff;
+        }
+        .extra-small { font-size: 0.7rem; }
+        .btn-indigo { background-color: #4263eb; border-color: #4263eb; }
+        .btn-indigo:hover { background-color: #3b5bdb; border-color: #3b5bdb; }
+        .dataTables_length select, #custom-sort-order, #user-sort-order, #post-sort-order {
+            border-radius: 8px;
+            padding: 5px 12px;
+            border: 1px solid #d1d5db;
+            background-color: #ffffff;
+            color: #1f2937;
+            font-weight: 500;
+            margin: 0 5px;
+            transition: all 0.2s;
+        }
+        .dataTables_length select:hover, #custom-sort-order:hover {
+            border-color: #3b82f6;
+            background-color: #f9fafb;
+        }
+    </style>
+@endpush
 
-    // SweetAlert2 handler for category delete
-    $(document).on('click', '.delete-category-btn', function(e) {
-        e.preventDefault();
-        var form = $(this).closest('form');
-
-        Swal.fire({
-            title: 'Delete Category?',
-            text: 'Are you sure you want to delete this post category?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, Delete!',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                popup: 'swal2-horizontal-layout',
-                actions: 'swal2-horizontal-actions'
-            },
-            buttonsStyling: true,
-            allowOutsideClick: false,
-            width: '450px',
-            padding: '1.5rem'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
+@push('scripts')
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#post-category-table').DataTable({
+                "pageLength": 10,
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search Categories...",
+                    "paginate": { "previous": "<i class='ti ti-chevron-left'></i>", "next": "<i class='ti ti-chevron-right'></i>" }
+                },
+                "dom": '<"d-flex justify-content-between align-items-center p-3" <"d-flex align-items-center" l <"#category-sort-wrapper" >> f>t<"d-flex justify-content-between align-items-center p-3"ip>',
+                "initComplete": function() {
+                    $('#category-sort-wrapper').html(`
+                        <div class="ms-3 d-flex align-items-center">
+                            <span class="fw-bold text-dark small me-2 d-none d-md-inline">Sort:</span>
+                            <select id="custom-sort-order" class="form-select form-select-sm shadow-sm" style="width: 140px;">
+                                <option value="asc">Oldest First</option>
+                                <option value="desc" selected>Newest First</option>
+                            </select>
+                        </div>
+                    `);
+                    
+                    $('#custom-sort-order').on('change', function() {
+                        const order = $(this).val();
+                        $('#post-category-table').DataTable().order([0, order]).draw();
+                    });
+                }
+            });
+            $('#post-category-table').DataTable().order([0, 'desc']).draw();
         });
-    });
-</script>
 
-<style>
-    /* Custom horizontal layout for SweetAlert2 */
-    .swal2-horizontal-layout {
-        border-radius: 8px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .swal2-horizontal-layout .swal2-content {
-        display: flex !important;
-        align-items: flex-start !important;
-        gap: 1rem !important;
-        text-align: left !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .swal2-horizontal-layout .swal2-icon {
-        position: relative !important;
-        margin: 0 !important;
-        flex-shrink: 0 !important;
-        width: 50px !important;
-        height: 50px !important;
-        border-width: 3px !important;
-        margin-top: 0.2rem !important;
-    }
-
-    .swal2-horizontal-layout .swal2-icon.swal2-warning {
-        border-color: #f39c12 !important;
-        color: #f39c12 !important;
-    }
-
-    .swal2-horizontal-layout .swal2-icon.swal2-warning .swal2-icon-content {
-        font-size: 2rem !important;
-        font-weight: bold !important;
-    }
-
-    .swal2-horizontal-layout .swal2-html-container {
-        flex: 1 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        text-align: left !important;
-    }
-
-    .swal2-horizontal-layout .swal2-title {
-        font-size: 1.2rem !important;
-        font-weight: 600 !important;
-        margin: 0 0 0.5rem 0 !important;
-        text-align: left !important;
-        color: #333 !important;
-    }
-
-    .swal2-horizontal-layout .swal2-html-container {
-        font-size: 0.95rem !important;
-        color: #666 !important;
-        line-height: 1.4 !important;
-    }
-
-    .swal2-horizontal-actions {
-        justify-content: flex-end !important;
-        gap: 0.5rem !important;
-        margin-top: 1.5rem !important;
-    }
-
-    .swal2-horizontal-actions .swal2-styled {
-        padding: 0.5rem 1.2rem !important;
-        font-size: 0.9rem !important;
-        border-radius: 4px !important;
-        font-weight: 500 !important;
-        min-width: 80px !important;
-    }
-
-    .swal2-horizontal-actions .swal2-confirm {
-        background-color: #dc3545 !important;
-        border: none !important;
-    }
-
-    .swal2-horizontal-actions .swal2-confirm:hover {
-        background-color: #c82333 !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3) !important;
-    }
-
-    .swal2-horizontal-actions .swal2-cancel {
-        background-color: #6c757d !important;
-        border: none !important;
-    }
-
-    .swal2-horizontal-actions .swal2-cancel:hover {
-        background-color: #5a6268 !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
-    }
-</style>
+        // SweetAlert2 handler for category delete
+        $(document).on('click', '.delete-category-btn', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4263eb',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#delete-form-' + id).submit();
+                }
+            })
+        });
+    </script>
+@endpush

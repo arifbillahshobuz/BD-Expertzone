@@ -46,7 +46,7 @@ class FriendRequestAcceptedNotification extends Notification implements ShouldQu
         return (new MailMessage)
             ->line('Your friend request has been accepted!')
             ->line($this->accepter->name . ' accepted your friend request.')
-            ->action('View Profile', route('user.profile', $this->accepter->id))
+            ->action('View Profile', route('user.profile.show', $this->accepter->username))
             ->line('You are now friends!');
     }
 

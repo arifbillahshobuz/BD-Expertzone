@@ -54,8 +54,8 @@ class FriendController extends Controller
         }
         DB::transaction(function () use ($friendRequest) {
             $friendRequest->update(['status' => 'accepted']);
-            // Add both users to friends table
-            DB::table('friends')->insert([
+            // Add both users to friends table safely
+            DB::table('friends')->insertOrIgnore([
                 ['user_id' => $friendRequest->sender_id, 'friend_id' => $friendRequest->receiver_id, 'created_at' => now(), 'updated_at' => now()],
                 ['user_id' => $friendRequest->receiver_id, 'friend_id' => $friendRequest->sender_id, 'created_at' => now(), 'updated_at' => now()],
             ]);

@@ -1,3 +1,9 @@
+<style>
+    .chat-search-input {
+        padding-left: 44px !important;
+    }
+</style>
+
 <div class="right-sidebar-mini">
     <div class="right-sidebar-panel p-0">
         <div class="card shadow-none m-0 h-100">
@@ -234,19 +240,20 @@
         .right-sidebar-mini {
             position: fixed;
             right: -320px;
-            top: 0; 
+            top: 0;
             z-index: 1050;
             width: 300px;
             height: 100vh;
             transition: right 0.3s ease-in-out;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
             background: #fff;
-            padding-top: 75px; 
+            padding-top: 75px;
         }
+
         .right-sidebar-mini.active {
             right: 0;
         }
-        
+
         .mobile-chat-toggle {
             display: flex !important;
             position: fixed;
@@ -260,21 +267,34 @@
             z-index: 1060;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             border: none;
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .mobile-chat-toggle:active { transform: scale(0.9); }
-        .mobile-chat-toggle span { color: white; }
+
+        .mobile-chat-toggle:active {
+            transform: scale(0.9);
+        }
+
+        .mobile-chat-toggle span {
+            color: white;
+        }
     }
-    
+
     @media (min-width: 1200px) {
-        .mobile-chat-toggle { display: none !important; }
+        .mobile-chat-toggle {
+            display: none !important;
+        }
     }
-    
+
     @media (max-width: 576px) {
-        .right-sidebar-mini { width: 100%; height: 100vh; top: 0; right: -100%; }
+        .right-sidebar-mini {
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            right: -100%;
+        }
     }
 </style>
 
@@ -289,7 +309,7 @@
         let currentChatUserId = null;
 
         // Toggle Sidebar on Mobile or from Header
-        $('#toggle-sidebar-messenger, #open-sidebar-messenger-header').on('click', function(e) {
+        $('#toggle-sidebar-messenger, #open-sidebar-messenger-header').on('click', function (e) {
             e.preventDefault();
             $('.right-sidebar-mini').toggleClass('active');
             const isActive = $('.right-sidebar-mini').hasClass('active');
@@ -297,7 +317,7 @@
         });
 
         // Close Sidebar when clicking outside on mobile
-        $(document).on('click', function(e) {
+        $(document).on('click', function (e) {
             if ($(window).width() < 1200) {
                 if (!$(e.target).closest('.right-sidebar-mini').length && !$(e.target).closest('#toggle-sidebar-messenger').length && !$(e.target).closest('#open-sidebar-messenger-header').length) {
                     $('.right-sidebar-mini').removeClass('active');

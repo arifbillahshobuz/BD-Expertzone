@@ -9,20 +9,25 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Frontend\PostCategoryController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'admin.access'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard-view');
 
     // Settings
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index')->middleware('permission:setting-manage');
+    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update')->middleware('permission:setting-manage');
 
     // Role management
-    Route::resource('roles', RoleController::class);
+    Route::resource('roles', RoleController::class)->middleware('permission:role-list|role-create|role-edit|role-delete');
+    Route::get('/roles-assign', [\App\Http\Controllers\Admin\UserRoleController::class, 'index'])->name('roles.assign.index')->middleware('permission:role-edit');
+    Route::post('/roles-assign', [\App\Http\Controllers\Admin\UserRoleController::class, 'store'])->name('roles.assign.store')->middleware('permission:role-edit');
+    Route::get('/users-search', [\App\Http\Controllers\Admin\UserRoleController::class, 'search'])->name('users.search')->middleware('permission:role-edit');
+    
     // Permission management
-    Route::resource('permissions', PermissionController::class);
+    Route::resource('permissions', PermissionController::class)->middleware('permission:permission-list|permission-create|permission-edit|permission-delete');
 
     // Admin profile routes
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
@@ -32,32 +37,30 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     });
     // Designation routes
     Route::group(['prefix' => 'designation', 'as' => 'designation.'], function () {
-        Route::get('/', [DesignationController::class, 'index'])->name('index');
-        Route::post('/store', [DesignationController::class, 'store'])->name('store');
-        Route::put('/update/{designation}', [DesignationController::class, 'update'])->name('update');
-        Route::delete('/delete/{designation}', [DesignationController::class, 'destroy'])->name('destroy');
+        Route::get('/', [DesignationController::class, 'index'])->name('index')->middleware('permission:designation-list');
+        Route::post('/store', [DesignationController::class, 'store'])->name('store')->middleware('permission:designation-create');
+        Route::put('/update/{designation}', [DesignationController::class, 'update'])->name('update')->middleware('permission:designation-edit');
+        Route::delete('/delete/{designation}', [DesignationController::class, 'destroy'])->name('destroy')->middleware('permission:designation-delete');
     });
     // partner routes
     Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
-        Route::get('/', [PartnerController::class, 'index'])->name('index');
-        Route::post('/store', [PartnerController::class, 'store'])->name('store');
-        Route::put('/update/{partner}', [PartnerController::class, 'update'])->name('update');
-        Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy');
+        Route::get('/', [PartnerController::class, 'index'])->name('index')->middleware('permission:partner-list');
+        Route::post('/store', [PartnerController::class, 'store'])->name('store')->middleware('permission:partner-create');
+        Route::put('/update/{partner}', [PartnerController::class, 'update'])->name('update')->middleware('permission:partner-edit');
+        Route::delete('/delete/{partner}', [PartnerController::class, 'destroy'])->name('destroy')->middleware('permission:partner-delete');
     });
-        // post routes incomplete
-        Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
-            Route::get('/', [PostController::class, 'index'])->name('index');
-            Route::post('/store', [PostController::class, 'store'])->name('store');
-            Route::put('/update/{post}', [PostController::class, 'update'])->name('update');
-            Route::delete('/delete/{post}', [PostController::class, 'destroy'])->name('destroy');
-        });
+    // Post management
+    Route::resource('posts', PostController::class)->middleware('permission:post-list|post-create|post-edit|post-delete');
     // post category routes
     Route::group(['prefix' => 'post-category', 'as' => 'post.category.'], function () {
-        Route::get('/', [PostCategoryController::class, 'index'])->name('index');
-        Route::post('/store', [PostCategoryController::class, 'store'])->name('store');
-        Route::put('/update/{postcategory}', [PostCategoryController::class, 'update'])->name('update');
-        Route::delete('/delete/{postcategory}', [PostCategoryController::class, 'destroy'])->name('destroy');
+        Route::get('/', [PostCategoryController::class, 'index'])->name('index')->middleware('permission:post-category-list');
+        Route::post('/store', [PostCategoryController::class, 'store'])->name('store')->middleware('permission:post-category-create');
+        Route::put('/update/{postcategory}', [PostCategoryController::class, 'update'])->name('update')->middleware('permission:post-category-edit');
+        Route::delete('/delete/{postcategory}', [PostCategoryController::class, 'destroy'])->name('destroy')->middleware('permission:post-category-delete');
     });
+
+    // User management
+    Route::resource('users', UserController::class)->middleware('permission:user-list|user-create|user-edit|user-delete');
 });
 
 

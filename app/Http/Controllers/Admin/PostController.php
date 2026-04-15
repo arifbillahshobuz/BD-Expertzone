@@ -1,128 +1,149 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use Exception;
+
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class PostController extends Controller
 {
-    public function index(): View|RedirectResponse
+    /**
+     * Show the form for creating a new post.
+     */
+    public function create()
     {
-        try {
-            $posts = Post::where("type", "=", "1")->with('category')->get();
-            $postCategories = PostCategory::select('id', 'title')->get();
-            return view('admin.pages.post.list', compact(['posts', 'postCategories']));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('error', 'Failed to load partner page');
+        if (!auth()->user()->hasPermissionTo('post-create')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
         }
+        $postCategories = PostCategory::all();
+        return view('admin.posts.create', compact('postCategories'));
     }
-    public function list(): JsonResponse
+
+    /**
+     * Store a newly created post in storage.
+     */
+    public function store(Request $request)
     {
-        try {
-            $partners = Partner::all();
-            return response()->json([
-                'status' => 'success',
-                'data' => $partners,
-                'message' => 'Partners fetched successfully'
-            ]);
-        } catch (Exception $exception) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to fetch partners',
-                'error' => config('app.debug') ? $exception->getMessage() : null
-            ], 500);
+        if (!auth()->user()->hasPermissionTo('post-create')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
         }
-    }
-    public function destroy(Post $post): \Illuminate\Http\RedirectResponse
-    {
-        try {
-            $post->delete();
-            if (file_exists(public_path('uploads/post/' . $post->media))) {
-                unlink(public_path('uploads/post/' . $post->media));
+        $request->validate([
+            'content' => 'required',
+            'post_category_id' => 'required|exists:post_categories,id',
+            'media.*' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,webm|max:20480',
+        ]);
+
+        $mediaPaths = [];
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $file) {
+                $filename = time() . '_' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/posts'), $filename);
+                $mediaPaths[] = 'uploads/posts/' . $filename;
             }
-            return redirect()->route('admin.post.index')->with('success', 'Post deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete Post Category.');
         }
-    }
-    public function store(Request $request): RedirectResponse
-    {
-        try {
-            $request->validate([
-                'content' => 'required',
-                'media' => 'required',
-                'post_category_id' => 'required',
-            ]);
-            $fileName = null;
-            if ($request->hasFile('media')) {
-                $file = $request->file('media');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis') . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/post'), $fileName);
-            }
-            Post::create([
-                'content' => $request->input('content'),
-                'media' => $fileName ? ['uploads/post/' . $fileName] : null,
-                'slug' => Str::slug(Str::words(strip_tags($request->input('content')), 10, ''), '-'),
-                'is_published' => true,
-                'type' => 1,
-                'post_type' => 'admin',
-                'user_id' => Auth::id(),
-                'post_category_id' => $request->input('post_category_id'),
-                'is_featured' => true,
-                'published_at' => now(),
-            ]);
 
-            return redirect()->route('admin.post.index')
-                ->with('success', 'Post created successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()
-                ->with('error', $exception->getMessage())
-                ->withInput();
-        }
+        Post::create([
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+            'post_category_id' => $request->post_category_id,
+            'media' => $mediaPaths,
+            'slug' => Str::slug(Str::limit(strip_tags($request->content), 50)),
+            'type' => Post::TYPE_ADMIN, // Marker for admin post
+            'post_type' => 'admin',
+            'is_published' => true,
+            'published_at' => now(),
+            'is_featured' => $request->has('is_featured'),
+        ]);
+
+        return redirect()->route('admin.posts.index')->with('success', 'Admin post created successfully.');
     }
 
-    public function update(Request $request, Post $post): RedirectResponse
+    /**
+     * Display a listing of posts for admin management.
+     */
+    public function index()
     {
-        try {
-            $request->validate([
-                'content' => 'required',
-                'post_category_id' => 'required',
-            ]);
-
-            $fileName = is_array($post->media) ? str_replace('uploads/post/', '', $post->media[0]) : $post->media;
-
-            if ($request->hasFile('media')) {
-                if ($post->media) {
-                    $oldFile = is_array($post->media) ? str_replace('uploads/post/', '', $post->media[0]) : $post->media;
-                    if (file_exists(public_path('uploads/post/' . $oldFile))) {
-                        unlink(public_path('uploads/post/' . $oldFile));
-                    }
-                }
-                $file = $request->file('media');
-                $fileName = $file->getClientOriginalName() . '.' . date('Ymdhis') . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/post'), $fileName);
-            }
-
-            $post->update([
-                'content' => $request->input('content'),
-                'media' => $fileName ? ['uploads/post/' . $fileName] : null,
-                'post_category_id' => $request->input('post_category_id'),
-                'slug' => Str::slug(Str::words(strip_tags($request->input('content')), 10, ''), '-'),
-            ]);
-
-            return redirect()->route('admin.post.index')
-                ->with('success', 'Post updated successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()
-                ->with('error', $exception->getMessage())
-                ->withInput();
+        if (!auth()->user()->hasPermissionTo('post-list')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
         }
+        // Load all posts with user and counts (admin + user posts as requested)
+        $posts = Post::with(['user', 'category'])->withCount(['comments', 'reactions'])->latest()->get();
+        return view('admin.posts.index', compact('posts'));
+    }
+
+    /**
+     * Display the specified post history/details.
+     */
+    public function show(Post $post)
+    {
+        if (!auth()->user()->hasPermissionTo('post-list')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        $post->load(['user', 'category', 'comments.user', 'reactions.user']);
+        $post->loadCount(['comments', 'reactions']);
+        
+        return view('admin.posts.show', compact('post'));
+    }
+
+    /**
+     * Show the form for editing the specified post.
+     */
+    public function edit(Post $post)
+    {
+        if (!auth()->user()->hasPermissionTo('post-edit')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        $postCategories = PostCategory::all();
+        return view('admin.posts.edit', compact('post', 'postCategories'));
+    }
+
+    /**
+     * Update the specified post in storage (Admin Overwrite).
+     */
+    public function update(Request $request, Post $post)
+    {
+        if (!auth()->user()->hasPermissionTo('post-edit')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        $request->validate([
+            'content' => 'required',
+            'post_category_id' => 'nullable|exists:post_categories,id',
+            'is_published' => 'required|boolean',
+            'is_featured' => 'required|boolean',
+        ]);
+
+        $data = $request->only(['content', 'post_category_id', 'is_published', 'is_featured']);
+        
+        // Handle media if uploaded
+        if ($request->hasFile('media')) {
+            $mediaPaths = [];
+            foreach ($request->file('media') as $file) {
+                $filename = time() . '_' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/posts'), $filename);
+                $mediaPaths[] = 'uploads/posts/' . $filename;
+            }
+            // Append or replace? For admin edit, usually replace is safer or merge
+            $data['media'] = array_merge($post->media ?? [], $mediaPaths);
+        }
+
+        $post->update($data);
+
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
+    }
+
+    /**
+     * Remove the specified post from storage.
+     */
+    public function destroy(Post $post)
+    {
+        if (!auth()->user()->hasPermissionTo('post-delete')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        $post->delete(); // Soft delete as per model
+        return redirect()->route('admin.posts.index')->with('success', 'Post moved to trash.');
     }
 }

@@ -13,6 +13,9 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->hasPermissionTo('permission-list')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
         $permissions = Permission::orderBy('id', 'DESC')->get();
         return view('admin.permissions.index', compact('permissions'));
     }

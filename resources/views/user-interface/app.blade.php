@@ -51,22 +51,13 @@
                         @foreach($friendRequests as $req)
                         <li class="d-flex align-items-center gap-3 pb-3 mb-2 border-bottom friend-request-item"
                             data-request-id="{{ $req->id }}">
-                            <div class="position-relative flex-shrink-0">
-                                <img src="{{ $req->sender->avatar ? asset($req->sender->avatar) : asset('frontend/assets/images/user/1.jpg') }}"
-                                     alt="{{ $req->sender->name }}"
-                                     class="avatar-50 rounded-circle object-cover">
-                                @if($req->sender->isOnline())
-                                    <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-white"
-                                          style="width:11px;height:11px;"></span>
-                                @endif
-                            </div>
                             <div class="flex-grow-1 min-width-0">
                                 <a href="{{ route('user.profile.show', $req->sender->username) }}"
                                    class="fw-semibold text-dark text-decoration-none d-block text-truncate">
                                     {{ $req->sender->name }}
                                 </a>
-                                <small class="text-muted">{{ $req->sender->friends()->count() }} friends</small>
-                                <div class="d-flex gap-2 mt-2">
+                                <small class="text-muted d-block">{{ $req->sender->friends()->count() }} friends</small>
+                                <div class="d-flex gap-2 mt-1">
                                     <button class="btn btn-primary btn-sm flex-fill accept-friend-request-btn"
                                             data-request-id="{{ $req->id }}">
                                         <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">check</span>
@@ -104,28 +95,27 @@
                         <ul class="list-unstyled m-0">
                             @foreach($friends as $friend)
                             <li class="d-flex align-items-center gap-3 mb-3">
-                                <div class="position-relative flex-shrink-0">
-                                    <img src="{{ $friend->avatar ? asset($friend->avatar) : asset('frontend/assets/images/user/1.jpg') }}"
-                                         alt="{{ $friend->name }}"
-                                         class="avatar-45 rounded-circle object-cover">
-                                    @if($friend->isOnline())
-                                        <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-white"
-                                              style="width:10px;height:10px;"></span>
-                                    @endif
-                                </div>
-                                <div class="flex-grow-1 min-width-0">
-                                    <a href="{{ route('user.profile.show', $friend->username) }}"
-                                       class="fw-semibold text-dark text-decoration-none d-block text-truncate">
-                                        {{ $friend->name }}
-                                    </a>
-                                    <small class="{{ $friend->isOnline() ? 'text-success' : 'text-muted' }}">
-                                        {{ $friend->isOnline() ? '● Online' : 'Offline' }}
-                                    </small>
-                                </div>
+                            <div class="flex-grow-1 min-width-0">
                                 <a href="{{ route('user.profile.show', $friend->username) }}"
-                                   class="btn btn-light btn-sm rounded-circle p-1" title="View Profile">
-                                    <span class="material-symbols-outlined" style="font-size:18px;line-height:1.2">person</span>
+                                   class="fw-semibold text-dark text-decoration-none d-block text-truncate">
+                                    <span class="status-dot {{ $friend->isOnline() ? 'bg-success' : 'bg-secondary' }} d-inline-block rounded-circle me-1" style="width:8px;height:8px;"></span>
+                                    {{ $friend->name }}
                                 </a>
+                            </div>
+                                <div class="d-flex gap-2">
+                                    <a href="javascript:void(0);"
+                                       class="btn btn-light btn-sm rounded-circle p-1 friend-chat-btn"
+                                       title="Send Message"
+                                       data-friend-id="{{ $friend->id }}"
+                                       data-friend-name="{{ $friend->name }}"
+                                       data-friend-avatar="{{ $friend->avatar ? asset($friend->avatar) : asset('frontend/assets/images/user/1.jpg') }}">
+                                        <span class="material-symbols-outlined" style="font-size:18px;line-height:1.2">chat</span>
+                                    </a>
+                                    <a href="{{ route('user.profile.show', $friend->username) }}"
+                                       class="btn btn-light btn-sm rounded-circle p-1" title="View Profile">
+                                        <span class="material-symbols-outlined" style="font-size:18px;line-height:1.2">person</span>
+                                    </a>
+                                </div>
                             </li>
                             @endforeach
                         </ul>
@@ -150,15 +140,16 @@
                         <ul class="list-unstyled m-0">
                             @foreach($jobPosts as $jobPost)
                             <li class="d-flex align-items-start gap-3 mb-3 border-bottom pb-2">
-                                <img src="{{ $jobPost->user->avatar ? asset($jobPost->user->avatar) : asset('frontend/assets/images/user/1.jpg') }}"
-                                     alt="{{ $jobPost->user->name }}"
-                                     class="avatar-40 rounded-circle object-cover flex-shrink-0">
                                 <div class="min-width-0">
-                                    <a href="{{ route('user.profile.show', $jobPost->user->username) }}#post-{{ $jobPost->id }}"
-                                       class="fw-semibold text-dark text-decoration-none small d-block">
-                                        {{ Str::limit(strip_tags($jobPost->content), 50) }}
+                                    <a href="{{ route('posts.show', $jobPost->id) }}"
+                                       class="fw-semibold text-dark text-decoration-none small d-block mb-1">
+                                        <i class="ph ph-briefcase text-primary me-1"></i>
+                                        {{ Str::limit(strip_tags($jobPost->content), 60) }}
                                     </a>
-                                    <small class="text-muted">by {{ $jobPost->user->name }}</small>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">by {{ $jobPost->user->name }}</small>
+                                        <small class="text-muted font-size-10">{{ $jobPost->created_at->diffForHumans(null, true) }}</small>
+                                    </div>
                                 </div>
                             </li>
                             @endforeach
