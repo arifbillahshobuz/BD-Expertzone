@@ -303,6 +303,47 @@
             right: -2px !important;
             font-size: 10px !important;
         }
+
+        /* Fixed & Centered Dropdowns for Mobile */
+        .dropdown {
+            position: static !important;
+            /* Allow dropdown-menu to be relative to the header */
+        }
+
+        .sub-drop {
+            width: 96vw !important;
+            position: absolute !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            top: 110px !important;
+            max-height: 75vh;
+            overflow-y: auto;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+            margin: 0 !important;
+            z-index: 10000 !important;
+        }
+
+        .sub-drop-large {
+            width: 96vw !important;
+        }
+
+        .iq-friend-request h6,
+        .flex-grow-1 h6 {
+            font-size: 14px !important;
+        }
+
+        .iq-friend-request p,
+        .flex-grow-1 p {
+            font-size: 12px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .iq-friend-request .btn {
+            padding: 6px 12px !important;
+            font-size: 11px !important;
+            border-radius: 6px !important;
+        }
     }
 </style>
 
