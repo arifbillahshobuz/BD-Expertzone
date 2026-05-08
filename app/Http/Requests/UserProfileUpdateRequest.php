@@ -22,24 +22,23 @@ class UserProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         $user = auth()->user();
-        $cvRequired = !($user->profile && $user->profile->cv);
 
         return [
             'name' => 'sometimes|string|max:255',
             'username' => 'sometimes|string|max:255|unique:users,username,' . $user->id,
-            'gender' => 'required|in:male,female',
-            'blood_group' => 'required|string|max:10|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
-            'language' => 'required|string|max:10',
-            'relationship' => 'required|in:married,unmarried',
-            'bio' => 'required|string|max:255',
-            'education' => 'required|string|max:50',
-            'date_of_birth' => 'required|date',
-            'hobby' => 'required|string|max:50',
-            'present_address' => 'required|string|max:255',
-            'permanent_address' => 'required|string|max:255',
-            'designation_id' => 'required|exists:designations,id',
-            'cv' => ($cvRequired ? 'required' : 'nullable') . '|file|mimes:pdf|max:2048',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gender' => 'nullable|in:male,female',
+            'blood_group' => 'nullable|string|max:10|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            'language' => 'nullable|string|max:10',
+            'relationship' => 'nullable|in:married,unmarried',
+            'bio' => 'nullable|string|max:1000',
+            'education' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'hobby' => 'nullable|string|max:255',
+            'present_address' => 'nullable|string|max:500',
+            'permanent_address' => 'nullable|string|max:500',
+            'designation_id' => 'nullable|exists:designations,id',
+            'cv' => 'nullable|file|mimes:pdf|max:5120',
+            'avatar' => 'nullable|image|max:2048',
         ];
     }
 }

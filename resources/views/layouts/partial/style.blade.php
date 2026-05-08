@@ -1,4 +1,10 @@
-<link rel="shortcut icon" href="{{asset('frontend/')}}/assets/images/favicon.ico" />
+@if(getSetting('app_logo'))
+    <link rel="shortcut icon" href="{{ asset(getSetting('app_logo')) }}" />
+@elseif(getSetting('favicon'))
+    <link rel="shortcut icon" href="{{ asset(getSetting('favicon')) }}" />
+@else
+    <link rel="shortcut icon" href="{{asset('frontend/')}}/assets/images/favicon.ico" />
+@endif
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/css/libs.min.css">
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />

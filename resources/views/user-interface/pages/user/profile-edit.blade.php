@@ -7,28 +7,16 @@
                 <div class="card-body p-0">
                     <div class="iq-edit-list">
                         <ul class="iq-edit-profile row nav nav-pills" role="tablist">
-                            <li class="col-md-3 p-0">
+                            <li class="col-md-6 p-0">
                                 <a class="nav-link {{ session('tab') == 'personal-information' || !session('tab') ? 'active' : '' }}"
                                     data-bs-toggle="pill" href="#personal-information" role="tab">
                                     Personal Information
                                 </a>
                             </li>
-                            <li class="col-md-3 p-0">
+                            <li class="col-md-6 p-0">
                                 <a class="nav-link {{ session('tab') == 'chang-pwd' ? 'active' : '' }}"
                                     data-bs-toggle="pill" href="#chang-pwd" role="tab">
                                     Change Password
-                                </a>
-                            </li>
-                            <li class="col-md-3 p-0">
-                                <a class="nav-link {{ session('tab') == 'emailandsms' ? 'active' : '' }}"
-                                    data-bs-toggle="pill" href="#emailandsms" role="tab">
-                                    Email and SMS
-                                </a>
-                            </li>
-                            <li class="col-md-3 p-0">
-                                <a class="nav-link {{ session('tab') == 'manage-contact' ? 'active' : '' }}"
-                                    data-bs-toggle="pill" href="#manage-contact" role="tab">
-                                    Manage Contact
                                 </a>
                             </li>
                         </ul>
@@ -63,7 +51,7 @@
                                                     <input class="file-upload @error('avatar') is-invalid @enderror"
                                                         type="file" name="avatar" accept="image/*" id="avatar-input" />
                                                     <label for="avatar-input" class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-camera"></i> Choose Avatar
+                                                        <i class="fa fa-pencil-alt"></i> Update Avatar
                                                     </label>
                                                     <small class="text-danger d-block">
                                                         @error('avatar')
@@ -388,116 +376,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="emailandsms" role="tabpanel">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <div class="header-title">
-                                    <h4 class="card-title">Email and SMS</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="form-group row align-items-center">
-                                        <label class="col-md-3" for="emailnotification">Email Notification:</label>
-                                        <div class="col-md-9 form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked11"
-                                                checked="">
-                                            <label class="form-check-label" for="flexSwitchCheckChecked11">Checked switch
-                                                checkbox input</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row align-items-center">
-                                        <label class="col-md-3" for="smsnotification">SMS Notification:</label>
-                                        <div class="col-md-9 form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked12"
-                                                checked="">
-                                            <label class="form-check-label" for="flexSwitchCheckChecked12">Checked switch
-                                                checkbox input</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row align-items-center">
-                                        <label class="col-md-3" for="npass">When To Email</label>
-                                        <div class="col-md-9">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDefault12">
-                                                <label class="form-check-label" for="flexCheckDefault12">
-                                                    You have new notifications.
-                                                </label>
-                                            </div>
-                                            <div class="form-check d-block">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="email02">
-                                                <label class="form-check-label" for="email02">You're sent a direct
-                                                    message</label>
-                                            </div>
-                                            <div class="form-check d-block">
-                                                <input type="checkbox" class="form-check-input" id="email03"
-                                                    checked="">
-                                                <label class="form-check-label" for="email03">Someone adds you as a
-                                                    connection</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row align-items-center">
-                                        <label class="col-md-3" for="npass">When To Escalate Emails</label>
-                                        <div class="col-md-9">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="email04">
-                                                <label class="form-check-label" for="email04">
-                                                    Upon new order.
-                                                </label>
-                                            </div>
-                                            <div class="form-check d-block">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="email05">
-                                                <label class="form-check-label" for="email05">New membership
-                                                    approval</label>
-                                            </div>
-                                            <div class="form-check d-block">
-                                                <input type="checkbox" class="form-check-input" id="email06"
-                                                    checked="">
-                                                <label class="form-check-label" for="email06">Member registration</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
-                                    <button type="reset" class="btn btn-danger-subtle">cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="manage-contact" role="tabpanel">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <div class="header-title">
-                                    <h4 class="card-title">Manage Contact</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="cno" class="form-label">Contact Number:</label>
-                                        <input type="text" class="form-control" id="cno"
-                                            value="001 2536 123 458">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email" class="form-label">Email:</label>
-                                        <input type="text" class="form-control" id="email"
-                                            value="Bnijone@demo.com">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="url" class="form-label">Url:</label>
-                                        <input type="text" class="form-control" id="url"
-                                            value="https://getbootstrap.com">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
-                                    <button type="reset" class="btn btn-danger-subtle">cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>

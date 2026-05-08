@@ -325,112 +325,98 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between border-bottom">
-                        <div class="header-title">
-                            <h4 class="card-title">About</h4>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-inline p-0 m-0">
-                            <li class="mb-3 d-flex align-items-center gap-2">
-                                <i class="ph ph-user fs-3 text-primary"></i>
-                                <p class="mb-0">{{ optional($user->designation)->name ?? 'Member' }}</p>
-                            </li>
-                            <li class="mb-3 d-flex align-items-center gap-2">
-                                <i class="ph ph-shield-check fs-3 text-primary"></i>
-                                <p class="mb-0">{{ $user->profile->bio ?? 'No bio available.' }}</p>
-                            </li>
-                            @if ($user->profile && $user->profile->present_address)
-                                <li class="mb-3 d-flex align-items-center gap-2">
-                                    <i class="ph ph-map-pin fs-3 text-primary"></i>
-                                    <p class="mb-0">{{ $user->profile->present_address }}</p>
-                                </li>
-                            @endif
-                            <li class="mb-3 d-flex align-items-center gap-2">
-                                <i class="ph ph-envelope-simple fs-3 text-primary"></i>
-                                <p class="mb-0"><a href="mailto:{{ $user->email }}" class="text-body">{{ $user->email }}</a>
-                                </p>
-                            </li>
-                            <li class="d-flex align-items-center gap-2">
-                                <i class="ph ph-heart-straight fs-3 text-primary"></i>
-                                <p class="mb-0">{{ ucfirst($user->profile->relationship ?? 'Single') }}</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="fixed-suggestion mb-4">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between border-bottom">
-                            <div class="header-title">
-                                <h4 class="card-title">Photos</h4>
-                            </div>
-                            <div class="card-header-toolbar d-flex align-items-center">
-                                @if(count($photos) > 0)
-                                    <p class="m-0"><a href="javascript:void(0);"
-                                            onclick="document.querySelector('.profile-img-gallary a').click();">View All </a>
-                                    </p>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul class="profile-img-gallary p-0 m-0 list-unstyled">
-                                @foreach($photos as $index => $photo)
-                                    @if($index < 9)
-                                        <li>
-                                            <a data-fslightbox="gallery" href="{{ asset($photo['url']) }}" data-type="image">
-                                                <img src="{{ asset($photo['url']) }}" class="img-fluid" alt="photo-profile"
-                                                    loading="lazy">
-                                            </a>
-                                        </li>
-                                    @else
-                                        <a data-fslightbox="gallery" href="{{ asset($photo['url']) }}" data-type="image"
-                                            class="d-none"></a>
-                                    @endif
-                                @endforeach
-                                @if($photos->isEmpty())
-                                    <p class="text-muted w-100 text-center mb-0">No photos available.</p>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between border-bottom">
-                            <div class="header-title">
-                                <h4 class="card-title">Friends</h4>
-                            </div>
-                            <div class="card-header-toolbar d-flex align-items-center">
-                                @if($user->friends->count() > 0)
-                                    <p class="m-0"><a href="{{ route('friends.list') }}">View All </a></p>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul class="profile-img-gallary p-0 m-0 list-unstyled">
-                                @foreach($user->friends->take(9) as $friend)
-                                    <li class="text-center">
-                                        <a href="{{ route('user.profile.show', $friend->username) }}">
-                                            <img src="{{ asset($friend->avatar ?? 'default-avatar.jpg') }}" alt="gallary-image"
-                                                class="img-fluid" loading="lazy">
-                                        </a>
-                                        <h6 class="mt-2 text-center text-truncate small" style="max-width: 70px;">
-                                            {{ $friend->name }}</h6>
-                                    </li>
-                                @endforeach
-                                @if($user->friends->isEmpty())
-                                    <p class="text-muted w-100 text-center mb-0">No friends yet.</p>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
+@section('sidebar_extra')
+    <li class="nav-item static-item mt-3">
+        <a class="nav-link static-item disabled" href="#" tabindex="-1">
+            <span class="default-icon">Profile Info</span>
+            <span class="mini-icon">-</span>
+        </a>
+    </li>
+    <li class="nav-item px-3">
+        <div class="card shadow-none mb-3 bg-transparent border">
+            <div class="card-header d-flex justify-content-between p-2 border-bottom">
+                <div class="header-title">
+                    <h6 class="card-title mb-0">About</h6>
                 </div>
             </div>
+            <div class="card-body p-2">
+                <ul class="list-inline p-0 m-0">
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="ph ph-user fs-5 text-primary"></i>
+                        <p class="mb-0 small">{{ optional($user->designation)->name ?? 'Member' }}</p>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="ph ph-shield-check fs-5 text-primary"></i>
+                        <p class="mb-0 small">{{ $user->profile->bio ?? 'No bio available.' }}</p>
+                    </li>
+                    @if ($user->profile && $user->profile->present_address)
+                        <li class="mb-2 d-flex align-items-center gap-2">
+                            <i class="ph ph-map-pin fs-5 text-primary"></i>
+                            <p class="mb-0 small">{{ $user->profile->present_address }}</p>
+                        </li>
+                    @endif
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="ph ph-envelope-simple fs-5 text-primary"></i>
+                        <p class="mb-0 small"><a href="mailto:{{ $user->email }}" class="text-body">{{ $user->email }}</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-            <div class="col-lg-8">
+        <div class="card shadow-none mb-3 bg-transparent border">
+            <div class="card-header d-flex justify-content-between p-2 border-bottom">
+                <div class="header-title">
+                    <h6 class="card-title mb-0">Photos</h6>
+                </div>
+                <div class="card-header-toolbar d-flex align-items-center">
+                    @if(count($photos) > 0)
+                        <a href="{{ route('user.profile.photos', $user->username) }}" class="small">View All</a>
+                    @endif
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <ul class="profile-img-gallary p-0 m-0 list-unstyled d-flex flex-wrap gap-1">
+                    @foreach($photos->take(6) as $photo)
+                        <li style="width: calc(33.33% - 4px);">
+                            <a data-fslightbox="gallery-sidebar" href="{{ asset($photo['url']) }}" data-type="image">
+                                <img src="{{ asset($photo['url']) }}" class="img-fluid rounded" alt="photo" loading="lazy">
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-none mb-3 bg-transparent border">
+            <div class="card-header d-flex justify-content-between p-2 border-bottom">
+                <div class="header-title">
+                    <h6 class="card-title mb-0">Friends</h6>
+                </div>
+                <div class="card-header-toolbar d-flex align-items-center">
+                    @if($user->friends->count() > 0)
+                        <a href="{{ route('friends.list') }}" class="small">View All</a>
+                    @endif
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <ul class="profile-img-gallary p-0 m-0 list-unstyled d-flex flex-wrap gap-1">
+                    @foreach($user->friends->take(6) as $friend)
+                        <li class="text-center" style="width: calc(33.33% - 4px);">
+                            <a href="{{ route('user.profile.show', $friend->username) }}">
+                                <img src="{{ asset($friend->avatar ?? 'default-avatar.jpg') }}" alt="friend" class="img-fluid rounded" loading="lazy">
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </li>
+@endsection
+
+        <div class="row">
+            {{-- Main Content (Full width since sidebars are in the sidebar) --}}
+            <div class="col-lg-12">
                 @if ($isOwnProfile)
                     @include('user-interface.pages.post.add-post')
                 @endif

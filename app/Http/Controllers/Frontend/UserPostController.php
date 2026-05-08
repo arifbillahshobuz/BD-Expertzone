@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -42,7 +43,9 @@ class UserPostController extends Controller
         // Admin posts for top of feed
         $feedAdminPosts = Post::with([
             'user:id,name,username,avatar,email,phone,password,role,designation_id',
-            'reactions', 'comments', 'comments.user'
+            'reactions',
+            'comments',
+            'comments.user'
         ])->where('post_type', 'admin')->latest()->published()->take(7)->get();
 
         if ($user) {
@@ -64,7 +67,12 @@ class UserPostController extends Controller
         }
 
         return view('user-interface.pages.post.single', compact(
-            'post', 'partners', 'friends', 'friendRequests', 'jobPosts', 'feedAdminPosts'
+            'post',
+            'partners',
+            'friends',
+            'friendRequests',
+            'jobPosts',
+            'feedAdminPosts'
         ));
     }
 
@@ -75,39 +83,35 @@ class UserPostController extends Controller
      * @return RedirectResponse
      */
 
-    public function store(Request $request)
+
+
+    public function store(Request $request): JsonResponse
     {
         try {
-            $request->validate([
-                'content' => 'nullable|string|max:5000',
-                'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:20480', // 20MB max
-            ]);
+            if (Auth::user() && !Auth::user()->hasVerifiedEmail()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please verify your email address before posting.',
+                    'require_verification' => true
+                ], 403);
+            }
 
             $user = Auth::user();
-
-            // Media upload (if file exists)
             $mediaPaths = [];
 
             if ($request->hasFile('media')) {
                 foreach ($request->file('media') as $file) {
-                    if ($file->isValid()) {
-                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $uploadPath = public_path('uploads/post');
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $uploadPath = public_path('uploads/post');
 
-                        if (!file_exists($uploadPath)) {
-                            mkdir($uploadPath, 0775, true);
-                        }
-
-                        $file->move($uploadPath, $filename);
-                        $mediaPaths[] = 'uploads/post/' . $filename;
-                    } else {
-                        throw ValidationException::withMessages([
-                            'media' => 'One or more media files failed to upload correctly.'
-                        ]);
+                    if (!file_exists($uploadPath)) {
+                        mkdir($uploadPath, 0775, true);
                     }
+
+                    $file->move($uploadPath, $filename);
+                    $mediaPaths[] = 'uploads/post/' . $filename;
                 }
             }
-
 
             $post = Post::create([
                 'content' => $request->input('content'),
@@ -122,36 +126,35 @@ class UserPostController extends Controller
                 'is_featured' => false,
             ]);
 
-            // Notify followers who want notifications
+            // Notify followers
             $followersToNotify = $user->followers()->wherePivot('notify', 1)->get();
-            if ($followersToNotify->count() > 0) {
-                foreach ($followersToNotify as $follower) {
-                    $follower->notify(new \App\Notifications\NewPostNotification($post));
-                }
+            foreach ($followersToNotify as $follower) {
+                $follower->notify(new \App\Notifications\NewPostNotification($post));
             }
 
-            // Notify friends about the new post
-            $friends = $user->friends()->get();
-            if ($friends->count() > 0) {
-                foreach ($friends as $friend) {
-                    // Don't notify if they're already notified as a follower
-                    if (!$followersToNotify->contains($friend)) {
-                        $friend->notify(new \App\Notifications\NewPostNotification($post));
-                    }
+            // Notify friends
+            foreach ($user->friends()->get() as $friend) {
+                if (!$followersToNotify->contains($friend)) {
+                    $friend->notify(new \App\Notifications\NewPostNotification($post));
                 }
             }
-
             ToastMagic::success('Post created successfully!');
-            return redirect()->back();
+            return response()->json(['success' => true]);
 
         } catch (ValidationException $e) {
-            ToastMagic::error('Validation failed: ' . $e->getMessage());
-            throw $e;
+            return response()->json([
+                'success' => false,
+                'message' => collect($e->errors())->flatten()->first()
+            ], 422);
+
         } catch (\Exception $e) {
-            ToastMagic::error('Failed to create post: ' . $e->getMessage());
-            throw ValidationException::withMessages(['error' => 'Failed to create post.']);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
+
 
     /**
      * Update user post.
@@ -246,4 +249,3 @@ class UserPostController extends Controller
         return redirect()->back();
     }
 }
-

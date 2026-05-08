@@ -18,38 +18,75 @@ class HomeController extends Controller
     public function home()
     {
         $user = auth()->user();
-        $currentPage = request()->get('page', 1);
-        $feedAdminPosts = collect();
+        $currentPage = (int) request()->get('page', 1);
+        $perPage = 20;
+
+        $postsRelation = [
+            'user:id,name,username,avatar,email,phone,password,role,designation_id',
+            'reactions' => function ($q) {
+                $q->latest()->take(5);
+            }, // Only for avatars
+            'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id',
+            // Load only parent comments for the feed to keep it fast
+            'comments' => function ($q) {
+                $q->whereNull('parent_id')->latest()->take(5);
+            },
+            'comments.user:id,name,username,avatar',
+            'comments.reactions',
+            'comments.replies' => function ($q) {
+                $q->latest()->take(2);
+            },
+            'comments.replies.user:id,name,username,avatar',
+        ];
+
+        $userPostsQuery = Post::with($postsRelation)
+            ->withCount(['reactions', 'comments']) // Get total counts efficiently
+            ->where('post_type', 'user')
+            ->latest()
+            ->published();
+
         if ($currentPage == 1) {
-            $feedAdminPosts = Post::with([
-                'user:id,name,username,avatar,email,phone,password,role,designation_id',
-                'reactions',
-                'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id',
-                'comments',
-                'comments.user'
-            ])
+            // First load: 7 Admin posts + 13 User posts
+            $feedAdminPosts = Post::with($postsRelation)
+                ->withCount(['reactions', 'comments'])
                 ->where('post_type', 'admin')
                 ->latest()
                 ->published()
                 ->take(7)
                 ->get();
+
+            // Use Simple Pagination for speed (prevents total count query)
+            $posts = $userPostsQuery->simplePaginate(13);
+        } else {
+            // Manual simple pagination logic for offset
+            $offset = 13 + ($currentPage - 2) * $perPage;
+            // Fetch perPage + 1 to detect next page
+            $items = $userPostsQuery->offset($offset)->limit($perPage + 1)->get();
+            $hasNextPage = $items->count() > $perPage;
+            if ($hasNextPage) {
+                $items->pop();
+            }
+
+            $posts = new \Illuminate\Pagination\Paginator(
+                $items,
+                $perPage,
+                $currentPage,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
         }
 
-        $posts = Post::with([
-            'user:id,name,username,avatar,email,phone,password,role,designation_id',
-            'reactions',
-            'reactions.user:id,name,username,avatar,email,phone,password,role,designation_id',
-            'comments',
-            'comments.user'
-        ])
-            ->where('post_type', 'user')
-            ->latest()
-            ->published()
-            ->select('id', 'content', 'media', 'slug', 'is_published', 'type', 'post_type', 'published_at', 'created_at', 'updated_at', 'user_id', 'post_category_id', 'is_featured')
-            ->paginate(10);
+        if (request()->ajax()) {
+            $view = '';
+            foreach ($posts as $post) {
+                $view .= view('user-interface.pages.post.show-post', compact('post'))->render();
+            }
+            return response()->json([
+                'html' => $view,
+                'nextPageUrl' => $posts->nextPageUrl()
+            ]);
+        }
 
         $partners = Partner::all();
-
         $friends = collect();
         $friendRequests = collect();
         $jobPosts = collect();
@@ -75,7 +112,7 @@ class HomeController extends Controller
                                 ->where('id', '!=', $user->id);
                         })->where('post_type', 'user');
                     }
-                    
+
                     $query->orWhere('post_type', 'admin');
                 })
                 ->latest()

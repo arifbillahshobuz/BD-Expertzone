@@ -386,13 +386,14 @@
                             <div class="me-3 flex-shrik-0">
                                 {{-- Use asset('storage/') for user avatar, with a default fallback --}}
                                 @if($post->user)
-                                    <a href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}">
+                                    <a
+                                        href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}">
                                         <img src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
                                             alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                     </a>
                                 @else
-                                    <img src="{{ asset('frontend/assets/images/user/1.jpg') }}"
-                                        alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                    <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
+                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                 @endif
                             </div>
 
@@ -402,7 +403,8 @@
                                         {{-- Check if user relationship exists before accessing name --}}
                                         <h6 class="mb-0 d-inline-block">
                                             @if($post->user)
-                                                <a href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}" class="text-body">{{ $post->user->name }}</a>
+                                                <a href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}"
+                                                    class="text-body">{{ $post->user->name }}</a>
                                             @else
                                                 Unknown User
                                             @endif
@@ -432,7 +434,8 @@
                                                 more_horiz
                                             </span>
                                             <div class="dropdown-menu m-0 p-0">
-                                                <a class="dropdown-item p-3" href="{{ route('posts.show', $post->id) }}">
+                                                <a class="dropdown-item p-3"
+                                                    href="{{ route('posts.show', $post->id) }}">
                                                     <div class="d-flex align-items-top">
                                                         <span class="material-symbols-outlined">visibility</span>
                                                         <div class="data ms-2">
@@ -540,16 +543,18 @@
                                                             </div>
                                                         </div>
                                                     </a>
-                                                    <form action="{{ route('user.post.destroy', $post) }}"
-                                                        method="POST" class="delete-post-form">
+                                                    <form action="{{ route('user.post.destroy', $post) }}" method="POST"
+                                                        class="delete-post-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="dropdown-item p-3 text-danger border-0 bg-transparent text-start w-100">
+                                                        <button type="submit"
+                                                            class="dropdown-item p-3 text-danger border-0 bg-transparent text-start w-100">
                                                             <div class="d-flex align-items-top">
                                                                 <span class="material-symbols-outlined">delete</span>
                                                                 <div class="data ms-2">
                                                                     <h6>Delete Post</h6>
-                                                                    <p class="mb-0 text-muted">Remove this post permanently</p>
+                                                                    <p class="mb-0 text-muted">Remove this post permanently
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </button>
@@ -596,10 +601,12 @@
                                                 'qt',
                                             ]);
                                         @endphp
-                                        <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                        <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}"
+                                            data-type="{{ $isVideo ? 'video' : 'image' }}">
                                             @if ($isVideo)
                                                 <video controls muted class="d-block w-100 h-100 object-cover" loading="lazy">
-                                                    <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($fileExtension) === 'mov' || strtolower($fileExtension) === 'qt' ? 'mp4' : strtolower($fileExtension) }}">
+                                                    <source src="{{ asset($mediaFiles[0]) }}"
+                                                        type="video/{{ strtolower($fileExtension) === 'mov' || strtolower($fileExtension) === 'qt' ? 'mp4' : strtolower($fileExtension) }}">
                                                     Your browser does not support the video tag.
                                                 </video>
                                             @else
@@ -626,10 +633,12 @@
                                                     'qt',
                                                 ]);
                                             @endphp
-                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[1]) }}" data-type="{{ $isVideo2 ? 'video' : 'image' }}">
+                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[1]) }}"
+                                                data-type="{{ $isVideo2 ? 'video' : 'image' }}">
                                                 @if ($isVideo2)
                                                     <video controls muted class="d-block w-100 h-100 object-cover" loading="lazy">
-                                                        <source src="{{ asset($mediaFiles[1]) }}" type="video/{{ strtolower($fileExtension2) === 'mov' || strtolower($fileExtension2) === 'qt' ? 'mp4' : strtolower($fileExtension2) }}">
+                                                        <source src="{{ asset($mediaFiles[1]) }}"
+                                                            type="video/{{ strtolower($fileExtension2) === 'mov' || strtolower($fileExtension2) === 'qt' ? 'mp4' : strtolower($fileExtension2) }}">
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 @else
@@ -673,15 +682,15 @@
                                 @endforeach
                             </ul>
                             <div class="d-inline-flex align-items-center gap-1">
-                                @if ($post->reactions->count() > 0)
+                                @if ($post->reactions_count > 0)
                                     {{-- Check if first reaction user exists before accessing name --}}
                                     <h6 class="m-0 font-size-14">
                                         {{ $post->reactions->first()->user->name ?? 'Someone' }}
                                     </h6>
-                                    @if ($post->reactions->count() > 1)
+                                    @if ($post->reactions_count > 1)
                                         <span class="text-capitalize font-size-14 fw-medium" data-bs-toggle="modal"
                                             data-bs-target="#likemodal{{ $post->id }}">
-                                            and {{ $post->reactions->count() - 1 }} others liked this
+                                            and {{ $post->reactions_count - 1 }} others liked this
                                         </span>
                                     @endif
                                 @endif
@@ -699,7 +708,7 @@
                                     data-bs-target="#commentcollapes{{ $post->id }}" aria-expanded="true"
                                     aria-controls="commentcollapes{{ $post->id }}">
                                     <span class="material-symbols-outlined align-text-top font-size-20">comment</span>
-                                    <span class="fw-medium comment-count-{{ $post->id }}">{{ $post->comments->count() }}
+                                    <span class="fw-medium comment-count-{{ $post->id }}">{{ $post->comments_count }}
                                         Comment</span>
                                 </div>
                                 <div class="share-block d-flex align-items-center feather-icon">
@@ -745,13 +754,15 @@
                                 <div class="d-flex align-items-start gap-2">
                                     <div class="flex-shrink-0">
                                         @auth
-                                            <a href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
+                                            <a
+                                                href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
                                                 <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                    alt="userimg" class="avatar-40 rounded-circle object-cover" loading="lazy">
+                                                    alt="userimg" class="avatar-40 rounded-circle object-cover"
+                                                    loading="lazy">
                                             </a>
                                         @else
-                                            <img src="{{ asset('frontend/assets/images/user/1.jpg') }}"
-                                                alt="userimg" class="avatar-40 rounded-circle object-cover" loading="lazy">
+                                            <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
+                                                class="avatar-40 rounded-circle object-cover" loading="lazy">
                                         @endauth
                                     </div>
                                     <div class="flex-grow-1">
@@ -826,7 +837,7 @@
 
         {{-- Share Modal --}}
         <div class="modal fade" id="share-btn-{{ $post->id }}" tabindex="-1"
-             aria-labelledby="shareModalLabel-{{ $post->id }}" aria-hidden="true">
+            aria-labelledby="shareModalLabel-{{ $post->id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content rounded-4 border-0 shadow">
                     <div class="modal-header border-0 pb-0">
@@ -841,13 +852,11 @@
                         <label class="form-label text-muted small fw-semibold mb-1">Post Link</label>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control form-control-sm rounded-start"
-                                   id="share-link-{{ $post->id }}"
-                                   value="{{ route('posts.show', $post->id) }}"
-                                   readonly>
+                                id="share-link-{{ $post->id }}" value="{{ route('posts.show', $post->id) }}" readonly>
                             <button class="btn btn-outline-primary btn-sm copy-link-btn"
-                                    data-target="share-link-{{ $post->id }}"
-                                    type="button">
-                                <span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span>
+                                data-target="share-link-{{ $post->id }}" type="button">
+                                <span class="material-symbols-outlined"
+                                    style="font-size:18px;vertical-align:-4px">content_copy</span>
                                 Copy
                             </button>
                         </div>
@@ -858,30 +867,36 @@
 
                             {{-- WhatsApp --}}
                             <a href="https://wa.me/?text={{ urlencode(route('posts.show', $post->id)) }}"
-                               target="_blank" rel="noopener"
-                               class="btn btn-success btn-sm d-flex align-items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                                target="_blank" rel="noopener"
+                                class="btn btn-success btn-sm d-flex align-items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
                                 </svg>
                                 WhatsApp
                             </a>
 
                             {{-- Facebook --}}
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('posts.show', $post->id)) }}"
-                               target="_blank" rel="noopener"
-                               class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                                target="_blank" rel="noopener"
+                                class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
                                 </svg>
                                 Facebook
                             </a>
 
                             {{-- Twitter / X --}}
                             <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('posts.show', $post->id)) }}&text={{ urlencode(Str::limit(strip_tags($post->content ?? ''), 100)) }}"
-                               target="_blank" rel="noopener"
-                               class="btn btn-dark btn-sm d-flex align-items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                                target="_blank" rel="noopener"
+                                class="btn btn-dark btn-sm d-flex align-items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
                                 </svg>
                                 X / Twitter
                             </a>
@@ -893,28 +908,28 @@
         </div>
 
         <script>
-        // Copy link handler for this post
-        $(document).on('click', '.copy-link-btn', function () {
-            var targetId = $(this).data('target');
-            var input = document.getElementById(targetId);
-            input.select();
-            input.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(input.value).then(function () {
-                var btn = $('[data-target="' + targetId + '"]');
-                btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
-                setTimeout(function () {
-                    btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
-                }, 2000);
-            }).catch(function () {
-                // Fallback for browsers that don't support clipboard API
-                document.execCommand('copy');
-                var btn = $('[data-target="' + targetId + '"]');
-                btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
-                setTimeout(function () {
-                    btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
-                }, 2000);
+            // Copy link handler for this post
+            $(document).on('click', '.copy-link-btn', function () {
+                var targetId = $(this).data('target');
+                var input = document.getElementById(targetId);
+                input.select();
+                input.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(input.value).then(function () {
+                    var btn = $('[data-target="' + targetId + '"]');
+                    btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
+                    setTimeout(function () {
+                        btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
+                    }, 2000);
+                }).catch(function () {
+                    // Fallback for browsers that don't support clipboard API
+                    document.execCommand('copy');
+                    var btn = $('[data-target="' + targetId + '"]');
+                    btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
+                    setTimeout(function () {
+                        btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
+                    }, 2000);
+                });
             });
-        });
         </script>
 
         <script>

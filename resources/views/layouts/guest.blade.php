@@ -4,13 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield("title")</title>
+    <title>{{ getSetting('app_name', 'BD-Expertzone') }} | @yield('title')</title>
     @include('layouts.partial.style')
 </head>
 
 <body style="overflow-y: auto;">
-    <div id="loading">
-        <div id="loading-center"></div>
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #ffffff; z-index: 999999; display: flex; align-items: center; justify-content: center;">
+        <div id="loading-center" style="background: none !important; display: flex; align-items: center; justify-content: center;">
+            @if(getSetting('loading_gif'))
+                <img src="{{ asset(getSetting('loading_gif')) }}" alt="loader" style="max-height: 150px; width: auto; display: block; margin: 0 auto;">
+            @else
+                <div class="loader-inner"></div>
+            @endif
+        </div>
     </div>
 
     <div class="wrapper">

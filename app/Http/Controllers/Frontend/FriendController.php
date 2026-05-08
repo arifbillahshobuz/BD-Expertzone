@@ -98,7 +98,7 @@ class FriendController extends Controller
         $friendIds = DB::table('friends')->where('user_id', $userId)->pluck('friend_id')->toArray();
         $pendingRequestedIds = DB::table('friend_requests')->where('sender_id', $userId)->where('status', 'pending')->pluck('receiver_id')->toArray();
         $pendingReceivedIds = DB::table('friend_requests')->where('receiver_id', $userId)->where('status', 'pending')->pluck('sender_id')->toArray();
-        
+
         $excludedIds = array_merge([$userId], $friendIds, $pendingRequestedIds, $pendingReceivedIds);
 
         // Fetch suggested friends
@@ -119,7 +119,7 @@ class FriendController extends Controller
         $friendIds = DB::table('friends')->where('user_id', $userId)->pluck('friend_id')->toArray();
         $pendingRequestedIds = DB::table('friend_requests')->where('sender_id', $userId)->where('status', 'pending')->pluck('receiver_id')->toArray();
         $pendingReceivedIds = DB::table('friend_requests')->where('receiver_id', $userId)->where('status', 'pending')->pluck('sender_id')->toArray();
-        
+
         $excludedIds = array_merge([$userId], $friendIds, $pendingRequestedIds, $pendingReceivedIds);
 
         // Fetch suggested friends
@@ -148,5 +148,15 @@ class FriendController extends Controller
         });
 
         return response()->json(['success' => 'Friend removed successfully']);
+    }
+    // Get relative friends (users with same designation)
+    public function getRelativeFriends()
+    {
+        $user = Auth::user();
+        $relativeFriends = User::where('designation_id', $user->designation_id)
+            ->where('id', '!=', $user->id)
+            ->get();
+
+        return view('user-interface.pages.relative-friends', compact('relativeFriends'));
     }
 }

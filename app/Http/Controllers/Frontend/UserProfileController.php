@@ -86,32 +86,7 @@ class UserProfileController extends Controller
         }
 
         // Get all photos for the user
-        $photos = collect();
-        $userPostsWithMedia = Post::where('user_id', $user->id)
-            ->whereNotNull('media')
-            ->latest()
-            ->get();
-
-        foreach ($userPostsWithMedia as $post) {
-            $media = $post->media;
-            if (is_string($media)) {
-                $media = json_decode($media, true);
-            }
-
-            if (is_array($media)) {
-                foreach ($media as $path) {
-                    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
-                        $photos->push([
-                            'url' => $path,
-                            'post_id' => $post->id,
-                            'owner_username' => $user->username
-                        ]);
-                    }
-                }
-            }
-        }
-        $photos = $photos->take(24); // Show more photos than just 12
+        $photos = $this->getUserPhotos($user, 24);
 
         return view('user-interface.pages.user.profile', compact(
             'user',
@@ -160,10 +135,10 @@ class UserProfileController extends Controller
                 $avatarFile = $request->file('avatar');
 
                 // Delete old avatar if exists
-                if ($user->profile && $user->profile->avatar) {
-                    $oldAvatarPath = public_path($user->profile->avatar);
+                if ($user->avatar && $user->avatar !== 'default-avatar.jpg') {
+                    $oldAvatarPath = public_path($user->avatar);
                     if (file_exists($oldAvatarPath)) {
-                        unlink($oldAvatarPath);
+                        @unlink($oldAvatarPath);
                     }
                 }
 
@@ -289,37 +264,39 @@ class UserProfileController extends Controller
     public function updateCoverPhoto(Request $request): RedirectResponse
     {
         try {
-            $request->validate([
-                'cover_photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
             $user = Auth::user();
             if ($request->hasFile('cover_photo')) {
                 $coverPhoto = $request->file('cover_photo');
-                $finalName = time() . '.' . $coverPhoto->getClientOriginalExtension();
-                // Store the file and get the path
+                $finalName = 'cover_' . time() . '_' . uniqid() . '.' . $coverPhoto->getClientOriginalExtension();
+
+                $uploadPath = public_path('uploads/cover-photos');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
                 $path = 'uploads/cover-photos/' . $finalName;
-                $coverPhoto->move(public_path('uploads/cover-photos'), $finalName);
+                $coverPhoto->move($uploadPath, $finalName);
+
                 // Get old photo path before updating
                 $oldPhoto = $user->profile->cover_photo ?? null;
+
                 // Update the profile with the new path
                 $user->profile()->updateOrCreate(
                     ['user_id' => $user->id],
                     ['cover_photo' => $path]
                 );
+
                 // Delete old photo after successful update
                 if ($oldPhoto && file_exists(public_path($oldPhoto))) {
-                    unlink(public_path($oldPhoto));
+                    @unlink(public_path($oldPhoto));
                 }
+
                 ToastMagic::success('Cover photo updated successfully!');
                 return redirect()->back();
             }
             ToastMagic::error('No cover photo uploaded');
             return redirect()->back();
 
-        } catch (ValidationException $exception) {
-            return redirect()->back()
-                ->withErrors($exception->validator)
-                ->withInput();
         } catch (\Throwable $exception) {
             ToastMagic::error('Something went wrong: ' . $exception->getMessage());
             return redirect()->back();
@@ -333,9 +310,6 @@ class UserProfileController extends Controller
     public function updateProfilePhoto(Request $request): RedirectResponse
     {
         try {
-            $request->validate([
-                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
             $user = Auth::user();
             if ($request->hasFile('avatar')) {
                 $uploadPath = public_path('uploads/avatars');
@@ -344,29 +318,26 @@ class UserProfileController extends Controller
                 }
 
                 $avatar = $request->file('avatar');
-                $finalName = 'avatar_' . time() . '.' . $avatar->getClientOriginalExtension();
+                $finalName = 'avatar_' . time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
                 $path = 'uploads/avatars/' . $finalName;
 
                 $avatar->move($uploadPath, $finalName);
 
-                $oldAvatar = $user->avatar !== 'default-avatar.jpg' ? $user->avatar : null;
-                $user->avatar = $path;
-                $user->save();
+                $oldAvatar = $user->avatar && $user->avatar !== 'default-avatar.jpg' ? $user->avatar : null;
+
+                $user->update(['avatar' => $path]);
 
                 // Delete old avatar after successful update
                 if ($oldAvatar && file_exists(public_path($oldAvatar))) {
-                    unlink(public_path($oldAvatar));
+                    @unlink(public_path($oldAvatar));
                 }
-                ToastMagic::success('Avatar updated successfully!');
+
+                ToastMagic::success('Profile photo updated successfully!');
                 return redirect()->back();
             }
             ToastMagic::error('No avatar uploaded');
             return redirect()->back();
 
-        } catch (ValidationException $exception) {
-            return redirect()->back()
-                ->withErrors($exception->validator)
-                ->withInput();
         } catch (\Throwable $exception) {
             ToastMagic::error('Something went wrong: ' . $exception->getMessage());
             return redirect()->back();
@@ -453,5 +424,76 @@ class UserProfileController extends Controller
             ToastMagic::error('Unable to download CV: ' . $exception->getMessage());
             return redirect()->back();
         }
+    }
+    /**
+     * Show all photos of a user.
+     */
+    public function allPhotos(string $identifier)
+    {
+        $user = User::where('username', $identifier)->first();
+        if (!$user && ctype_digit($identifier)) {
+            $user = User::find((int) $identifier);
+        }
+
+        if (!$user) {
+            abort(404);
+        }
+
+        $user->load(['profile', 'designation']);
+        $photos = $this->getUserPhotos($user); // Get all photos
+
+        return view('user-interface.pages.user.all-photos', compact('user', 'photos'));
+    }
+
+    /**
+     * Helper to get user photos.
+     */
+    private function getUserPhotos(User $user, int $limit = null)
+    {
+        $photos = collect();
+
+        // 1. Add current avatar if not default
+        if ($user->avatar && $user->avatar !== 'default-avatar.jpg') {
+            $photos->push([
+                'url' => $user->avatar,
+                'type' => 'avatar',
+                'owner_username' => $user->username
+            ]);
+        }
+
+        // 2. Add current cover photo
+        if ($user->profile && $user->profile->cover_photo) {
+            $photos->push([
+                'url' => $user->profile->cover_photo,
+                'type' => 'cover',
+                'owner_username' => $user->username
+            ]);
+        }
+
+        // 3. Add images from user's posts
+        $userPostsWithMedia = Post::where('user_id', $user->id)
+            ->whereNotNull('media')
+            ->latest()
+            ->get();
+
+        foreach ($userPostsWithMedia as $post) {
+            $media = $post->media;
+            if (is_array($media)) {
+                foreach ($media as $path) {
+                    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                        $photos->push([
+                            'url' => $path,
+                            'type' => 'post',
+                            'post_id' => $post->id,
+                            'owner_username' => $user->username
+                        ]);
+                    }
+                }
+            }
+        }
+
+        $photos = $photos->unique('url');
+        return $limit ? $photos->take($limit) : $photos;
     }
 }

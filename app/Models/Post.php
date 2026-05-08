@@ -46,17 +46,22 @@ class Post extends Model
         parent::boot();
 
         static::creating(function ($post) {
-            $sourceTitle = $post->title ?? Str::limit($post->content, 50, '');
-            $post->slug = $post->generateUniqueSlug($sourceTitle);
+            if (empty($post->slug)) {
+                $sourceTitle = $post->title ?? Str::limit($post->content, 50, '');
+                $post->slug = $post->generateUniqueSlug($sourceTitle);
+            }
         });
     }
 
     protected function generateUniqueSlug($title)
     {
         $slug = Str::slug($title);
+        if (empty($slug)) {
+            $slug = 'post';
+        }
         $originalSlug = $slug;
         $count = 1;
-        while (static::where('slug', $slug)->exists()) {
+        while (static::withTrashed()->where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $count++;
         }
         return $slug;

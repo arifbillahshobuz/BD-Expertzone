@@ -9,17 +9,23 @@
         <div class="card shadow-none m-0 h-100">
             <div class="card-body px-0 pt-0 d-flex flex-column h-100">
 
-                {{-- Global Search Header (Always Persistent) --}}
-                <div class="p-4 border-bottom bg-white sticky-top">
-                    <h6 class="fw-bold m-0 text-uppercase tracking-wider"
-                        style="font-size: 13px; color: var(--bs-primary)">Messenger</h6>
-                    <div class="mt-3 iq-search-bar device-search ">
+                <div class="px-4 pb-4 border-bottom bg-white sticky-top">
+                    <div class="d-flex align-items-center justify-content-between py-4">
+                        <h6 class="fw-bold m-0 text-uppercase tracking-wider"
+                            style="font-size: 13px; color: var(--bs-primary)">Messenger</h6>
+                        <button type="button"
+                            class="btn-close-sidebar-mini border-0 bg-transparent d-flex align-items-center d-xl-none"
+                            id="close-messenger-sidebar" title="Close">
+                            <span class="material-symbols-outlined font-size-18 text-muted">close</span>
+                        </button>
+                    </div>
+                    <div class="iq-search-bar device-search">
                         <form action="#" class="searchbox position-relative" onsubmit="return false;">
                             <a class="search-link" href="javascript:void(0);">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
                                     <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor" stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
@@ -32,123 +38,122 @@
                 </div>
 
                 <div class="flex-grow-1 overflow-hidden d-flex flex-column" id="sidebar-view-container">
-                    {{-- 1. Conversation List View --}}
-                    <div id="sidebar-list-view" class="h-100 d-flex flex-column overflow-auto">
-                        <div class="media-height flex-grow-1" data-scrollbar="init">
-                            <div id="nav-search-results" style="display: none;"></div>
-                            <div id="nav-friends">
-                                <div class="wsus__mini_divider text-center my-2">
-                                    <span>All Messages</span>
-                                </div>
+                {{-- 1. Conversation List View --}}
+                <div id="sidebar-list-view" class="h-100 d-flex flex-column overflow-auto">
+                    <div class="media-height flex-grow-1" data-scrollbar="init">
+                        <div id="nav-search-results" style="display: none;"></div>
+                        <div id="nav-friends">
+                            <div class="wsus__mini_divider text-center my-2">
+                                <span>All Messages</span>
+                            </div>
 
-                                @auth
-                                    @if (isset($sidebarFriends) && count($sidebarFriends))
-                                        @foreach ($sidebarFriends as $friend)
-                                            <div class="d-flex align-items-center justify-content-between chat-tabs-content sidebar-chat-item border-bottom"
-                                                data-id="{{ $friend->id }}" style="cursor: pointer;"
-                                                title="Chat with {{ $friend->name }}">
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <div
-                                                        class="iq-profile-avatar {{ $friend->isOnline() ? 'status-online' : 'status-offline' }}">
-                                                        <img class="rounded-circle avatar-50 border" src="{{ $friend->avatar_url }}"
-                                                            alt="user-img" loading="lazy">
-                                                    </div>
-                                                    <div class="overflow-hidden">
-                                                        <h6 class="font-size-14 mb-0 fw-semibold text-truncate"
-                                                            style="max-width: 150px;">{{ $friend->name }}</h6>
-                                                        <p class="mb-0 font-size-12 fw-medium text-muted text-truncate"
-                                                            style="max-width: 150px;">
-                                                            {{ $friend->last_message ?? 'Say hi 👋' }}
-                                                        </p>
-                                                    </div>
+                            @auth
+                                @if (isset($sidebarFriends) && count($sidebarFriends))
+                                    @foreach ($sidebarFriends as $friend)
+                                        <div class="d-flex align-items-center justify-content-between chat-tabs-content sidebar-chat-item border-bottom"
+                                            data-id="{{ $friend->id }}" style="cursor: pointer;"
+                                            title="Chat with {{ $friend->name }}">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div
+                                                    class="iq-profile-avatar {{ $friend->isOnline() ? 'status-online' : 'status-offline' }}">
+                                                    <img class="rounded-circle avatar-50 border" src="{{ $friend->avatar_url }}"
+                                                        alt="user-img" loading="lazy">
                                                 </div>
-                                                <div class="d-flex flex-column align-items-end">
-                                                    <span
-                                                        class="font-size-10 fw-medium text-muted">{{ $friend->last_message_time ?? '' }}</span>
+                                                <div class="overflow-hidden">
+                                                    <h6 class="font-size-14 mb-0 fw-semibold text-truncate"
+                                                        style="max-width: 150px;">{{ $friend->name }}</h6>
+                                                    <p class="mb-0 font-size-12 fw-medium text-muted text-truncate"
+                                                        style="max-width: 150px;">
+                                                        {{ $friend->last_message ?? 'Say hi 👋' }}
+                                                    </p>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <div class="p-5 text-center">
-                                            <div class="bg-light rounded-circle d-inline-flex p-3 mb-3">
-                                                <span class="material-symbols-outlined text-muted"
-                                                    style="font-size: 32px">chat_bubble</span>
+                                            <div class="d-flex flex-column align-items-end">
+                                                <span
+                                                    class="font-size-10 fw-medium text-muted">{{ $friend->last_message_time ?? '' }}</span>
                                             </div>
-                                            <h6 class="font-size-14 text-muted">No Conversations</h6>
-                                            <p class="small text-muted px-3">Start a chat by searching for friends above.</p>
                                         </div>
-                                    @endif
+                                    @endforeach
                                 @else
                                     <div class="p-5 text-center">
-                                        <div class="bg-primary-subtle rounded-circle d-inline-flex p-3 mb-3">
-                                            <span class="material-symbols-outlined text-primary"
-                                                style="font-size: 32px">lock</span>
+                                        <div class="bg-light rounded-circle d-inline-flex p-3 mb-3">
+                                            <span class="material-symbols-outlined text-muted"
+                                                style="font-size: 32px">chat_bubble</span>
                                         </div>
-                                        <h6 class="font-size-14 fw-bold">Join the Conversation</h6>
-                                        <p class="small text-muted px-3 mb-4">You must be logged in to view history and chat
-                                            with friends.</p>
-                                        <a href="{{ route('login') }}"
-                                            class="btn btn-primary btn-sm px-4 rounded-pill shadow-sm">Login Now</a>
+                                        <h6 class="font-size-14 text-muted">No Conversations</h6>
+                                        <p class="small text-muted px-3">Start a chat by searching for friends above.</p>
                                     </div>
-                                @endauth
-                            </div>
-                        </div>
-                    </div> {{-- End of sidebar-list-view --}}
-
-                    {{-- 2. Active Chat View (Initially Hidden) --}}
-                    <div id="sidebar-chat-view" class="h-100 d-flex flex-column overflow-hidden"
-                        style="display: none !important;">
-                        {{-- Header --}}
-                        <div class="p-3 border-bottom d-flex align-items-center gap-2 bg-primary text-white shadow-sm">
-                            <button class="btn btn-link text-white p-0 border-0 d-flex align-items-center"
-                                id="close-sidebar-chat">
-                                <span class="material-symbols-outlined">arrow_back</span>
-                            </button>
-                            <div class="iq-profile-avatar status-online" id="sidebar-chat-avatar-container">
-                                <img class="rounded-circle avatar-35 border border-white" id="sidebar-chat-avatar"
-                                    src="" alt="user">
-                            </div>
-                            <div class="overflow-hidden flex-grow-1">
-                                <h6 class="font-size-14 mb-0 fw-bold text-white text-truncate" id="sidebar-chat-name">
-                                    User Name</h6>
-                                <p class="mb-0 font-size-11 text-white-50" id="sidebar-chat-status">Online</p>
-                            </div>
-                        </div>
-
-                        {{-- Messages Area --}}
-                        <div class="flex-grow-1 p-3 bg-light-subtle" id="sidebar-chat-messages"
-                            style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
-                            {{-- Messages will be loaded here --}}
-                        </div>
-
-                        {{-- Footer/Input --}}
-                        <div class="p-2 border-top bg-white">
-                            <form id="sidebar-chat-form" onsubmit="return false;"
-                                class="d-flex gap-2 align-items-center">
-                                <input type="text" id="sidebar-chat-input"
-                                    class="form-control form-control-sm rounded-pill border-0 bg-light"
-                                    placeholder="Type a message..." autocomplete="off">
-                                <button type="submit"
-                                    class="btn btn-primary btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center">
-                                    <span class="material-symbols-outlined" style="font-size: 18px">send</span>
-                                </button>
-                            </form>
+                                @endif
+                            @else
+                                <div class="p-5 text-center">
+                                    <div class="bg-primary-subtle rounded-circle d-inline-flex p-3 mb-3">
+                                        <span class="material-symbols-outlined text-primary"
+                                            style="font-size: 32px">lock</span>
+                                    </div>
+                                    <h6 class="font-size-14 fw-bold">Join the Conversation</h6>
+                                    <p class="small text-muted px-3 mb-4">You must be logged in to view history and chat
+                                        with friends.</p>
+                                    <a href="{{ route('login') }}"
+                                        class="btn btn-primary btn-sm px-4 rounded-pill shadow-sm">Login Now</a>
+                                </div>
+                            @endauth
                         </div>
                     </div>
-                </div>
+                </div> {{-- End of sidebar-list-view --}}
 
-                {{-- Global Footer Button (Persistent) --}}
-                <div class="p-3 bg-light border-top mt-auto">
-                    <a href="{{ route('messenger.index') }}"
-                        class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
-                        <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
-                        <span class="fw-semibold">Direct Messenger</span>
-                    </a>
-                </div>
+                {{-- 2. Active Chat View (Initially Hidden) --}}
+                <div id="sidebar-chat-view" class="h-100 d-flex flex-column overflow-hidden"
+                    style="display: none !important;">
+                    {{-- Header --}}
+                    <div class="p-3 border-bottom d-flex align-items-center gap-2 bg-primary text-white shadow-sm">
+                        <button class="btn btn-link text-white p-0 border-0 d-flex align-items-center"
+                            id="close-sidebar-chat">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                        </button>
+                        <div class="iq-profile-avatar status-online" id="sidebar-chat-avatar-container">
+                            <img class="rounded-circle avatar-35 border border-white" id="sidebar-chat-avatar" src=""
+                                alt="user">
+                        </div>
+                        <div class="overflow-hidden flex-grow-1">
+                            <h6 class="font-size-14 mb-0 fw-bold text-white text-truncate" id="sidebar-chat-name">
+                                User Name</h6>
+                            <p class="mb-0 font-size-11 text-white-50" id="sidebar-chat-status">Online</p>
+                        </div>
+                    </div>
 
+                    {{-- Messages Area --}}
+                    <div class="flex-grow-1 p-3 bg-light-subtle" id="sidebar-chat-messages"
+                        style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                        {{-- Messages will be loaded here --}}
+                    </div>
+
+                    {{-- Footer/Input --}}
+                    <div class="p-2 border-top bg-white">
+                        <form id="sidebar-chat-form" onsubmit="return false;" class="d-flex gap-2 align-items-center">
+                            <input type="text" id="sidebar-chat-input"
+                                class="form-control form-control-sm rounded-pill border-0 bg-light"
+                                placeholder="Type a message..." autocomplete="off">
+                            <button type="submit"
+                                class="btn btn-primary btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center">
+                                <span class="material-symbols-outlined" style="font-size: 18px">send</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
+
+            {{-- Global Footer Button (Persistent) --}}
+            <div class="p-3 bg-light border-top mt-auto">
+                <a href="{{ route('messenger.index') }}"
+                    class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
+                    <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
+                    <span class="fw-semibold">Direct Messenger</span>
+                </a>
+            </div>
+
         </div>
     </div>
+</div>
 </div>
 
 <style>
@@ -238,62 +243,55 @@
     /* Mobile Responsiveness for Sidebar */
     @media (max-width: 1199px) {
         .right-sidebar-mini {
-            position: fixed;
-            right: -320px;
-            top: 0;
-            z-index: 1050;
-            width: 300px;
-            height: 100vh;
-            transition: right 0.3s ease-in-out;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-            background: #fff;
-            padding-top: 75px;
+            display: flex !important;
+            /* Use flex for internal layout */
+            flex-direction: column;
+            visibility: visible !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            /* Extremely high z-index */
+            background: #fff !important;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2) !important;
+            transform: translateX(105%);
+            /* Shifted out of view */
+            transition: transform 0.3s ease-in-out !important;
+            padding-top: 0 !important;
+            /* Let the internal header handle it */
         }
 
         .right-sidebar-mini.active {
-            right: 0;
+            transform: translateX(0) !important;
         }
 
         .mobile-chat-toggle {
             display: flex !important;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
             background: var(--bs-primary);
             color: white;
             border-radius: 50%;
-            z-index: 1060;
+            z-index: 99998;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             border: none;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .mobile-chat-toggle:active {
-            transform: scale(0.9);
-        }
-
-        .mobile-chat-toggle span {
-            color: white;
         }
     }
 
-    @media (min-width: 1200px) {
-        .mobile-chat-toggle {
-            display: none !important;
-        }
-    }
-
+    /* Small mobile screens */
     @media (max-width: 576px) {
         .right-sidebar-mini {
-            width: 100%;
-            height: 100vh;
-            top: 0;
-            right: -100%;
+            max-width: 85% !important;
+            /* Leave some space on the left */
         }
     }
 </style>
@@ -309,19 +307,40 @@
         let currentChatUserId = null;
 
         // Toggle Sidebar on Mobile or from Header
-        $('#toggle-sidebar-messenger, #open-sidebar-messenger-header').on('click', function (e) {
+        $(document).on('click', '#toggle-sidebar-messenger, #open-sidebar-messenger-header, #mail-drop-1, .messenger-sidebar-trigger', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             $('.right-sidebar-mini').toggleClass('active');
             const isActive = $('.right-sidebar-mini').hasClass('active');
+
+            // If opening, ensure list view is shown first
+            if (isActive && $('#sidebar-chat-view').css('display') !== 'none') {
+                // optionally reset to list view if wanted
+            }
+
             $('#toggle-sidebar-messenger').find('span').text(isActive ? 'close' : 'chat');
+        });
+
+        if (!$('body > .right-sidebar-mini').length) {
+            $('.right-sidebar-mini').appendTo('body');
+        }
+
+        // Close sidebar when clicking the "X" button next to "Messenger"
+        $(document).on('click', '#close-messenger-sidebar', function (e) {
+            $('.right-sidebar-mini').removeClass('active');
+            $('#toggle-sidebar-messenger').find('span').text('chat');
         });
 
         // Close Sidebar when clicking outside on mobile
         $(document).on('click', function (e) {
             if ($(window).width() < 1200) {
-                if (!$(e.target).closest('.right-sidebar-mini').length && !$(e.target).closest('#toggle-sidebar-messenger').length && !$(e.target).closest('#open-sidebar-messenger-header').length) {
-                    $('.right-sidebar-mini').removeClass('active');
-                    $('#toggle-sidebar-messenger').find('span').text('chat');
+                const $sidebar = $('.right-sidebar-mini');
+                if ($sidebar.hasClass('active')) {
+                    if (!$sidebar.is(e.target) && $sidebar.has(e.target).length === 0 &&
+                        !$(e.target).closest('#toggle-sidebar-messenger, #open-sidebar-messenger-header, #mail-drop-1, .messenger-sidebar-trigger').length) {
+                        $sidebar.removeClass('active');
+                        $('#toggle-sidebar-messenger').find('span').text('chat');
+                    }
                 }
             }
         });

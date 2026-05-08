@@ -63,14 +63,7 @@
                                     <a class="nav-link menu-arrow justify-content-start"
                                         href="{{ route('partner.list') }}" target="_blank">
                                         <span class="nav-text">Partner</span>
-                                    </a>
-                                    {{--                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData"> --}}
-                                    {{--                                        @foreach ($globalPartners as $partner) --}}
-                                    {{--                                            <li class="nav-item"> --}}
-                                    {{--                                                <a class="nav-link " href="../dashboard/store-category-list.html">{{ "$partner->first_name $partner->last_name"   }}</a> --}}
-                                    {{--                                            </li> --}}
-                                    {{--                                        @endforeach --}}
-                                    {{--                                    </ul> --}}
+                                    </a>                                   
                                 </li>
                             </ul>
                         </div>
@@ -290,8 +283,8 @@
                             </div>
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a href="javascript:void(0);" class="d-flex align-items-center" id="open-sidebar-messenger-header">
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" class="d-flex align-items-center messenger-sidebar-trigger" id="open-sidebar-messenger-header">
                             <i class="material-symbols-outlined">mail</i>
                             <span class="mobile-text d-none ms-3">Message</span>
                         </a>
@@ -461,11 +454,10 @@
                             }
                         </script>
                     @endauth
-                    <li class="nav-item d-none d-lg-none">
-                        <a href="app/chat.html" class="dropdown-toggle d-flex align-items-center" id="mail-drop-1"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <li class="nav-item d-block d-lg-none">
+                        <a href="javascript:void(0);" class="d-flex align-items-center messenger-sidebar-trigger" id="mail-drop-1">
                             <i class="material-symbols-outlined">mail</i>
-                            <span class="mobile-text  ms-3">Message</span>
+                            <span class="mobile-text ms-3">Message</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown user-dropdown">
@@ -523,152 +515,7 @@
     </nav>
 </div>
 
-@push('styles')
-    <style>
-        .nav-tabs .nav-link {
-            border: none;
-            border-bottom: 2px solid transparent;
-            background: none;
-            color: #6c757d;
-            padding: 0.5rem 1rem;
-            margin-bottom: -1px;
-        }
 
-        .nav-tabs .nav-link.active {
-            color: #007bff;
-            border-bottom-color: #007bff;
-            background: none;
-        }
-
-        .nav-tabs .nav-link:hover {
-            color: #007bff;
-            border-color: transparent;
-        }
-
-        .iq-friend-request,
-        .iq-friend-item {
-            transition: all 0.3s ease;
-        }
-
-        .iq-friend-request:hover,
-        .iq-friend-item:hover {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 8px;
-            margin: -8px;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 9px;
-            font-size: 11px;
-            line-height: 16px;
-            text-align: center;
-            padding: 0 4px;
-        }
-
-        .badge {
-            font-size: 0.65em;
-        }
-
-        /* Chat Modal Styles */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            background-color: #f8f9fa;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-
-        .max-width-70 {
-            max-width: 70%;
-        }
-
-        .friend-profile-btn:hover {
-            background-color: #007bff !important;
-            color: white;
-        }
-
-        .friend-chat-btn:hover {
-            background-color: #17a2b8 !important;
-            color: white;
-        }
-
-        .friend-profile-btn,
-        .friend-chat-btn {
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .friend-profile-btn:hover span,
-        .friend-chat-btn:hover span {
-            color: white !important;
-        }
-
-        .accept-friend-request-header-btn:hover,
-        .accept-friend-request-btn:hover {
-            background-color: #28a745 !important;
-            color: white !important;
-        }
-
-        .decline-friend-request-header-btn:hover,
-        .decline-friend-request-btn:hover {
-            background-color: #dc3545 !important;
-            color: white !important;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 10px;
-            line-height: 18px;
-            text-align: center;
-            z-index: 10;
-        }
-
-        .friend-request-notification {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-left: 3px solid #007bff;
-        }
-
-        .thread:hover {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-    </style>
-@endpush
 
 @push('scripts')
     <script>

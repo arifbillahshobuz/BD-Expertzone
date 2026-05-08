@@ -16,6 +16,13 @@ use App\Http\Controllers\Frontend\FriendController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Models\User;
 
+
+//catch clear
+Route::get('clear', function () {
+    \Artisan::call('optimize:clear');
+    return "Optimize cache cleared!";
+});
+
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::post('/search/recent/save', [SearchController::class, 'saveRecent'])->name('search.recent.save');
 Route::post('/search/recent/delete', [SearchController::class, 'deleteRecent'])->name('search.recent.delete');
@@ -56,6 +63,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->where('identifier', '[A-Za-z0-9._-]+') // reserved words like 'edit' already matched above
         ->name('user.profile.show');
 
+    Route::get('profile/{identifier}/photos', [UserProfileController::class, 'allPhotos'])
+        ->where('identifier', '[A-Za-z0-9._-]+')
+        ->name('user.profile.photos');
+
     //    User Post Routes
     Route::get('/posts/{post}', [UserPostController::class, 'show'])->name('posts.show');
     Route::post('/user/post/store', [UserPostController::class, 'store'])->name('user.post.store');
@@ -90,9 +101,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/friend-request/send/{receiverId}', [FriendController::class, 'sendRequest'])->name('friend.request.send');
     Route::post('/friend-request/accept/{requestId}', [FriendController::class, 'acceptRequest'])->name('friend.request.accept');
     Route::post('/friend-request/decline/{requestId}', [FriendController::class, 'declineRequest'])->name('friend.request.decline');
-    Route::get('/friend-requests', [FriendController::class, 'getPendingRequests'])->name('friend.requests');
-    Route::get('/friends', [FriendController::class, 'getFriends'])->name('friends.list');
-    Route::delete('/friends/{friendId}', [FriendController::class, 'removeFriend'])->name('friend.remove');
+    Route::get('/friends/list', [FriendController::class, 'getFriends'])->name('friends.list');
+    Route::get('/friends/relative', [FriendController::class, 'getRelativeFriends'])->name('friends.relative');
+    Route::get('/friends/requests', [FriendController::class, 'getPendingRequests'])->name('friend.requests');
 
 
     Route::post('/notifications/mark-read', function () {

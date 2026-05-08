@@ -15,7 +15,13 @@
     <title>SocialV | Responsive Bootstrap 5 Admin Dashboard Template</title>
 
     <!-- End Config Options -->
-    <link rel="shortcut icon" href="{{ asset('frontend/assets/images/favicon.ico') }}" />
+    @if(getSetting('app_logo'))
+        <link rel="shortcut icon" href="{{ asset(getSetting('app_logo')) }}" />
+    @elseif(getSetting('favicon'))
+        <link rel="shortcut icon" href="{{ asset(getSetting('favicon')) }}" />
+    @else
+        <link rel="shortcut icon" href="{{ asset('frontend/assets/images/favicon.ico') }}" />
+    @endif
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/libs.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/socialv097b.css?v=5.2.0') }}">
     <link rel="stylesheet"
