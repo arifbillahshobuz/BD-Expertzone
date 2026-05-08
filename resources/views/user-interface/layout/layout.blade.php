@@ -33,7 +33,6 @@
             color: var(--bs-body-color) !important;
         }
 
-        /* Target common text elements to ensure they inherit the global color */
         h1,
         h2,
         h3,
@@ -46,7 +45,7 @@
         div,
         small,
         label {
-            color: inherit !important;
+            color: var(--bs-body-color) !important;
         }
 
         /* For links that are not buttons, use the global text color but allow hover effects if any */
@@ -231,6 +230,16 @@
         img,
         .avatar-130 {
             transition: all 0.3s ease-in-out;
+        }
+
+        /* Sidebar specific text color override to ensure it follows the setting */
+        .sidebar-header .logo-title,
+        .sidebar .nav-link,
+        .sidebar .item-name,
+        .sidebar .static-item span,
+        .card-header .card-title,
+        .card-header a.small {
+            color: var(--bs-body-color) !important;
         }
     </style>
 
@@ -522,13 +531,13 @@
                 function showSidebarToast(message, type) {
                     const id = 'toast_' + Date.now();
                     const toast = $(`
-                                                                                                                    <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
-                                                                                                                         style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
-                                                                                                                        <div class="d-flex">
-                                                                                                                            <div class="toast-body">${message}</div>
-                                                                                                                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                                                                                                        </div>
-                                                                                                                    </div>`);
+                                                                                                                                <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
+                                                                                                                                     style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
+                                                                                                                                    <div class="d-flex">
+                                                                                                                                        <div class="toast-body">${message}</div>
+                                                                                                                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                                                                                                                    </div>
+                                                                                                                                </div>`);
                     $('body').append(toast);
                     const bsToast = new bootstrap.Toast(document.getElementById(id), { delay: 3000 });
                     bsToast.show();

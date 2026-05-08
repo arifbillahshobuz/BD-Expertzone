@@ -744,6 +744,33 @@
                     $('.search-modal-custom').removeClass('open');
                 }, 200);
             });
+
+            // Mobile Dropdown Fix: Ensure they open and remain centered
+            $('.nav-icon-btn[data-bs-toggle="dropdown"]').on('click', function (e) {
+                if ($(window).width() < 1200) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const target = $(this).next('.dropdown-menu');
+                    const isOpen = target.hasClass('show');
+
+                    // Close all other dropdowns
+                    $('.dropdown-menu.show').not(target).removeClass('show');
+
+                    if (isOpen) {
+                        target.removeClass('show');
+                    } else {
+                        target.addClass('show');
+                    }
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.dropdown').length) {
+                    $('.dropdown-menu.show').removeClass('show');
+                }
+            });
         });
     </script>
 @endpush

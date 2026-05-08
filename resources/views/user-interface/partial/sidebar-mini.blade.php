@@ -12,7 +12,7 @@
                 <div class="px-4 pb-4 border-bottom bg-white sticky-top">
                     <div class="d-flex align-items-center justify-content-between py-4">
                         <h6 class="fw-bold m-0 text-uppercase tracking-wider"
-                            style="font-size: 13px; color: var(--bs-primary)">Messenger</h6>
+                            style="font-size: 13px; color: var(--bs-body-color)">Messenger</h6>
                         <button type="button"
                             class="btn-close-sidebar-mini border-0 bg-transparent d-flex align-items-center d-xl-none"
                             id="close-messenger-sidebar" title="Close">
@@ -24,8 +24,8 @@
                             <a class="search-link" href="javascript:void(0);">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor" stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
@@ -38,122 +38,123 @@
                 </div>
 
                 <div class="flex-grow-1 overflow-hidden d-flex flex-column" id="sidebar-view-container">
-                {{-- 1. Conversation List View --}}
-                <div id="sidebar-list-view" class="h-100 d-flex flex-column overflow-auto">
-                    <div class="media-height flex-grow-1" data-scrollbar="init">
-                        <div id="nav-search-results" style="display: none;"></div>
-                        <div id="nav-friends">
-                            <div class="wsus__mini_divider text-center my-2">
-                                <span>All Messages</span>
-                            </div>
+                    {{-- 1. Conversation List View --}}
+                    <div id="sidebar-list-view" class="h-100 d-flex flex-column overflow-auto">
+                        <div class="media-height flex-grow-1" data-scrollbar="init">
+                            <div id="nav-search-results" style="display: none;"></div>
+                            <div id="nav-friends">
+                                <div class="wsus__mini_divider text-center my-2">
+                                    <span>All Messages</span>
+                                </div>
 
-                            @auth
-                                @if (isset($sidebarFriends) && count($sidebarFriends))
-                                    @foreach ($sidebarFriends as $friend)
-                                        <div class="d-flex align-items-center justify-content-between chat-tabs-content sidebar-chat-item border-bottom"
-                                            data-id="{{ $friend->id }}" style="cursor: pointer;"
-                                            title="Chat with {{ $friend->name }}">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <div
-                                                    class="iq-profile-avatar {{ $friend->isOnline() ? 'status-online' : 'status-offline' }}">
-                                                    <img class="rounded-circle avatar-50 border" src="{{ $friend->avatar_url }}"
-                                                        alt="user-img" loading="lazy">
+                                @auth
+                                    @if (isset($sidebarFriends) && count($sidebarFriends))
+                                        @foreach ($sidebarFriends as $friend)
+                                            <div class="d-flex align-items-center justify-content-between chat-tabs-content sidebar-chat-item border-bottom"
+                                                data-id="{{ $friend->id }}" style="cursor: pointer;"
+                                                title="Chat with {{ $friend->name }}">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div
+                                                        class="iq-profile-avatar {{ $friend->isOnline() ? 'status-online' : 'status-offline' }}">
+                                                        <img class="rounded-circle avatar-50 border" src="{{ $friend->avatar_url }}"
+                                                            alt="user-img" loading="lazy">
+                                                    </div>
+                                                    <div class="overflow-hidden">
+                                                        <h6 class="font-size-14 mb-0 fw-semibold text-truncate"
+                                                            style="max-width: 150px;">{{ $friend->name }}</h6>
+                                                        <p class="mb-0 font-size-12 fw-medium text-muted text-truncate"
+                                                            style="max-width: 150px;">
+                                                            {{ $friend->last_message ?? 'Say hi 👋' }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div class="overflow-hidden">
-                                                    <h6 class="font-size-14 mb-0 fw-semibold text-truncate"
-                                                        style="max-width: 150px;">{{ $friend->name }}</h6>
-                                                    <p class="mb-0 font-size-12 fw-medium text-muted text-truncate"
-                                                        style="max-width: 150px;">
-                                                        {{ $friend->last_message ?? 'Say hi 👋' }}
-                                                    </p>
+                                                <div class="d-flex flex-column align-items-end">
+                                                    <span
+                                                        class="font-size-10 fw-medium text-muted">{{ $friend->last_message_time ?? '' }}</span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column align-items-end">
-                                                <span
-                                                    class="font-size-10 fw-medium text-muted">{{ $friend->last_message_time ?? '' }}</span>
+                                        @endforeach
+                                    @else
+                                        <div class="p-5 text-center">
+                                            <div class="bg-light rounded-circle d-inline-flex p-3 mb-3">
+                                                <span class="material-symbols-outlined text-muted"
+                                                    style="font-size: 32px">chat_bubble</span>
                                             </div>
+                                            <h6 class="font-size-14 text-muted">No Conversations</h6>
+                                            <p class="small text-muted px-3">Start a chat by searching for friends above.</p>
                                         </div>
-                                    @endforeach
+                                    @endif
                                 @else
                                     <div class="p-5 text-center">
-                                        <div class="bg-light rounded-circle d-inline-flex p-3 mb-3">
-                                            <span class="material-symbols-outlined text-muted"
-                                                style="font-size: 32px">chat_bubble</span>
+                                        <div class="bg-primary-subtle rounded-circle d-inline-flex p-3 mb-3">
+                                            <span class="material-symbols-outlined text-primary"
+                                                style="font-size: 32px">lock</span>
                                         </div>
-                                        <h6 class="font-size-14 text-muted">No Conversations</h6>
-                                        <p class="small text-muted px-3">Start a chat by searching for friends above.</p>
+                                        <h6 class="font-size-14 fw-bold">Join the Conversation</h6>
+                                        <p class="small text-muted px-3 mb-4">You must be logged in to view history and chat
+                                            with friends.</p>
+                                        <a href="{{ route('login') }}"
+                                            class="btn btn-primary btn-sm px-4 rounded-pill shadow-sm">Login Now</a>
                                     </div>
-                                @endif
-                            @else
-                                <div class="p-5 text-center">
-                                    <div class="bg-primary-subtle rounded-circle d-inline-flex p-3 mb-3">
-                                        <span class="material-symbols-outlined text-primary"
-                                            style="font-size: 32px">lock</span>
-                                    </div>
-                                    <h6 class="font-size-14 fw-bold">Join the Conversation</h6>
-                                    <p class="small text-muted px-3 mb-4">You must be logged in to view history and chat
-                                        with friends.</p>
-                                    <a href="{{ route('login') }}"
-                                        class="btn btn-primary btn-sm px-4 rounded-pill shadow-sm">Login Now</a>
-                                </div>
-                            @endauth
+                                @endauth
+                            </div>
                         </div>
-                    </div>
-                </div> {{-- End of sidebar-list-view --}}
+                    </div> {{-- End of sidebar-list-view --}}
 
-                {{-- 2. Active Chat View (Initially Hidden) --}}
-                <div id="sidebar-chat-view" class="h-100 d-flex flex-column overflow-hidden"
-                    style="display: none !important;">
-                    {{-- Header --}}
-                    <div class="p-3 border-bottom d-flex align-items-center gap-2 bg-primary text-white shadow-sm">
-                        <button class="btn btn-link text-white p-0 border-0 d-flex align-items-center"
-                            id="close-sidebar-chat">
-                            <span class="material-symbols-outlined">arrow_back</span>
-                        </button>
-                        <div class="iq-profile-avatar status-online" id="sidebar-chat-avatar-container">
-                            <img class="rounded-circle avatar-35 border border-white" id="sidebar-chat-avatar" src=""
-                                alt="user">
-                        </div>
-                        <div class="overflow-hidden flex-grow-1">
-                            <h6 class="font-size-14 mb-0 fw-bold text-white text-truncate" id="sidebar-chat-name">
-                                User Name</h6>
-                            <p class="mb-0 font-size-11 text-white-50" id="sidebar-chat-status">Online</p>
-                        </div>
-                    </div>
-
-                    {{-- Messages Area --}}
-                    <div class="flex-grow-1 p-3 bg-light-subtle" id="sidebar-chat-messages"
-                        style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
-                        {{-- Messages will be loaded here --}}
-                    </div>
-
-                    {{-- Footer/Input --}}
-                    <div class="p-2 border-top bg-white">
-                        <form id="sidebar-chat-form" onsubmit="return false;" class="d-flex gap-2 align-items-center">
-                            <input type="text" id="sidebar-chat-input"
-                                class="form-control form-control-sm rounded-pill border-0 bg-light"
-                                placeholder="Type a message..." autocomplete="off">
-                            <button type="submit"
-                                class="btn btn-primary btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center">
-                                <span class="material-symbols-outlined" style="font-size: 18px">send</span>
+                    {{-- 2. Active Chat View (Initially Hidden) --}}
+                    <div id="sidebar-chat-view" class="h-100 d-flex flex-column overflow-hidden"
+                        style="display: none !important;">
+                        {{-- Header --}}
+                        <div class="p-3 border-bottom d-flex align-items-center gap-2 bg-primary text-white shadow-sm">
+                            <button class="btn btn-link text-white p-0 border-0 d-flex align-items-center"
+                                id="close-sidebar-chat">
+                                <span class="material-symbols-outlined">arrow_back</span>
                             </button>
-                        </form>
+                            <div class="iq-profile-avatar status-online" id="sidebar-chat-avatar-container">
+                                <img class="rounded-circle avatar-35 border border-white" id="sidebar-chat-avatar"
+                                    src="" alt="user">
+                            </div>
+                            <div class="overflow-hidden flex-grow-1">
+                                <h6 class="font-size-14 mb-0 fw-bold text-white text-truncate" id="sidebar-chat-name">
+                                    User Name</h6>
+                                <p class="mb-0 font-size-11 text-white-50" id="sidebar-chat-status">Online</p>
+                            </div>
+                        </div>
+
+                        {{-- Messages Area --}}
+                        <div class="flex-grow-1 p-3 bg-light-subtle" id="sidebar-chat-messages"
+                            style="overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                            {{-- Messages will be loaded here --}}
+                        </div>
+
+                        {{-- Footer/Input --}}
+                        <div class="p-2 border-top bg-white">
+                            <form id="sidebar-chat-form" onsubmit="return false;"
+                                class="d-flex gap-2 align-items-center">
+                                <input type="text" id="sidebar-chat-input"
+                                    class="form-control form-control-sm rounded-pill border-0 bg-light"
+                                    placeholder="Type a message..." autocomplete="off">
+                                <button type="submit"
+                                    class="btn btn-primary btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center">
+                                    <span class="material-symbols-outlined" style="font-size: 18px">send</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Global Footer Button (Persistent) --}}
-            <div class="p-3 bg-light border-top mt-auto">
-                <a href="{{ route('messenger.index') }}"
-                    class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
-                    <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
-                    <span class="fw-semibold">Direct Messenger</span>
-                </a>
-            </div>
+                {{-- Global Footer Button (Persistent) --}}
+                <div class="p-3 bg-light border-top mt-auto">
+                    <a href="{{ route('messenger.index') }}"
+                        class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
+                        <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
+                        <span class="fw-semibold">Direct Messenger</span>
+                    </a>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <style>
