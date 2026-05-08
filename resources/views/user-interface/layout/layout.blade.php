@@ -299,11 +299,11 @@
     <!-- Wrapper Start -->
     @include('user-interface.partial.wrapper')
     <!-- Wrapper End-->
+    <!-- header start-->
+    @include('user-interface.partial.header')
+    <!-- header end -->
     <main class="main-content">
         <div class="position-relative">
-            <!-- header start-->
-            @include('user-interface.partial.header')
-            <!-- header end -->
             <div>
                 <div class="position-relative">
                 </div>
@@ -400,12 +400,32 @@
                 });
             }
 
+            $(document).on('submit', '.searchbox', function (e) {
+                e.preventDefault();
+                let query = $(this).find('.search-input').val().trim();
+                if (query.length > 0) {
+                    clearTimeout(searchTimeout);
+                    if (!$('#search-tabs-container').length) {
+                        renderSearchUI(query, 'post');
+                    } else {
+                        fetchSearchResults(query, 'post');
+                    }
+                    saveRecentSearch(query);
+                    $('.search-modal-custom').removeClass('open');
+                }
+            });
+
             $('.search-input').on('input', function () {
                 let query = $(this).val().trim();
 
                 // Hide recent search modal when user starts typing
                 if (query.length > 0) {
-                    $('.search-modal-custom').removeClass('show');
+                    $('.search-modal-custom').removeClass('open');
+                } else {
+                    // Re-show if input is empty and focused
+                    if ($(this).is(':focus')) {
+                        $(this).closest('.searchbox').next('.search-modal-custom').addClass('open');
+                    }
                 }
 
                 clearTimeout(searchTimeout);
@@ -416,17 +436,13 @@
                     return;
                 }
                 searchTimeout = setTimeout(() => {
-                    if (container.length === 0 || contentDiv.length === 0) {
-                        window.location.href = "/?q=" + encodeURIComponent(query);
+                    let activeTab = $('#searchFilters .active').length ? $('#searchFilters .active').data('tab') : 'post';
+                    if (!$('#search-tabs-container').length) {
+                        renderSearchUI(query, 'post');
                     } else {
-                        let activeTab = $('#searchFilters .active').length ? $('#searchFilters .active').data('tab') : 'post';
-                        if (!$('#search-tabs-container').length) {
-                            renderSearchUI(query, 'post');
-                        } else {
-                            fetchSearchResults(query, activeTab);
-                        }
-                        saveRecentSearch(query);
+                        fetchSearchResults(query, activeTab);
                     }
+                    saveRecentSearch(query);
                 }, 400);
             });
 
@@ -444,10 +460,24 @@
 
             function saveRecentSearch(query) {
                 if (!query) return;
+                console.log('Attempting to save search:', query);
                 $.ajax({
                     url: "{{ route('search.recent.save') }}",
                     method: 'POST',
-                    data: { q: query }
+                    data: { q: query },
+                    success: function (res) {
+                        if (res.success && res.html) {
+                            console.log('Search saved successfully');
+                            $('#recent-searches-container-desktop').html(res.html);
+                            // For mobile, we need to preserve the "Clear All" header
+                            const mobileContainer = $('#recent-searches-container-mobile');
+                            const mobileHeader = mobileContainer.find('.d-flex.d-lg-none').clone();
+                            mobileContainer.html(res.html).prepend(mobileHeader);
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Search save failed:', xhr.responseText);
+                    }
                 });
             }
 
@@ -463,14 +493,14 @@
             $(document).on('click', '.clear-recent-btn, .clear-recent-btn-mobile', function () {
                 $.post("{{ route('search.recent.clear') }}", {});
                 $('.recent-search-item').remove();
-                $('.search-modal-body').html('<div class="py-3 px-3 text-center text-muted no-recent-searches">No recent searches</div>');
+                $('#recent-searches-container-desktop, #recent-searches-container-mobile').html('<div class="py-3 px-3 text-center text-muted no-recent-searches">No recent searches</div>');
             });
 
             $(document).on('click', '.recent-search-link', function (e) {
                 e.preventDefault();
                 let query = $(this).text().trim();
                 $('.search-input').val(query).trigger('input');
-                $('.search-modal-custom').removeClass('show');
+                $('.search-modal-custom').removeClass('open');
             });
 
             let urlParams = new URLSearchParams(window.location.search);
@@ -492,13 +522,13 @@
                 function showSidebarToast(message, type) {
                     const id = 'toast_' + Date.now();
                     const toast = $(`
-                                                        <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
-                                                             style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
-                                                            <div class="d-flex">
-                                                                <div class="toast-body">${message}</div>
-                                                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                                            </div>
-                                                        </div>`);
+                                                                                                                    <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
+                                                                                                                         style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
+                                                                                                                        <div class="d-flex">
+                                                                                                                            <div class="toast-body">${message}</div>
+                                                                                                                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                                                                                                        </div>
+                                                                                                                    </div>`);
                     $('body').append(toast);
                     const bsToast = new bootstrap.Toast(document.getElementById(id), { delay: 3000 });
                     bsToast.show();

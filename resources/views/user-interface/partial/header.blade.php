@@ -1,280 +1,491 @@
+<style>
+    /* Facebook-like Header Styles */
+    .iq-top-navbar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        background: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+        display: flex !important;
+        align-items: center !important;
+        z-index: 9999 !important;
+        transition: all 0.3s ease;
+    }
 
-<div class="iq-top-navbar border-bottom">
-    <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar p-lg-0 mt-0">
-        <div class="container-fluid navbar-inner  ">
-            <div class="d-flex align-items-center pb-2 pb-lg-0 d-xl-none">
-                <a href="{{ route('home') }}"
-                    class="d-flex align-items-center iq-header-logo navbar-brand d-block d-xl-none">
+    body {
+        padding-top: 60px !important;
+    }
+
+    .navbar-inner {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    /* Left Section */
+    .header-left {
+        width: 320px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input-wrapper .search-icon {
+        position: absolute;
+        left: 12px;
+        color: #65676b;
+        font-size: 20px;
+        z-index: 5;
+    }
+
+    .search-input-wrapper .search-input {
+        background-color: #f0f2f5 !important;
+        border: none !important;
+        font-size: 15px;
+        padding-left: 40px !important;
+        height: 40px;
+        width: 240px;
+        transition: all 0.2s ease;
+        border-radius: 50px !important;
+    }
+
+    .search-input-wrapper .search-input:focus {
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 2px var(--bs-primary) !important;
+    }
+
+    /* Center Section */
+    .header-center {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .nav-center {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .nav-center .nav-item {
+        margin: 0 4px;
+        width: 100px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-center .nav-link {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        color: #65676b !important;
+        transition: background-color 0.2s ease;
+        position: relative;
+        padding: 0;
+        text-decoration: none;
+    }
+
+    .nav-center .nav-link:hover {
+        background-color: #f0f2f5;
+    }
+
+    .nav-center .nav-link.active {
+        color: var(--bs-primary) !important;
+    }
+
+    .nav-center .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--bs-primary);
+        border-radius: 3px 3px 0 0;
+    }
+
+    .nav-center .nav-link .material-symbols-outlined {
+        font-size: 28px;
+    }
+
+    .nav-center .nav-link.active .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+    }
+
+    /* Right Section */
+    .header-right {
+        width: 320px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .nav-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #e4e6eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #050505 !important;
+        position: relative;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+        border: none;
+        padding: 0;
+    }
+
+    .nav-icon-btn:hover {
+        background-color: #d8dadf;
+    }
+
+    .nav-icon-btn .material-symbols-outlined {
+        font-size: 22px;
+    }
+
+    .badge-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #e41e3f;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 1px 5px;
+        border-radius: 50px;
+        border: 2px solid #ffffff;
+        line-height: 1.2;
+        min-width: 18px;
+        text-align: center;
+    }
+
+    .profile-btn {
+        padding: 0;
+        border: none;
+        background: transparent;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-btn img {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: filter 0.2s ease;
+    }
+
+    .profile-btn:hover img {
+        filter: brightness(0.9);
+    }
+
+    /* Dropdown Styling Fixes */
+    .sub-drop {
+        border-radius: 8px;
+        box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        border: none;
+        margin-top: 10px !important;
+        padding: 8px;
+        width: 360px !important;
+    }
+
+    .sub-drop-large {
+        width: 400px !important;
+    }
+
+    .hover-bg:hover {
+        background-color: #f2f2f2;
+    }
+
+    /* Search Modal Custom Position */
+    .search-modal-custom {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 320px;
+        background: white;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        display: none;
+        z-index: 1000;
+        margin-top: 8px;
+    }
+
+    .search-modal-custom.open {
+        display: block;
+    }
+
+    /* Responsive & Two-Row Mobile Layout */
+    @media (max-width: 1199px) {
+        .iq-top-navbar {
+            height: auto !important;
+            padding: 0 !important;
+        }
+
+        body {
+            padding-top: 110px !important;
+            /* Height for two rows */
+        }
+
+        .navbar-inner {
+            flex-direction: column !important;
+            padding: 0 !important;
+        }
+
+        .mobile-header-row-1 {
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 16px;
+        }
+
+        .mobile-header-row-2 {
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+        }
+
+        .header-center {
+            display: none !important;
+        }
+
+        .header-left,
+        .header-right {
+            width: auto !important;
+            flex: none !important;
+        }
+
+        /* Centering icons in row 2 */
+        .mobile-header-row-2 .header-right {
+            width: 100% !important;
+            justify-content: center !important;
+            gap: 20px !important;
+        }
+
+        .nav-icon-btn {
+            width: 42px !important;
+            height: 42px !important;
+            background: transparent !important;
+        }
+
+        .nav-icon-btn .material-symbols-outlined {
+            font-size: 26px !important;
+            color: #65676b !important;
+        }
+
+        .profile-btn img {
+            width: 34px !important;
+            height: 34px !important;
+        }
+
+        .badge-count {
+            top: -2px !important;
+            right: -2px !important;
+            font-size: 10px !important;
+        }
+    }
+</style>
+
+<div class="iq-top-navbar">
+    <div class="container-fluid navbar-inner">
+
+        <!-- MOBILE ROW 1: Logo & Burger Menu -->
+        <div class="mobile-header-row-1 d-xl-none">
+            <a href="{{ route('home') }}" class="navbar-brand m-0 p-0">
+                @if(getSetting('header_logo'))
+                    <img src="{{ asset(getSetting('header_logo')) }}" class="img-fluid" alt="logo"
+                        style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;">
+                @else
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 36px; height: 36px;">
+                        <span class="text-white fw-bold">B</span>
+                    </div>
+                @endif
+            </a>
+
+            <a class="sidebar-toggle nav-icon-btn" data-toggle="sidebar" data-active="true" href="javascript:void(0);">
+                <span class="material-symbols-outlined">menu</span>
+            </a>
+        </div>
+
+        <!-- DESKTOP NAV & MOBILE ROW 2 -->
+        <nav
+            class="nav navbar navbar-expand-lg p-0 w-100 d-flex align-items-center justify-content-between mobile-header-row-2">
+
+            <!-- DESKTOP LEFT (Logo & Search) - Hidden on Mobile -->
+            <div class="header-left d-none d-xl-flex">
+                <a href="{{ route('home') }}" class="navbar-brand m-0 p-0 d-flex align-items-center">
                     @if(getSetting('header_logo'))
-                        <img src="{{ asset(getSetting('header_logo')) }}" class="img-fluid" alt="logo" style="height: 40px;">
+                        <img src="{{ asset(getSetting('header_logo')) }}" class="img-fluid" alt="logo"
+                            style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover;">
                     @else
-                        <h3 class="logo-title d-none d-sm-block">{{ getSetting('app_name', 'BD-Expertzone') }}</h3>
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px;">
+                            <span class="text-white fw-bold">B</span>
+                        </div>
                     @endif
                 </a>
-                <a class="sidebar-toggle" data-toggle="sidebar" data-active="true" href="javascript:void(0);">
-                    <div class="icon material-symbols-outlined iq-burger-menu"> menu </div>
-                </a>
-            </div>
-            <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center justify-content-between product-offcanvas">
-                    <div class="offcanvas offcanvas-end shadow-none iq-product-menu-responsive d-none d-xl-block"
-                        tabindex="-1" id="offcanvasBottomNav">
-                        <div class="offcanvas-body">
-                            <ul class="iq-nav-menu list-unstyled">
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start active"
-                                        href="{{ route('home') }}">
-                                        <span class="nav-text">Home</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse"
-                                        href="#storeData" role="button" aria-expanded="false"
-                                        aria-controls="storeData">
-                                        <span class="nav-text">Spatial job</span>
-                                    </a>
-                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        @foreach($adminPosts as $post)
-                                            @if($post->category->title=== 'China Student visa' || $post->category->title=== 'China Medical visa')
-                                                <li class="nav-item">
-                                                    <a class="nav-link " href="../dashboard/store-category-list.html">{!! $post->content !!}</a>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start" data-bs-toggle="collapse"
-                                        href="#storeData" role="button" aria-expanded="false"
-                                        aria-controls="storeData">
-                                        <span class="nav-text">Government job</span>
-                                    </a>
-                                    <ul class="iq-header-sub-menu list-unstyled collapse shadow" id="storeData">
-                                        @foreach($adminPosts as $post)
-                                            @if($post->category->title=== 'Government Jobs')
-                                                <li class="nav-item">
-                                            <a class="nav-link " href="../dashboard/store-category-list.html">{!! $post->content !!}</a>
-                                        </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-arrow justify-content-start"
-                                        href="{{ route('partner.list') }}" target="_blank">
-                                        <span class="nav-text">Partner</span>
-                                    </a>                                   
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="iq-search-bar device-search position-relative d-none d-lg-block">
+
+                <div class="iq-search-bar device-search position-relative">
                     <form action="#" class="searchbox open-modal-search">
-                        <a class="search-link" href="javascript:void(0);">
-                            <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </a>
-                        <input type="text" class="text search-input form-control bg-light-subtle"
-                            placeholder="Search for post ...">
+                        <div class="search-input-wrapper">
+                            <span class="material-symbols-outlined search-icon">search</span>
+                            <input type="text" class="text search-input form-control"
+                                placeholder="Search BD-Expertzone">
+                        </div>
                     </form>
                     <div class="search-modal-custom">
                         <div class="search-modal-content">
-                            <div class="py-2 px-3">
-                                <div class="d-flex align-items-center justify-content-between d-lg-none w-100">
-                                    <form action="#" class="searchbox w-50" data-bs-toggle="modal"
-                                        data-bs-target="#searchmodal">
-                                        <a class="search-link" href="javascript:void(0);">
-                                            <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="7.82491" cy="7.82495" r="6.74142"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                                <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor"
-                                                    stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </a>
-                                        <input type="text" class="text search-input form-control bg-primary-subtle"
-                                            placeholder="Search here...">
-                                    </form>
-                                    <a href="javascript:void(0);" class="material-symbols-outlined text-dark"
-                                        data-bs-dismiss="modal">close</a>
-                                </div>
-                                    <div class="d-none d-lg-flex align-items-center justify-content-between w-100">
-                                        <h4 class="modal-title" id="exampleModalFullscreenLabel">Recent</h4>
-                                        <a class="text-dark clear-recent-btn" href="javascript:void(0);">Clear All</a>
-                                    </div>
-                                </div>
+                            <div class="py-2 px-3 border-bottom d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0 small fw-bold">Recent</h5>
+                                <a class="text-primary small clear-recent-btn" href="javascript:void(0);">Clear All</a>
                             </div>
                             <div class="item-header-scroll">
                                 <div class="search-modal-body" id="recent-searches-container-desktop">
                                     @php
                                         $recentSearches = session()->get('recent_searches', []);
                                     @endphp
-                                    @forelse($recentSearches as $search)
-                                        <div class="d-flex align-items-center search-hover py-2 px-3 recent-search-item">
-                                            <div class="flex-shrink-0">
-                                                <div class="avatar-40 rounded-pill bg-light d-flex align-items-center justify-content-center">
-                                                    <span class="material-symbols-outlined text-muted">search</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex ms-3 w-100 justify-content-between align-items-center">
-                                                <div class="d-flex flex-column">
-                                                    <div>
-                                                        <a href="javascript:void(0);" class="h6 recent-search-link">{{ $search['query'] }}</a>
-                                                    </div>
-                                                </div>
-                                                <a href="javascript:void(0);" data-query="{{ $search['query'] }}" class="material-symbols-outlined text-dark font-size-16 delete-recent-btn">close</a>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <div class="py-3 px-3 text-center text-muted no-recent-searches">
-                                            No recent searches
-                                        </div>
-                                    @endforelse
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-            <ul class="navbar-nav navbar-list">
-                <li class="nav-item d-lg-none">
-                    <div class="iq-search-bar device-search">
-                        <form action="#" class="searchbox open-modal-search ">
-                            <a class="d-lg-none d-flex text-body" href="javascript:void(0);">
-                                <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="7.82491" cy="7.82495" r="6.74142" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle>
-                                    <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                            </a>
-                        </form>
-                        <div class="search-modal-custom">
-                            <div class="search-modal-content">
-                                <div class="py-2 px-3">
-                                    <div class="d-lg-none w-100">
-                                        <form action="#" class="searchbox" data-bs-toggle="modal"
-                                            data-bs-target="#searchmodal">
-                                            <a class="search-link" href="javascript:void(0);">
-                                                <svg width="16" height="17" viewBox="0 0 16 17"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="7.82491" cy="7.82495" r="6.74142"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M12.5137 12.8638L15.1567 15.5" stroke="currentColor"
-                                                        stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                </svg>
-                                            </a>
-                                            <input type="text"
-                                                class="text search-input form-control bg-primary-subtle"
-                                                placeholder="Search here...">
-                                        </form>
-                                    </div>
-                                    <div class="d-none d-lg-flex align-items-center justify-content-between w-100">
-                                        <h4 class="modal-title" id="exampleModalFullscreenLabel">Recent</h4>
-                                        <a class="text-dark clear-recent-btn" href="javascript:void(0);">Clear All</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-header-scroll">
-                                <div class="search-modal-body" id="recent-searches-container-mobile">
-                                    <div class="d-flex d-lg-none align-items-center justify-content-between w-100 p-3 pb-0">
-                                        <h5 class="modal-title h4" id="exampleModalFullscreenLabel">Recent</h5>
-                                        <a href="javascript:void(0);" class="text-dark clear-recent-btn-mobile">Clear All</a>
-                                    </div>
-                                    @php
-                                        $recentSearches = session()->get('recent_searches', []);
-                                    @endphp
-                                    @forelse($recentSearches as $search)
-                                        <div class="d-flex align-items-center search-hover py-2 px-3 recent-search-item">
-                                            <div class="flex-shrink-0">
-                                                <div class="avatar-40 rounded-pill bg-light d-flex align-items-center justify-content-center">
-                                                    <span class="material-symbols-outlined text-muted">search</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex ms-3 w-100 justify-content-between align-items-center">
-                                                <div class="d-flex flex-column">
-                                                    <div>
-                                                        <a href="javascript:void(0);" class="h6 recent-search-link">{{ $search['query'] }}</a>
-                                                    </div>
-                                                </div>
-                                                <a href="javascript:void(0);" data-query="{{ $search['query'] }}" class="material-symbols-outlined text-dark font-size-16 delete-recent-btn">close</a>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <div class="py-3 px-3 text-center text-muted no-recent-searches">
-                                            No recent searches
-                                        </div>
-                                    @endforelse
+                                    @include('user-interface.pages.search.partials.recent-list', ['recentSearches' => $recentSearches])
                                 </div>
                             </div>
                         </div>
                     </div>
-                </li>
-                @auth()
-                    <li class="nav-item dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" id="group-drop"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="material-symbols-outlined">group</span>
+                </div>
+            </div>
+
+            <!-- DESKTOP CENTER - Hidden on Mobile -->
+            <div class="header-center d-none d-xl-flex">
+                <ul class="nav-center">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}"
+                            title="Home">
+                            <span class="material-symbols-outlined">home</span>
                         </a>
-                        <div class="sub-drop sub-drop-large dropdown-menu " aria-labelledby="group-drop">
-                            <div class="card shadow m-0">
-                                <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                    <div class="header-title">
-                                        <h5 class="fw-semibold">
-                                            Friend Requests
-                                            @php $pendingRequests = auth()->user()->friendRequestsReceived()->where('status', 'pending')->count(); @endphp
-                                            @if ($pendingRequests > 0)
-                                                <span class="badge bg-primary ms-1 badge-pill">{{ $pendingRequests }}</span>
-                                            @endif
-                                        </h5>
-                                    </div>
-                                    <a href="{{ route('friend.requests') }}" class="text-primary fw-500">View All</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="javascript:void(0);" id="spatialJobDrop" data-bs-toggle="dropdown"
+                            title="Spatial Job">
+                            <span class="material-symbols-outlined">explore</span>
+                        </a>
+                        <div class="dropdown-menu sub-drop" aria-labelledby="spatialJobDrop">
+                            <h6 class="dropdown-header fw-bold text-dark">Spatial Jobs</h6>
+                            @foreach($adminPosts as $post)
+                                @if($post->category && ($post->category->title === 'China Student visa' || $post->category->title === 'China Medical visa'))
+                                    <a class="dropdown-item p-2 hover-bg rounded d-flex align-items-center gap-2"
+                                        href="{{ route('posts.show', $post->slug) }}">
+                                        <span class="material-symbols-outlined text-primary"
+                                            style="font-size: 20px;">description</span>
+                                        <span class="text-wrap">{!! Str::limit(strip_tags($post->content), 50) !!}</span>
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="javascript:void(0);" id="govJobDrop" data-bs-toggle="dropdown"
+                            title="Government Job">
+                            <span class="material-symbols-outlined">account_balance</span>
+                        </a>
+                        <div class="dropdown-menu sub-drop" aria-labelledby="govJobDrop">
+                            <h6 class="dropdown-header fw-bold text-dark">Government Jobs</h6>
+                            @foreach($adminPosts as $post)
+                                @if($post->category && $post->category->title === 'Government Jobs')
+                                    <a class="dropdown-item p-2 hover-bg rounded d-flex align-items-center gap-2"
+                                        href="{{ route('posts.show', $post->slug) }}">
+                                        <span class="material-symbols-outlined text-success"
+                                            style="font-size: 20px;">description</span>
+                                        <span class="text-wrap">{!! Str::limit(strip_tags($post->content), 50) !!}</span>
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('partner.list') ? 'active' : '' }}"
+                            href="{{ route('partner.list') }}" title="Partners">
+                            <span class="material-symbols-outlined">handshake</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- RIGHT: Actions (Centered on Mobile Row 2) -->
+            <div class="header-right">
+                @auth
+                    <!-- Friend Requests -->
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" class="nav-icon-btn" id="group-drop" data-bs-toggle="dropdown">
+                            <span class="material-symbols-outlined">group</span>
+                            @php $pendingRequestsCount = auth()->user()->friendRequestsReceived()->where('status', 'pending')->count(); @endphp
+                            @if ($pendingRequestsCount > 0)
+                                <span class="badge-count">{{ $pendingRequestsCount }}</span>
+                            @endif
+                        </a>
+                        <div class="sub-drop sub-drop-large dropdown-menu dropdown-menu-end" aria-labelledby="group-drop">
+                            <div class="card shadow-none m-0 border-0">
+                                <div
+                                    class="card-header d-flex justify-content-between align-items-center px-2 pb-3 border-bottom">
+                                    <h5 class="fw-bold mb-0">Friend Requests</h5>
+                                    <a href="{{ route('friend.requests') }}" class="text-primary small fw-semibold">View
+                                        All</a>
                                 </div>
-                                <div class="card-body">
-                                    <div class="item-header-scroll" id="friend-requests-list">
+                                <div class="card-body p-2">
+                                    <div class="item-header-scroll" id="friend-requests-list" style="max-height: 400px;">
                                         @forelse(auth()->user()->friendRequestsReceived()->where('status', 'pending')->take(10)->get() as $request)
-                                            <div class="iq-friend-request" data-request-id="{{ $request->id }}">
-                                                <div class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded-pill"
-                                                            src="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                            alt="" loading="lazy">
-                                                        <div class="ms-3">
-                                                            <h6 class="mb-0">{{ $request->sender->name }}</h6>
-                                                            <p class="mb-0 small text-muted">{{ $request->sender->friends()->count() }} friends</p>
+                                            <div class="iq-friend-request mb-2 p-2 rounded hover-bg"
+                                                data-request-id="{{ $request->id }}">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <img class="avatar-50 rounded-circle"
+                                                        src="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                        alt="" loading="lazy">
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-0 fw-bold">{{ $request->sender->name }}</h6>
+                                                        <p class="mb-2 small text-muted">
+                                                            {{ $request->sender->friends()->count() }} mutual friends
+                                                        </p>
+                                                        <div class="d-flex gap-2">
+                                                            <button
+                                                                class="btn btn-primary btn-sm flex-grow-1 accept-friend-request-header-btn"
+                                                                data-request-id="{{ $request->id }}"
+                                                                data-sender-id="{{ $request->sender->id }}"
+                                                                data-sender-name="{{ $request->sender->name }}"
+                                                                data-sender-username="{{ $request->sender->username }}"
+                                                                data-sender-avatar="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}">
+                                                                Confirm
+                                                            </button>
+                                                            <button
+                                                                class="btn btn-light btn-sm flex-grow-1 decline-friend-request-header-btn"
+                                                                data-request-id="{{ $request->id }}">
+                                                                Delete
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="rounded bg-primary-subtle border-0 d-inline-flex p-1 accept-friend-request-header-btn"
-                                                            data-request-id="{{ $request->id }}"
-                                                            data-sender-id="{{ $request->sender->id }}"
-                                                            data-sender-name="{{ $request->sender->name }}"
-                                                            data-sender-username="{{ $request->sender->username }}"
-                                                            data-sender-avatar="{{ asset($request->sender->avatar ?? 'frontend/assets/images/user/1.jpg') }}">
-                                                            <span class="material-symbols-outlined font-size-18">add</span>
-                                                        </a>
-                                                        <a href="javascript:void(0);"
-                                                            class="rounded bg-danger-subtle border-0 d-inline-flex p-1 decline-friend-request-header-btn"
-                                                            data-request-id="{{ $request->id }}">
-                                                            <span class="material-symbols-outlined font-size-18">close</span>
-                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
                                         @empty
                                             <div class="text-center text-muted py-5" id="no-requests-message">
-                                                <span class="material-symbols-outlined font-size-40 d-block mb-2">person_add</span>
+                                                <span
+                                                    class="material-symbols-outlined font-size-40 d-block mb-2">person_add</span>
                                                 No new friend requests
                                             </div>
                                         @endforelse
@@ -282,817 +493,215 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="nav-item">
-                        <a href="javascript:void(0);" class="d-flex align-items-center messenger-sidebar-trigger" id="open-sidebar-messenger-header">
-                            <i class="material-symbols-outlined">mail</i>
-                            <span class="mobile-text d-none ms-3">Message</span>
+                    </div>
+
+                    <!-- Messenger -->
+                    <div class="nav-item">
+                        <a href="javascript:void(0);" class="nav-icon-btn messenger-sidebar-trigger">
+                            <span class="material-symbols-outlined">chat</span>
                         </a>
-                        <div class="sub-drop dropdown-menu header-notification" aria-labelledby="mail-drop">
-                            <div class="card shadow m-0">
-                                <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                    <div class="header-title">
-                                        <h5 class="fw-semibold">All Message</h5>
-                                    </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" class="nav-icon-btn" id="notification-drop" data-bs-toggle="dropdown">
+                            <span class="material-symbols-outlined">notifications</span>
+                            @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                            @if ($unreadCount > 0)
+                                <span class="badge-count">{{ $unreadCount }}</span>
+                            @endif
+                        </a>
+                        <div class="sub-drop dropdown-menu dropdown-menu-end" aria-labelledby="notification-drop">
+                            <div class="card shadow-none m-0 border-0">
+                                <div
+                                    class="card-header d-flex justify-content-between align-items-center px-2 pb-3 border-bottom">
+                                    <h5 class="fw-bold mb-0">Notifications</h5>
+                                    <a href="javascript:void(0);" onclick="markAllNotificationsRead()"
+                                        class="text-primary small">Mark all as read</a>
                                 </div>
-                                <div class="card-body p-0">
-                                    <div class="item-header-scroll">
-                                        @php
-                                            // Fetch recent conversations/messages for the authenticated user
-                                            $recentMessages = auth()->user()->recentMessages ?? [];
-                                        @endphp
-                                        @forelse($recentMessages as $message)
-                                            <a href="{{ route('messenger.chat', $message->user->username) }}">
-                                                <div
-                                                    class="thread d-flex align-items-center justify-content-between rounded-0">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded-pill align-top"
-                                                            src="{{ asset($message->user->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                            alt="" loading="lazy">
-                                                        <div class="ms-3 d-inline-block">
-                                                            <h6>{{ $message->user->name }}</h6>
-                                                            <small
-                                                                class="fw-500 text-body">{{ Str::limit($message->body, 40) }}</small>
-                                                        </div>
-                                                    </div>
+                                <div class="card-body p-1">
+                                    <div class="item-header-scroll" id="notification-list" style="max-height: 400px;">
+                                        @forelse(auth()->user()->unreadNotifications->take(10) as $notification)
+                                            <div class="d-flex gap-3 p-2 rounded hover-bg mb-1">
+                                                <img class="avatar-40 rounded-circle"
+                                                    src="{{ $notification->data['avatar'] ?? asset('frontend/assets/images/user/1.jpg') }}"
+                                                    alt="">
+                                                <div class="flex-grow-1">
+                                                    <p class="mb-0 small">
+                                                        <span
+                                                            class="fw-bold">{{ $notification->data['user_name'] ?? 'Someone' }}</span>
+                                                        @if (isset($notification->data['type']) && $notification->data['type'] === 'friend_request')
+                                                            sent you a friend request.
+                                                        @elseif(isset($notification->data['type']) && $notification->data['type'] === 'follow')
+                                                            started following you.
+                                                        @else
+                                                            {{ $notification->data['message'] ?? 'sent a notification.' }}
+                                                        @endif
+                                                    </p>
                                                     <small
-                                                        class="text-body">{{ $message->created_at->diffForHumans() }}</small>
+                                                        class="text-primary">{{ $notification->created_at->diffForHumans() }}</small>
                                                 </div>
-                                            </a>
+                                            </div>
                                         @empty
-                                            <div class="text-center text-muted py-4">No messages</div>
+                                            <div class="text-center text-muted py-4">No new notifications</div>
                                         @endforelse
                                     </div>
-                                    <div class="m-5 mt-4">
-                                        <button type="button" class="btn btn-primary fw-500 w-100"
-                                            onclick="window.location.href='/messenger'">View All
-                                            Messages</button>
+                                    <div class="mt-2">
+                                        <a href="#" class="btn btn-light btn-sm w-100 text-primary fw-bold">See all</a>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a href="javascript:void(0);" class="search-toggle dropdown-toggle d-flex align-items-center"
-                                id="notification-drop" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined position-relative">notifications
-                                    @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
-                                    @if ($unreadCount > 0)
-                                        <span class="bg-primary text-white notification-badge">{{ $unreadCount }}</span>
-                                    @endif
-                                </span>
-                            </a>
-                            <div class="sub-drop dropdown-menu header-notification" aria-labelledby="notification-drop">
-                                <div class="card m-0 shadow">
-                                    <div class="card-header d-flex justify-content-between px-0 pb-4 mx-5 border-bottom">
-                                        <div class="header-title">
-                                            <h5 class="fw-semibold">Notifications</h5>
-                                        </div>
-                                        <h6 class="material-symbols-outlined">settings</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="item-header-scroll" id="notification-list">
-                                            @forelse(auth()->user()->unreadNotifications->take(10) as $notification)
-                                                @if (isset($notification->data['type']) && $notification->data['type'] === 'friend_request')
-                                                    <div class="d-flex gap-3 mb-4 friend-request-notification"
-                                                        data-notification-id="{{ $notification->id }}">
-                                                        <img class="avatar-32 rounded-pill"
-                                                            src="{{ $notification->data['avatar'] ?? asset('frontend/assets/images/user/1.jpg') }}"
-                                                            alt="">
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="font-size-14">
-                                                                <span
-                                                                    class="fw-semibold">{{ $notification->data['user_name'] ?? 'Someone' }}</span>
-                                                                sent you a friend request.
-                                                            </h6>
-                                                            <small
-                                                                class="text-body fw-500">{{ $notification->created_at->diffForHumans() }}</small>
-                                                            <div class="d-flex gap-2 mt-2">
-                                                                <button type="button"
-                                                                    class="btn btn-primary btn-sm accept-friend-request-btn"
-                                                                    data-request-id="{{ $notification->data['request_id'] }}"
-                                                                    data-notification-id="{{ $notification->id }}"
-                                                                    data-sender-id="{{ $notification->data['sender_id'] ?? $notification->data['user_id'] }}"
-                                                                    data-sender-name="{{ $notification->data['user_name'] ?? 'Someone' }}"
-                                                                    data-sender-username="{{ $notification->data['username'] ?? 'unknown' }}"
-                                                                    data-sender-avatar="{{ $notification->data['avatar'] ?? asset('frontend/assets/images/user/1.jpg') }}">
-                                                                    Accept
-                                                                </button>
-                                                                <button type="button"
-                                                                    class="btn btn-outline-secondary btn-sm decline-friend-request-btn"
-                                                                    data-request-id="{{ $notification->data['request_id'] }}"
-                                                                    data-notification-id="{{ $notification->id }}">
-                                                                    Decline
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <a
-                                                        href="{{ $notification->data['url'] ?? route('user.profile.show', $notification->data['username'] ?? ($notification->data['follower_username'] ?? 'unknown')) }}">
-                                                        <div class="d-flex gap-3 mb-4">
-                                                            <img class="avatar-32 rounded-pill"
-                                                                src="{{ $notification->data['avatar'] ?? asset('frontend/assets/images/user/1.jpg') }}"
-                                                                alt="">
-                                                            <div>
-                                                                <h6 class="font-size-14">
-                                                                    @if (isset($notification->data['type']) && $notification->data['type'] === 'follow')
-                                                                        <span
-                                                                            class="fw-semibold">{{ $notification->data['follower_name'] ?? 'Someone' }}</span>
-                                                                        started following you.
-                                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'friend_request_accepted')
-                                                                        <span
-                                                                            class="fw-semibold">{{ $notification->data['user_name'] ?? 'Someone' }}</span>
-                                                                        accepted your friend request.
-                                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'new_post')
-                                                                        <span
-                                                                            class="fw-semibold">{{ $notification->data['user_name'] ?? 'Someone' }}</span>
-                                                                        posted: <span
-                                                                            class="text-primary">{{ Str::limit($notification->data['content'] ?? '', 40) }}</span>
-                                                                    @else
-                                                                        {{ $notification->data['message'] ?? 'You have a new notification.' }}
-                                                                    @endif
-                                                                </h6>
-                                                                <small
-                                                                    class="text-body fw-500">{{ $notification->created_at->diffForHumans() }}</small>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                @endif
-                                            @empty
-                                                <div class="text-center text-muted py-4">No new notifications</div>
-                                            @endforelse
-                                        </div>
-                                        <button type="button" class="btn btn-primary fw-500 w-100"
-                                            onclick="markAllNotificationsRead()">View All Notifications</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <audio id="notification-sound" src="{{ asset('frontend/assets/sounds/notification.mp3') }}"
-                            preload="auto"></audio>
-                        <script>
-                            // Play sound when a new notification arrives via Echo
-                            if (window.Echo && window.Laravel && window.Laravel.userId) {
-                                window.Echo.private('App.Models.User.' + window.Laravel.userId)
-                                    .notification((notification) => {
-                                        document.getElementById('notification-sound').play();
-                                        // Optionally, update notification list dynamically here
-                                        // location.reload(); // or use AJAX to update notification list
-                                    });
-                            }
-
-                            function markAllNotificationsRead() {
-                                fetch("{{ route('mark.notifications.read') }}", {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                }).then(() => location.reload());
-                            }
-                        </script>
-                    @endauth
-                    <li class="nav-item d-block d-lg-none">
-                        <a href="javascript:void(0);" class="d-flex align-items-center messenger-sidebar-trigger" id="mail-drop-1">
-                            <i class="material-symbols-outlined">mail</i>
-                            <span class="mobile-text ms-3">Message</span>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown user-dropdown">
-                        <a href="javascript:void(0);" class="d-flex align-items-center dropdown-toggle"
-                            id="drop-down-arrow" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') ?? '' }}"
-                                class="img-fluid rounded-circle avatar-48 border border-2 me-3" alt="user"
-                                loading="lazy">
-                        </a>
-                        <div class="sub-drop dropdown-menu caption-menu" aria-labelledby="drop-down-arrow">
-                            <div class="card shadow-none m-0">
-                                <div class="card-header ">
-                                    <div class="header-title">
-                                        <h5 class="mb-0 ">{{ auth()->user()->name ?? 'N/A' }}</h5>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0 ">
-                                    <div class="d-flex align-items-center iq-sub-card border-0">
-                                        <span class="material-symbols-outlined"> line_style </span>
-                                        <div class="ms-3">
-                                            <a href="{{ route('user.profile') }}" class="mb-0 h6"> My Profile </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center iq-sub-card border-0">
-                                        <span class="material-symbols-outlined"> edit_note </span>
-                                        <div class="ms-3">
-                                            <a href="{{ route('user.edit-profile') }}" class="mb-0 h6"> Edit Profile </a>
-                                        </div>
-                                    </div>                              
-                                    <div class="d-flex align-items-center iq-sub-card">
-                                        <span class="material-symbols-outlined"> login </span>
-                                        <div class="ms-3">
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <a href="javascript:;"
-                                                    onclick="event.preventDefault(); this.closest('form').submit();"
-                                                    class="mb-0 h6">{{ __('Sign out') }}</a>
-                                            </form>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                @endauth
-                @guest()
-                    <li class="nav-item dropdown">
-                        <a href="{{ route('login') }}" class="dropdown-toggle d-flex align-items-center">
-                            <span>Login</span>
-                        </a>
-                    </li>
-                @endguest
-            </ul>
-        </div>
-    </nav>
-</div>
-
-
-
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Friend Request Notification handlers (from notifications dropdown)
-            $(document).on('click', '.accept-friend-request-btn', function(e) {
-                console.log('Accept friend request button clicked');
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = $(this);
-                var requestId = btn.data('request-id');
-                var notificationId = btn.data('notification-id');
-                var senderId = btn.data('sender-id');
-                var senderName = btn.data('sender-name');
-                var senderUsername = btn.data('sender-username');
-                var senderAvatar = btn.data('sender-avatar');
-
-                console.log('Request ID:', requestId, 'Notification ID:', notificationId);
-                
-                if (!requestId) {
-                    alert('Friend request ID missing. Please refresh the page.');
-                    return;
-                }
-
-                btn.prop('disabled', true);
-
-                $.ajax({
-                    url: '/friend-request/accept/' + requestId,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Remove the notification
-                            btn.closest('.friend-request-notification').fadeOut(300,
-                                function() {
-                                    $(this).remove();
-                                    updateNotificationBadge();
-
-                                    // Check if no more notifications
-                                    var notificationsLeft = $('#notification-list .d-flex')
-                                        .length;
-                                    if (notificationsLeft === 0) {
-                                        $('#notification-list').html(
-                                            '<div class="text-center text-muted py-4">No new notifications</div>'
-                                        );
-                                    }
-                                });
-
-                            // Add the new friend to the friends list if we have the required data
-                            if (senderId && senderName && senderAvatar && senderUsername) {
-                                addFriendToList(senderId, senderName, senderAvatar,
-                                    senderUsername);
-                            }
-
-                            // Mark notification as read
-                            if (notificationId) {
-                                markNotificationAsRead(notificationId);
-                            }
-
-                            if (window.ToastMagic) {
-                                ToastMagic.success('Friend request accepted! ' + senderName +
-                                    ' is now your friend.');
-                            }
-                        } else {
-                            alert(response.error || 'Failed to accept friend request.');
-                            btn.prop('disabled', false);
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Failed to accept friend request.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        alert(errorMsg);
-                        btn.prop('disabled', false);
-                    }
-                });
-            });
-
-            $(document).on('click', '.decline-friend-request-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = $(this);
-                var requestId = btn.data('request-id');
-                var notificationId = btn.data('notification-id');
-
-                btn.prop('disabled', true);
-
-                $.ajax({
-                    url: '/friend-request/decline/' + requestId,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Remove the notification
-                            btn.closest('.friend-request-notification').fadeOut(300,
-                                function() {
-                                    $(this).remove();
-                                    updateNotificationBadge();
-
-                                    // Check if no more notifications
-                                    var notificationsLeft = $('#notification-list .d-flex')
-                                        .length;
-                                    if (notificationsLeft === 0) {
-                                        $('#notification-list').html(
-                                            '<div class="text-center text-muted py-4">No new notifications</div>'
-                                        );
-                                    }
-                                });
-
-                            // Mark notification as read
-                            if (notificationId) {
-                                markNotificationAsRead(notificationId);
-                            }
-
-                            if (window.ToastMagic) {
-                                ToastMagic.success('Friend request declined.');
-                            }
-                        } else {
-                            alert(response.error || 'Failed to decline friend request.');
-                            btn.prop('disabled', false);
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Failed to decline friend request.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        alert(errorMsg);
-                        btn.prop('disabled', false);
-                    }
-                });
-            });
-
-            // Friend Request handlers (from header friend request dropdown)
-            $(document).on('click', '.accept-friend-request-header-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = $(this);
-                var requestId = btn.data('request-id');
-                var senderId = btn.data('sender-id');
-                var senderName = btn.data('sender-name');
-                var senderUsername = btn.data('sender-username');
-                var senderAvatar = btn.data('sender-avatar');
-
-                btn.prop('disabled', true);
-
-                $.ajax({
-                    url: '/friend-request/accept/' + requestId,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Remove the friend request from the header dropdown
-                            btn.closest('.iq-friend-request').fadeOut(300, function() {
-                                $(this).remove();
-
-                                // Check if there are no more requests
-                                var requestsLeft = $(
-                                        '#friend-requests-list .iq-friend-request')
-                                    .length;
-                                if (requestsLeft === 0) {
-                                    $('#friend-requests-list').html(
-                                        '<div class="text-center text-muted py-4" id="no-requests-message">No new friend requests</div>'
-                                    );
-                                }
-
-                                // Update request badge count
-                                updateRequestBadge();
-
-                                // Add the new friend to the friends list
-                                addFriendToList(senderId, senderName, senderAvatar,
-                                    senderUsername);
-                            });
-
-                            if (window.ToastMagic) {
-                                ToastMagic.success('Friend request accepted! ' + senderName +
-                                    ' is now your friend.');
-                            }
-                        } else {
-                            alert(response.error || 'Failed to accept friend request.');
-                            btn.prop('disabled', false);
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Failed to accept friend request.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        alert(errorMsg);
-                        btn.prop('disabled', false);
-                    }
-                });
-            });
-
-            $(document).on('click', '.decline-friend-request-header-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = $(this);
-                var requestId = btn.data('request-id');
-
-                btn.prop('disabled', true);
-
-                $.ajax({
-                    url: '/friend-request/decline/' + requestId,
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Remove the friend request from the header dropdown
-                            btn.closest('.iq-friend-request').fadeOut(300, function() {
-                                $(this).remove();
-
-                                // Check if there are no more requests
-                                var requestsLeft = $(
-                                        '#friend-requests-list .iq-friend-request')
-                                    .length;
-                                if (requestsLeft === 0) {
-                                    $('#friend-requests-list').html(
-                                        '<div class="text-center text-muted py-4" id="no-requests-message">No new friend requests</div>'
-                                    );
-                                }
-
-                                // Update request badge count
-                                updateRequestBadge();
-                            });
-
-                            if (window.ToastMagic) {
-                                ToastMagic.success('Friend request declined.');
-                            }
-                        } else {
-                            alert(response.error || 'Failed to decline friend request.');
-                            btn.prop('disabled', false);
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Failed to decline friend request.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        alert(errorMsg);
-                        btn.prop('disabled', false);
-                    }
-                });
-            });
-
-            // Function to update notification count
-            function updateNotificationCount() {
-                var count = $('#notification-list .d-flex').length;
-                var badge = $('.notification-badge');
-                if (count > 0) {
-                    badge.text(count).show();
-                } else {
-                    badge.hide();
-                    // Show "No notifications" message if needed
-                    if (count === 0) {
-                        $('#notification-list').html(
-                            '<div class="text-center p-3"><p class="text-muted">No new notifications</p></div>');
-                    }
-                }
-            }
-
-            // Real-time notification handling (if Echo is available)
-            if (window.Echo) {
-                window.Echo.private('App.Models.User.' + {{ auth()->id() ?? 'null' }})
-                    .notification((notification) => {
-                        console.log('Received notification:', notification);
-
-                        if (notification.type === 'friend_request') {
-                            // Add new friend request notification to the notifications dropdown
-                            var newNotification = `
-                        <div class="d-flex gap-3 mb-4 friend-request-notification" data-notification-id="${notification.id}">
-                            <img class="avatar-32 rounded-pill"
-                                src="${notification.avatar || '/frontend/assets/images/user/1.jpg'}"
-                                alt="">
-                            <div class="flex-grow-1">
-                                <h6 class="font-size-14">
-                                    <span class="fw-semibold">${notification.user_name}</span>
-                                    sent you a friend request.
-                                </h6>
-                                <small class="text-body fw-500">Just now</small>
-                                <div class="d-flex gap-2 mt-2">
-                                    <button type="button" 
-                                            class="btn btn-primary btn-sm accept-friend-request-btn" 
-                                            data-request-id="${notification.request_id}"
-                                            data-notification-id="${notification.id}">
-                                        Accept
-                                    </button>
-                                    <button type="button" 
-                                            class="btn btn-outline-secondary btn-sm decline-friend-request-btn" 
-                                            data-request-id="${notification.request_id}"
-                                            data-notification-id="${notification.id}">
-                                        Decline
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                            $('#notification-list').prepend(newNotification);
-                            updateNotificationCount();
-
-                            // Also add to the friend request header dropdown if it exists
-                            var friendRequestDropdown = `
-                                <div class="iq-friend-request" data-request-id="${notification.request_id}">
-                                    <div class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                                        <div class="d-flex align-items-center">
-                                            <img class="avatar-40 rounded-pill"
-                                                src="${notification.avatar || '/frontend/assets/images/user/1.jpg'}"
-                                                alt="" loading="lazy">
-                                            <div class="ms-3">
-                                                <h6 class="mb-0">${notification.user_name}</h6>
-                                                <p class="mb-0">0 friends</p>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <a href="javascript:void(0);"
-                                                class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1 accept-friend-request-header-btn"
-                                                data-request-id="${notification.request_id}"
-                                                data-sender-id="${notification.sender_id || ''}"
-                                                data-sender-name="${notification.user_name}"
-                                                data-sender-username="${notification.username || ''}"
-                                                data-sender-avatar="${notification.avatar || '/frontend/assets/images/user/1.jpg'}">
-                                                <span class="material-symbols-outlined font-size-18 align-text-bottom">add</span>
-                                            </a>
-                                            <a href="javascript:void(0);"
-                                                class="me-3 rounded bg-danger-subtle border-0 d-inline-block px-1 decline-friend-request-header-btn"
-                                                data-request-id="${notification.request_id}">
-                                                <span class="material-symbols-outlined font-size-18 align-text-bottom">close</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-
-                            // Check if the "No new friend requests" message exists and replace it
-                            var friendRequestsList = $('#friend-requests-list');
-                            if (friendRequestsList.find('#no-requests-message').length > 0) {
-                                friendRequestsList.html(friendRequestDropdown);
-                            } else {
-                                friendRequestsList.prepend(friendRequestDropdown);
-                            }
-
-                            // Update request badge count
-                            updateRequestBadge();
-
-                            // Show toast notification
-                            if (window.ToastMagic) {
-                                ToastMagic.info(`${notification.user_name} sent you a friend request!`);
-                            }
-
-                            // Play notification sound
-                            var sound = document.getElementById('notification-sound');
-                            if (sound) {
-                                sound.play().catch(e => console.log('Could not play notification sound:', e));
-                            }
-                        }
-
-                        if (notification.type === 'friend_request_accepted') {
-                            // Show toast for accepted friend request
-                            if (window.ToastMagic) {
-                                ToastMagic.success(`${notification.user_name} accepted your friend request!`);
-                            }
-
-                            // Play notification sound
-                            var sound = document.getElementById('notification-sound');
-                            if (sound) {
-                                sound.play().catch(e => console.log('Could not play notification sound:', e));
-                            }
-                        }
-
-                        // Handle new message notifications
-                        if (notification.type === 'new_message') {
-                            // Add to message dropdown
-                            var messageNotification = `
-                                <a href="javascript:void(0);" onclick="openChatPopup('${notification.sender_id}', '${notification.sender_name}', '${notification.sender_avatar}', true)">
-                                    <div class="thread d-flex align-items-center justify-content-between rounded-0">
-                                        <div>
-                                            <img class="avatar-40 rounded-pill align-top"
-                                                src="${notification.sender_avatar || '/frontend/assets/images/user/1.jpg'}"
-                                                alt="" loading="lazy">
-                                            <div class="ms-3 d-inline-block">
-                                                <h6>${notification.sender_name}</h6>
-                                                <small class="fw-500 text-body">${notification.message_preview || 'New message'}</small>
-                                            </div>
-                                        </div>
-                                        <small class="text-body">Just now</small>
-                                    </div>
-                                </a>
-                            `;
-
-                            // Add to message list (assuming there's a message list container)
-                            var messageList = $('.item-header-scroll').first(); // Messages container
-                            if (messageList.length > 0) {
-                                messageList.prepend(messageNotification);
-                            }
-
-                            // Show toast notification
-                            if (window.ToastMagic) {
-                                ToastMagic.info(
-                                    `New message from ${notification.sender_name}: ${notification.message_preview || 'New message'}`
-                                );
-                            }
-
-                            // Play notification sound
-                            var sound = document.getElementById('notification-sound');
-                            if (sound) {
-                                sound.play().catch(e => console.log('Could not play notification sound:', e));
-                            }
-                        }
-                    });
-            }
-
-            // Helper function to update friend request badge count
-            function updateRequestBadge() {
-                var requestCount = $('#friend-requests-list .iq-friend-request').length;
-                var badge = $('#requests-tab .badge');
-                if (requestCount > 0) {
-                    if (badge.length === 0) {
-                        $('#requests-tab').append('<span class="badge bg-primary ms-1">' + requestCount +
-                            '</span>');
-                    } else {
-                        badge.text(requestCount);
-                    }
-                } else {
-                    badge.remove();
-                }
-            }
-
-            // Helper function to update friends badge count
-            function updateFriendsBadge() {
-                var friendsCount = $('#friends-list .iq-friend-item').length;
-                var badge = $('#friends-tab .badge');
-                if (friendsCount > 0) {
-                    if (badge.length === 0) {
-                        $('#friends-tab').append('<span class="badge bg-success ms-1">' + friendsCount + '</span>');
-                    } else {
-                        badge.text(friendsCount);
-                    }
-                } else {
-                    badge.remove();
-                }
-            }
-
-            // Helper function to update notification badge count
-            function updateNotificationBadge() {
-                var notificationCount = $('#notification-list .d-flex').length;
-                var badge = $('.notification-badge');
-                if (notificationCount > 0) {
-                    if (badge.length === 0) {
-                        $('.material-symbols-outlined:contains("notifications")').append(
-                            '<span class="bg-primary text-white notification-badge">' + notificationCount +
-                            '</span>');
-                    } else {
-                        badge.text(notificationCount).show();
-                    }
-                } else {
-                    badge.hide();
-                }
-            }
-
-            // Helper function to add a new friend to the friends list
-            function addFriendToList(friendId, friendName, friendAvatar, friendUsername) {
-                // Check if friends list has "No friends yet" message
-                var friendsList = $('#friends-list');
-                var noFriendsMsg = friendsList.find('.text-center.text-muted');
-
-                if (noFriendsMsg.length > 0) {
-                    noFriendsMsg.remove();
-                }
-
-                // Create new friend item
-                var newFriend = `
-                    <div class="iq-friend-item" data-friend-id="${friendId}">
-                        <div class="iq-sub-card-big d-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center">
-                                <img class="avatar-40 rounded-pill"
-                                    src="${friendAvatar}"
-                                    alt="" loading="lazy">
-                                <div class="ms-3">
-                                    <h6 class="mb-0">${friendName}</h6>
-                                    <p class="mb-0">Friends</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <a href="/profile/${friendUsername}"
-                                    class="me-2 rounded bg-primary-subtle border-0 d-inline-block px-1 friend-profile-btn"
-                                    title="View Profile"
-                                    data-friend-id="${friendId}"
-                                    data-friend-name="${friendName}">
-                                    <span class="material-symbols-outlined font-size-18 align-text-bottom">person</span>
-                                </a>
-                                <a href="javascript:void(0);"
-                                    class="me-3 rounded bg-info-subtle border-0 d-inline-block px-1 friend-chat-btn"
-                                    title="Send Message"
-                                    data-friend-id="${friendId}"
-                                    data-friend-name="${friendName}"
-                                    data-friend-avatar="${friendAvatar}">
-                                    <span class="material-symbols-outlined font-size-18 align-text-bottom">chat</span>
-                                </a>
                             </div>
                         </div>
                     </div>
-                `;
 
-                // Add to the beginning of friends list
-                friendsList.prepend(newFriend);
+                    <!-- User Account -->
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" class="profile-btn" data-bs-toggle="dropdown">
+                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                class="avatar-40 rounded-circle" alt="user">
+                        </a>
+                        <div class="sub-drop dropdown-menu dropdown-menu-end" style="width: 300px !important;">
+                            <div class="card shadow-none m-0 border-0">
+                                <div class="card-body p-2">
+                                    <a href="{{ route('user.profile') }}"
+                                        class="d-flex align-items-center gap-3 p-2 rounded hover-bg text-dark text-decoration-none mb-3">
+                                        <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                            class="avatar-60 rounded-circle border" alt="user">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0 fw-bold">{{ auth()->user()->name }}</h6>
+                                            <small class="text-muted">See your profile</small>
+                                        </div>
+                                    </a>
+                                    <hr class="my-2">
+                                    <a href="{{ route('user.edit-profile') }}"
+                                        class="d-flex align-items-center gap-3 p-2 rounded hover-bg text-dark text-decoration-none">
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center"
+                                            style="width: 36px; height: 36px;">
+                                            <span class="material-symbols-outlined" style="font-size: 20px;">settings</span>
+                                        </div>
+                                        <span class="fw-semibold">Settings & Privacy</span>
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                                        @csrf
+                                        <a href="javascript:;"
+                                            onclick="event.preventDefault(); this.closest('form').submit();"
+                                            class="d-flex align-items-center gap-3 p-2 rounded hover-bg text-dark text-decoration-none">
+                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 36px; height: 36px;">
+                                                <span class="material-symbols-outlined"
+                                                    style="font-size: 20px;">logout</span>
+                                            </div>
+                                            <span class="fw-semibold">Log Out</span>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-4 fw-bold">Log In</a>
+                    <a href="{{ route('register') }}" class="btn btn-light rounded-pill px-4 fw-bold ms-2">Sign Up</a>
+                @endauth
+            </div>
+        </nav>
+    </div>
+</div>
 
-                // Update friends badge count
-                updateFriendsBadge();
+<audio id="notification-sound" src="{{ asset('frontend/assets/sounds/notification.mp3') }}" preload="auto"></audio>
 
-                // Show animation
-                friendsList.find('.iq-friend-item').first().hide().fadeIn(300);
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            // Notification Sound Logic
+            if (window.Echo && window.Laravel && window.Laravel.userId) {
+                window.Echo.private('App.Models.User.' + window.Laravel.userId)
+                    .notification((notification) => {
+                        const sound = document.getElementById('notification-sound');
+                        if (sound) sound.play().catch(e => console.log('Sound play blocked'));
+                    });
             }
 
-
-            // Helper function to mark individual notification as read
-            function markNotificationAsRead(notificationId) {
-                $.ajax({
-                    url: '/notifications/mark-read/' + notificationId,
+            // Mark all as read
+            window.markAllNotificationsRead = function () {
+                fetch("{{ route('mark.notifications.read') }}", {
                     method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
-                    success: function(response) {
-                        console.log('Notification marked as read');
-                        updateNotificationBadge();
-                    },
-                    error: function(xhr) {
-                        console.log('Failed to mark notification as read');
+                }).then(() => location.reload());
+            }
+
+            // Friend Request AJAX (Accept)
+            $(document).on('click', '.accept-friend-request-header-btn', function () {
+                const btn = $(this);
+                const requestId = btn.data('request-id');
+                const senderName = btn.data('sender-name');
+
+                btn.prop('disabled', true).html('...');
+
+                $.ajax({
+                    url: '/friend-request/accept/' + requestId,
+                    method: 'POST',
+                    data: { _token: $('meta[name="csrf-token"]').attr('content') },
+                    success: function (res) {
+                        if (res.success) {
+                            btn.closest('.iq-friend-request').fadeOut(300, function () {
+                                $(this).remove();
+                                if ($('#friend-requests-list .iq-friend-request').length === 0) {
+                                    $('#friend-requests-list').html('<div class="text-center text-muted py-5">No new friend requests</div>');
+                                }
+                                // Update badge
+                                const badge = $('#group-drop .badge-count');
+                                if (badge.length) {
+                                    const count = parseInt(badge.text()) - 1;
+                                    if (count > 0) badge.text(count); else badge.remove();
+                                }
+                            });
+                            if (window.ToastMagic) ToastMagic.success('You are now friends with ' + senderName);
+                        }
                     }
                 });
-            }
-
-            // Friend profile button handler
-            $(document).on('click', '.friend-profile-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var friendId = $(this).data('friend-id');
-                var friendName = $(this).data('friend-name');
-
-                // Show loading indicator
-                if (window.ToastMagic) {
-                    ToastMagic.info('Loading ' + friendName + "'s profile...");
-                }
-
-                // Navigate to profile page
-                window.location.href = $(this).attr('href');
             });
 
-            // Friend chat button handler - Use the new popup chat system
-            $(document).on('click', '.friend-chat-btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var friendId = $(this).data('friend-id');
-                var friendName = $(this).data('friend-name');
-                var friendAvatar = $(this).data('friend-avatar');
+            // Friend Request AJAX (Decline)
+            $(document).on('click', '.decline-friend-request-header-btn', function () {
+                const btn = $(this);
+                const requestId = btn.data('request-id');
 
-                // Use the new openChatPopup function if available
-                if (typeof openChatPopup === 'function') {
-                    openChatPopup(friendId, friendName, friendAvatar, true);
+                btn.prop('disabled', true).html('...');
 
-                    if (window.ToastMagic) {
-                        ToastMagic.success('Opening chat with ' + friendName);
+                $.ajax({
+                    url: '/friend-request/decline/' + requestId,
+                    method: 'POST',
+                    data: { _token: $('meta[name="csrf-token"]').attr('content') },
+                    success: function (res) {
+                        if (res.success) {
+                            btn.closest('.iq-friend-request').fadeOut(300, function () {
+                                $(this).remove();
+                                if ($('#friend-requests-list .iq-friend-request').length === 0) {
+                                    $('#friend-requests-list').html('<div class="text-center text-muted py-5">No new friend requests</div>');
+                                }
+                                // Update badge
+                                const badge = $('#group-drop .badge-count');
+                                if (badge.length) {
+                                    const count = parseInt(badge.text()) - 1;
+                                    if (count > 0) badge.text(count); else badge.remove();
+                                }
+                            });
+                        }
                     }
-                } else {
-                    // Fallback to messenger page if popup not available
-                    window.location.href = '/messenger?user=' + friendId;
-                }
+                });
+            });
+
+            // Search Input Toggle logic
+            $('.search-input').on('focus', function () {
+                $('.search-modal-custom').addClass('open');
+            }).on('blur', function () {
+                // Delay to allow clicking on recent search links
+                setTimeout(() => {
+                    $('.search-modal-custom').removeClass('open');
+                }, 200);
             });
         });
     </script>
