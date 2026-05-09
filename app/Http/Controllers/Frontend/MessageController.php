@@ -31,12 +31,13 @@ class MessageController extends Controller
     {
         $otherUser = User::findOrFail($request->user_id);
         $messages = Message::where(function ($q) use ($otherUser) {
-                $q->where('from_id', Auth::id())->where('to_id', $otherUser->id);
-            })->orWhere(function ($q) use ($otherUser) {
-                $q->where('from_id', $otherUser->id)->where('to_id', Auth::id());
-            })->with('sender:id,name,avatar')
-            ->orderBy('created_at', 'asc')
-            ->take(50)->get();
+            $q->where('from_id', Auth::id())->where('to_id', $otherUser->id);
+        })->orWhere(function ($q) use ($otherUser) {
+            $q->where('from_id', $otherUser->id)->where('to_id', Auth::id());
+        })->with('sender:id,name,avatar')
+            ->orderBy('created_at', 'desc')
+            ->take(50)->get()
+            ->reverse();
 
         // Mark received messages as seen
         Message::where('from_id', $otherUser->id)
@@ -51,15 +52,15 @@ class MessageController extends Controller
     function quickSend(Request $request)
     {
         $request->validate([
-            'to_id'   => 'required|integer|exists:users,id',
+            'to_id' => 'required|integer|exists:users,id',
             'message' => 'required|string|max:2000',
         ]);
 
         $message = Message::create([
             'from_id' => Auth::id(),
-            'to_id'   => $request->to_id,
-            'body'    => $request->message,
-            'seen'    => 0,
+            'to_id' => $request->to_id,
+            'body' => $request->message,
+            'seen' => 0,
         ]);
 
         $message->load('sender:id,name,avatar');
@@ -70,11 +71,11 @@ class MessageController extends Controller
         return response()->json([
             'success' => true,
             'message' => [
-                'id'         => $message->id,
-                'body'       => $message->body,
-                'from_id'    => $message->from_id,
+                'id' => $message->id,
+                'body' => $message->body,
+                'from_id' => $message->from_id,
                 'created_at' => $message->created_at->format('H:i'),
-                'sender'     => $message->sender,
+                'sender' => $message->sender,
             ]
         ]);
     }
@@ -88,13 +89,13 @@ class MessageController extends Controller
         }
 
         $users = User::where('id', '!=', Auth::id())
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', "%{$query}%")
-                  ->orWhere('username', 'LIKE', "%{$query}%");
+                    ->orWhere('username', 'LIKE', "%{$query}%");
             })
             ->take(10)
             ->get()
-            ->map(function($user) {
+            ->map(function ($user) {
                 return [
                     'id' => $user->id,
                     'name' => $user->name,

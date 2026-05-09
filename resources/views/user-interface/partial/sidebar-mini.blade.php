@@ -367,10 +367,14 @@
                 let msgHtml = '';
                 $temp.find('.chat-bubble').each(function () {
                     const isMe = $(this).hasClass('me');
-                    const text = $(this).contents().get(0).nodeValue ? $(this).contents().get(0).nodeValue.trim() : "";
-                    const time = $(this).find('.msg-time').text();
+                    const $clone = $(this).clone();
+                    const time = $clone.find('.msg-time').text();
+                    $clone.find('.msg-time').remove();
+                    const text = $clone.text().trim();
+
                     if (text) {
-                        msgHtml += `<div class="sidebar-msg ${isMe ? 'me' : 'them'}">${text} <span class="time">${time}</span></div>`;
+                        const safeText = $('<div>').text(text).html();
+                        msgHtml += `<div class="sidebar-msg ${isMe ? 'me' : 'them'}">${safeText} <span class="time">${time}</span></div>`;
                     }
                 });
 
@@ -547,7 +551,6 @@
             window.openChatPopup(userId);
         });
 
-        // 6. Real-time message listener (Sync with layout.blade.php)
-        // We can add a custom event handler here if layout.blade.php triggers it
+        // Real-time is now handled centrally in layout.blade.php via Laravel Echo
     });
 </script>

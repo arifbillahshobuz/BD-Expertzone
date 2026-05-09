@@ -53,8 +53,10 @@ class Message implements ShouldBroadcast
             'to_id' => $this->message->to_id,
             'attachment' => json_decode($this->message->attachment),
             'from_id' => $this->from_id,
-            'sender_name' => auth()->user()->name,
-            'sender_avatar' => auth()->user()->avatar ? asset(auth()->user()->avatar) : asset('frontend/assets/images/user/1.jpg'),
+            'sender_name' => $this->message->sender->name ?? 'User',
+            'sender_avatar' => $this->message->sender && $this->message->sender->avatar
+                ? asset($this->message->sender->avatar)
+                : asset('frontend/assets/images/user/1.jpg'),
         ];
     }
 

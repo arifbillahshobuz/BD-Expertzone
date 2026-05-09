@@ -13,11 +13,11 @@
             @endif
             <h3 class="logo-title" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME') ?? 'BD Expert Zone') }} </h3>
         </a>
-        <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
+        <!-- <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">
             <span class="menu-btn d-inline-block is-active">
                 <i class="right-icon material-symbols-outlined icon-rtl">chevron_left</i>
             </span>
-        </div>
+        </div> -->
     </div>
     <div class="sidebar-body pt-0 data-scrollbar">
         <div class="sidebar-list">

@@ -98,8 +98,7 @@
                     <h6 class="mb-3 pb-1">Recent Chats</h6>
                     <li class="nav-item iq-chat-list mb-3 ps-0" v-for="chat in chats" :key="chat.id"
                         :class="{ 'active': activeChat && activeChat.id === chat.id }">
-                        <a href="#" class="nav-link d-flex gap-3 rounded-2 zoom-in"
-                            @click.prevent="loadChat(chat)">
+                        <a href="#" class="nav-link d-flex gap-3 rounded-2 zoom-in" @click.prevent="loadChat(chat)">
                             <div class="position-relative">
                                 <img :src="chat.other_user.avatar || '/frontend/assets/images/chat/avatar/01.png'"
                                     :alt="chat.other_user.name" class="avatar-48 object-cover rounded-circle"
@@ -114,7 +113,8 @@
                                             class="mb-0 iq-userlist-name font-size-14 fw-semibold mb-0 text-ellipsis short-1 flex-grow-1">
                                             @{{ chat.other_user.name }}
                                         </h6>
-                                        <span class="mb-0 font-size-12">@{{ formatTime(chat.last_message.created_at) }}</span>
+                                        <span class="mb-0 font-size-12">@{{ formatTime(chat.last_message.created_at)
+                                            }}</span>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">
                                         <p class="text-ellipsis short-1 flex-grow-1 font-size-14 mb-0">
@@ -152,8 +152,7 @@
                             <header class="d-flex justify-content-between align-items-center pt-3 ps-3 pe-3 pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="d-block d-xl-none">
-                                        <button class="btn btn-sm btn-primary rounded btn-icon"
-                                            @click="toggleSidebar">
+                                        <button class="btn btn-sm btn-primary rounded btn-icon" @click="toggleSidebar">
                                             <span class="btn-inner">
                                                 <svg class="icon-rtl" width="20px" viewBox="0 0 24 24">
                                                     <path fill="currentColor"
@@ -221,19 +220,18 @@
                                 <span class="main-title">@{{ formatDate(new Date()) }}</span>
                             </div>
 
-                            <div v-for="message in messages" :key="message.id"
-                                :class="{
+                            <div v-for="message in messages" :key="message.id" :class="{
                                     'iq-message-body iq-current-user': message.sender_id === currentUser.id,
                                     'iq-message-body iq-other-user': message.sender_id !== currentUser.id
                                 }">
                                 <div class="chat-profile text-center">
                                     <img :src="message.sender.avatar || '/frontend/assets/images/chat/avatar/01.png'"
                                         alt="chat-" class="avatar-40 rounded-pill">
-                                    <small class="iq-chating p-0 mb-0 d-block">@{{ formatTime(message.created_at) }}</small>
+                                    <small class="iq-chating p-0 mb-0 d-block">@{{ formatTime(message.created_at)
+                                        }}</small>
                                 </div>
                                 <div class="iq-chat-text">
-                                    <div class="d-flex align-items-center"
-                                        :class="{
+                                    <div class="d-flex align-items-center" :class="{
                                             'justify-content-end gap-1 gap-md-2': message.sender_id === currentUser.id,
                                             'justify-content-start gap-md-2': message.sender_id !== currentUser.id
                                         }">
@@ -250,8 +248,7 @@
                                                         class="material-symbols-outlined align-middle font-size-20 me-1">content_copy</span>Copy
                                                     message text
                                                 </a>
-                                                <a class="dropdown-item" href="#"
-                                                    @click.prevent="editMessage(message)">
+                                                <a class="dropdown-item" href="#" @click.prevent="editMessage(message)">
                                                     <span
                                                         class="material-symbols-outlined align-middle font-size-20 me-1">edit</span>Edit
                                                 </a>
@@ -311,8 +308,8 @@
                                         </svg>
                                     </a>
                                     <a href="#" class="d-flex align-items-center pe-3">
-                                        <svg class="icon-24" width="18" height="23" viewBox="0 0 18 23"
-                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg class="icon-24" width="18" height="23" viewBox="0 0 18 23" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
                                             <path d="M9.00021 21.5V18.3391" stroke="currentcolor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"></path>
                                             <path fill-rule="evenodd" clip-rule="evenodd"

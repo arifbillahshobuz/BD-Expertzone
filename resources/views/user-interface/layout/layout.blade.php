@@ -531,13 +531,13 @@
                 function showSidebarToast(message, type) {
                     const id = 'toast_' + Date.now();
                     const toast = $(`
-                                                                                                                                <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
-                                                                                                                                     style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
-                                                                                                                                    <div class="d-flex">
-                                                                                                                                        <div class="toast-body">${message}</div>
-                                                                                                                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                                                                                                                    </div>
-                                                                                                                                </div>`);
+                                                                                                                                    <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 position-fixed"
+                                                                                                                                         style="bottom:20px;right:20px;z-index:9999;min-width:240px;" role="alert">
+                                                                                                                                        <div class="d-flex">
+                                                                                                                                            <div class="toast-body">${message}</div>
+                                                                                                                                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                                                                                                                        </div>
+                                                                                                                                    </div>`);
                     $('body').append(toast);
                     const bsToast = new bootstrap.Toast(document.getElementById(id), { delay: 3000 });
                     bsToast.show();
@@ -713,8 +713,19 @@
 
     {{-- Global Messenger Listener for Popups --}}
     @auth
+        <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
         <script>
             $(document).ready(function () {
+                // Initialize Echo
+                window.Pusher = Pusher;
+                window.Echo = new Echo({
+                    broadcaster: 'pusher',
+                    key: '{{ env('PUSHER_APP_KEY') }}',
+                    cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+                    forceTLS: true
+                });
+
                 if (typeof window.Echo !== 'undefined') {
                     window.Echo.private('message.' + {{ auth()->id() }})
                         .listen('.Message', (e) => {

@@ -748,6 +748,21 @@
                 }, 200);
             });
 
+            // Sidebar Icon Toggle Logic
+            $('[data-toggle="sidebar"]').on('click', function () {
+                const icon = $(this).find('.material-symbols-outlined');
+                if (icon.length) {
+                    setTimeout(() => {
+                        // app.js toggles the "sidebar-main" class on body
+                        if ($('body').hasClass('sidebar-main')) {
+                            icon.text('close');
+                        } else {
+                            icon.text('menu');
+                        }
+                    }, 50);
+                }
+            });
+
         });
     </script>
 @endpush
