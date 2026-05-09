@@ -143,14 +143,6 @@
                     </div>
                 </div>
 
-                {{-- Global Footer Button (Persistent) --}}
-                <div class="p-3 bg-light border-top mt-auto">
-                    <a href="{{ route('messenger.index') }}"
-                        class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
-                        <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
-                        <span class="fw-semibold">Direct Messenger</span>
-                    </a>
-                </div>
 
             </div>
         </div>

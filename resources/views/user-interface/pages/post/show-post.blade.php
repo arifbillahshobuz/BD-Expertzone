@@ -1736,6 +1736,4 @@
     });
 </script>
 
-<script type="module">
-    import '/js/echo-comments.js';
-</script>
+@vite(['resources/js/echo-comments.js'])

@@ -425,7 +425,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="javascript:void(0);" id="spatialJobDrop" data-bs-toggle="dropdown"
-                            title="Spatial Job">
+                            data-bs-display="static" title="Spatial Job">
                             <span class="material-symbols-outlined">explore</span>
                         </a>
                         <div class="dropdown-menu sub-drop" aria-labelledby="spatialJobDrop">
@@ -444,7 +444,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="javascript:void(0);" id="govJobDrop" data-bs-toggle="dropdown"
-                            title="Government Job">
+                            data-bs-display="static" title="Government Job">
                             <span class="material-symbols-outlined">account_balance</span>
                         </a>
                         <div class="dropdown-menu sub-drop" aria-labelledby="govJobDrop">
@@ -475,7 +475,8 @@
                 @auth
                     <!-- Friend Requests -->
                     <div class="dropdown">
-                        <a href="javascript:void(0);" class="nav-icon-btn" id="group-drop" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0);" class="nav-icon-btn" id="group-drop" data-bs-toggle="dropdown"
+                            data-bs-display="static">
                             <span class="material-symbols-outlined">group</span>
                             @php $pendingRequestsCount = auth()->user()->friendRequestsReceived()->where('status', 'pending')->count(); @endphp
                             @if ($pendingRequestsCount > 0)
@@ -545,7 +546,8 @@
 
                     <!-- Notifications -->
                     <div class="dropdown">
-                        <a href="javascript:void(0);" class="nav-icon-btn" id="notification-drop" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0);" class="nav-icon-btn" id="notification-drop" data-bs-toggle="dropdown"
+                            data-bs-display="static">
                             <span class="material-symbols-outlined">notifications</span>
                             @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
                             @if ($unreadCount > 0)
@@ -597,7 +599,8 @@
 
                     <!-- User Account -->
                     <div class="dropdown">
-                        <a href="javascript:void(0);" class="profile-btn" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0);" class="profile-btn" data-bs-toggle="dropdown"
+                            data-bs-display="static">
                             <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
                                 class="avatar-40 rounded-circle" alt="user">
                         </a>
@@ -745,32 +748,6 @@
                 }, 200);
             });
 
-            // Mobile Dropdown Fix: Ensure they open and remain centered
-            $('.nav-icon-btn[data-bs-toggle="dropdown"]').on('click', function (e) {
-                if ($(window).width() < 1200) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    const target = $(this).next('.dropdown-menu');
-                    const isOpen = target.hasClass('show');
-
-                    // Close all other dropdowns
-                    $('.dropdown-menu.show').not(target).removeClass('show');
-
-                    if (isOpen) {
-                        target.removeClass('show');
-                    } else {
-                        target.addClass('show');
-                    }
-                }
-            });
-
-            // Close dropdowns when clicking outside
-            $(document).on('click', function (e) {
-                if (!$(e.target).closest('.dropdown').length) {
-                    $('.dropdown-menu.show').removeClass('show');
-                }
-            });
         });
     </script>
 @endpush

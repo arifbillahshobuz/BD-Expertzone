@@ -8,6 +8,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 "resources/js/messenger.js",
+                "resources/js/echo-comments.js",
             ],
             refresh: true,
         }),
