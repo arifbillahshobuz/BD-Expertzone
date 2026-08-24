@@ -53,41 +53,126 @@
             color: inherit !important;
         }
 
-        /* --- Global Responsiveness Patch --- */
-        @media (max-width: 1199px) {
+        /* --- 3-Column Desktop Layout (Left Sidebar, Middle Feed, Right Messenger) --- */
+        @media (min-width: 932px) {
+            /* Left Navigation Sidebar - Fixed Expanded View for all screens >= 932px */
+            aside.sidebar,
+            .sidebar,
+            .sidebar-default,
+            .sidebar.sidebar-mini {
+                position: fixed !important;
+                top: 60px !important;
+                left: 0 !important;
+                width: 260px !important;
+                min-width: 260px !important;
+                max-width: 260px !important;
+                height: calc(100vh - 60px) !important;
+                z-index: 1000 !important;
+                transform: none !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow-y: auto !important;
+                border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+                background-color: #ffffff !important;
+            }
+
+            /* FORCE display of all Left Sidebar Text Labels, Brand Logo, & Titles */
+            aside.sidebar .logo-title,
+            aside.sidebar .item-name,
+            aside.sidebar .default-icon,
+            aside.sidebar .static-item span,
+            aside.sidebar span {
+                display: inline-block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                width: auto !important;
+                height: auto !important;
+            }
+
+            aside.sidebar .mini-icon {
+                display: none !important;
+            }
+
+            aside.sidebar .nav-item {
+                width: 100% !important;
+                padding: 0 !important;
+            }
+
+            aside.sidebar .nav-link {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                padding: 10px 16px !important;
+                text-align: left !important;
+                width: 100% !important;
+            }
+
+            aside.sidebar .nav-link i.icon,
+            aside.sidebar .nav-link .material-symbols-outlined {
+                margin: 0 !important;
+                font-size: 22px !important;
+            }
+
+            /* Right Messenger Sidebar - Fixed on Right */
+            .right-sidebar-mini {
+                position: fixed !important;
+                top: 60px !important;
+                right: 0 !important;
+                left: auto !important;
+                width: 320px !important;
+                height: calc(100vh - 60px) !important;
+                z-index: 1000 !important;
+                transform: none !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                display: block !important;
+                overflow-y: auto !important;
+                border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.04) !important;
+            }
+
+            /* Middle Main Content - Perfectly Centered */
+            .main-content {
+                margin-left: 260px !important;
+                margin-right: 320px !important;
+                width: calc(100% - 580px) !important;
+                max-width: calc(100% - 580px) !important;
+                padding-top: 15px !important;
+            }
+
+            .main-content .container,
+            .main-content .container-fluid {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+
+            #close-messenger-sidebar {
+                display: none !important;
+            }
+        }
+
+        /* --- Mobile & Tablet Layout (< 932px) --- */
+        @media (max-width: 931.98px) {
+            .main-content {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+            }
+
             .container {
                 max-width: 100% !important;
                 padding-left: 10px !important;
                 padding-right: 10px !important;
             }
 
-            .col-lg-8,
-            .col-lg-12,
-            .col-lg-4,
-            .col-md-12 {
-                width: 100% !important;
-                flex: 0 0 100% !important;
-                max-width: 100% !important;
-            }
-
-            #dynamicDivContainer {
-                order: 1;
-            }
-
-            .col-lg-4 {
-                order: 2;
-                margin-top: 20px;
-            }
-
-            .card {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                margin-bottom: 20px !important;
-            }
-
             .right-sidebar-mini {
-                top: 0 !important;
-                height: 100vh !important;
+                top: 60px !important;
+                height: calc(100vh - 60px) !important;
             }
         }
 

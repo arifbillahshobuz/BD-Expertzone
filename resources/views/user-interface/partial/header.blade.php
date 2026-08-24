@@ -229,8 +229,8 @@
         display: block;
     }
 
-    /* Responsive & Two-Row Mobile Layout */
-    @media (max-width: 1199px) {
+    /* Responsive & Two-Row Mobile Layout (< 932px) */
+    @media (max-width: 931.98px) {
         .iq-top-navbar {
             height: auto !important;
             padding: 0 !important;
@@ -248,7 +248,7 @@
 
         .mobile-header-row-1 {
             height: 55px;
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: space-between;
             width: 100%;
@@ -265,11 +265,11 @@
             background: #ffffff;
         }
 
+        .header-left,
         .header-center {
             display: none !important;
         }
 
-        .header-left,
         .header-right {
             width: auto !important;
             flex: none !important;
@@ -281,6 +281,18 @@
             justify-content: center !important;
             gap: 20px !important;
         }
+    }
+
+    /* Desktop Header Layout (>= 932px) */
+    @media (min-width: 932px) {
+        .mobile-header-row-1 {
+            display: none !important;
+        }
+        .header-left,
+        .header-center {
+            display: flex !important;
+        }
+    }
 
         .nav-icon-btn {
             width: 42px !important;
@@ -351,7 +363,7 @@
     <div class="container-fluid navbar-inner">
 
         <!-- MOBILE ROW 1: Logo & Burger Menu -->
-        <div class="mobile-header-row-1 d-xl-none">
+        <div class="mobile-header-row-1">
             <a href="{{ route('home') }}" class="navbar-brand m-0 p-0">
                 @if(getSetting('header_logo'))
                     <img src="{{ asset(getSetting('header_logo')) }}" class="img-fluid" alt="logo"
@@ -374,7 +386,7 @@
             class="nav navbar navbar-expand-lg p-0 w-100 d-flex align-items-center justify-content-between mobile-header-row-2">
 
             <!-- DESKTOP LEFT (Logo & Search) - Hidden on Mobile -->
-            <div class="header-left d-none d-xl-flex">
+            <div class="header-left">
                 <a href="{{ route('home') }}" class="navbar-brand m-0 p-0 d-flex align-items-center">
                     @if(getSetting('header_logo'))
                         <img src="{{ asset(getSetting('header_logo')) }}" class="img-fluid" alt="logo"
@@ -415,7 +427,7 @@
             </div>
 
             <!-- DESKTOP CENTER - Hidden on Mobile -->
-            <div class="header-center d-none d-xl-flex">
+            <div class="header-center">
                 <ul class="nav-center">
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}"
