@@ -225,8 +225,8 @@
         margin-top: 8px;
     }
 
-    /* Mobile & Tablet Header Styles (< 992px) */
-    @media (max-width: 991.98px) {
+    /* Mobile & Tablet Header Styles (< 932px) */
+    @media (max-width: 931.98px) {
         .iq-top-navbar {
             height: auto !important;
             padding: 0 !important;
@@ -301,8 +301,8 @@
     }
     
 
-    /* Desktop Header Layout (≥ 992px) */
-    @media (min-width: 992px) {
+    /* Desktop Header Layout (≥ 932px) */
+    @media (min-width: 932px) {
         .mobile-header-row-1 {
             display: none !important;
         }

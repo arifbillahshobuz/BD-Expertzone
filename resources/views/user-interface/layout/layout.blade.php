@@ -54,8 +54,8 @@
         }
 
         /* --- 3-Column Desktop Layout (Left Sidebar, Middle Feed, Right Messenger) --- */
-        @media (min-width: 992px) {
-            /* Left Navigation Sidebar - Fixed Expanded View for all screens >= 992px */
+        @media (min-width: 932px) {
+            /* Left Navigation Sidebar - Fixed Expanded View for all screens >= 932px */
             aside.sidebar,
             .sidebar,
             .sidebar-default,
@@ -132,6 +132,7 @@
                 overflow-y: auto !important;
                 border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
                 box-shadow: -2px 0 10px rgba(0, 0, 0, 0.04) !important;
+                background-color: #ffffff !important;
             }
 
             /* Middle Main Content - Perfectly Centered */
@@ -156,8 +157,8 @@
             }
         }
 
-        /* --- Mobile & Tablet Layout (< 992px) --- */
-        @media (max-width: 991.98px) {
+        /* --- Mobile & Tablet Layout (< 932px) --- */
+        @media (max-width: 931.98px) {
             .main-content {
                 margin-left: 0 !important;
                 margin-right: 0 !important;
@@ -168,11 +169,6 @@
                 max-width: 100% !important;
                 padding-left: 10px !important;
                 padding-right: 10px !important;
-            }
-
-            .right-sidebar-mini {
-                top: 60px !important;
-                height: calc(100vh - 60px) !important;
             }
         }
 

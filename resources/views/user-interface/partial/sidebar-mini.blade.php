@@ -233,28 +233,25 @@
         color: #eee;
     }
 
-    /* Mobile Responsiveness for Sidebar */
-    @media (max-width: 931px) {
+    /* Mobile Screens (< 932px): Top margin 105px below 2-row mobile header */
+    @media (max-width: 931.98px) {
         .right-sidebar-mini {
             display: flex !important;
-            /* Use flex for internal layout */
-            flex-direction: column;
+            flex-direction: column !important;
             visibility: visible !important;
             position: fixed !important;
-            top: 0 !important;
+            top: 105px !important;
             right: 0 !important;
+            left: auto !important;
             width: 100% !important;
             max-width: 320px !important;
-            height: 100vh !important;
+            height: calc(100vh - 105px) !important;
             z-index: 99999 !important;
-            /* Extremely high z-index */
-            background: #fff !important;
+            background: #ffffff !important;
             box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2) !important;
             transform: translateX(105%);
-            /* Shifted out of view */
             transition: transform 0.3s ease-in-out !important;
             padding-top: 0 !important;
-            /* Let the internal header handle it */
         }
 
         .right-sidebar-mini.active {
@@ -263,20 +260,20 @@
 
         .mobile-chat-toggle {
             display: flex !important;
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 55px;
-            height: 55px;
-            background: var(--bs-primary);
-            color: white;
-            border-radius: 50%;
-            z-index: 99998;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: none;
-            cursor: pointer;
+            position: fixed !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            width: 55px !important;
+            height: 55px !important;
+            background: var(--bs-primary) !important;
+            color: white !important;
+            border-radius: 50% !important;
+            z-index: 99998 !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+            border: none !important;
+            cursor: pointer !important;
         }
     }
 
@@ -284,7 +281,31 @@
     @media (max-width: 576px) {
         .right-sidebar-mini {
             max-width: 85% !important;
-            /* Leave some space on the left */
+        }
+    }
+
+    /* Desktop Screens (>= 932px): Fixed 3-Column Right Sidebar */
+    @media (min-width: 932px) {
+        .right-sidebar-mini {
+            position: fixed !important;
+            top: 60px !important;
+            right: 0 !important;
+            left: auto !important;
+            width: 320px !important;
+            height: calc(100vh - 60px) !important;
+            z-index: 1000 !important;
+            transform: none !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: block !important;
+            overflow-y: auto !important;
+            border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.04) !important;
+            background-color: #ffffff !important;
+        }
+
+        .mobile-chat-toggle {
+            display: none !important;
         }
     }
 </style>
@@ -324,9 +345,9 @@
             $('#toggle-sidebar-messenger').find('span').text('chat');
         });
 
-        // Close Sidebar when clicking outside on mobile
+        // Close Sidebar when clicking outside on mobile & tablet
         $(document).on('click', function (e) {
-            if ($(window).width() < 1200) {
+            if ($(window).width() < 992) {
                 const $sidebar = $('.right-sidebar-mini');
                 if ($sidebar.hasClass('active')) {
                     if (!$sidebar.is(e.target) && $sidebar.has(e.target).length === 0 &&
