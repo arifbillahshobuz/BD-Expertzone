@@ -45,7 +45,6 @@ class PostController extends Controller
                 $mediaPaths[] = 'uploads/posts/' . $filename;
             }
         }
-
         Post::create([
             'user_id' => Auth::id(),
             'content' => $request->content,

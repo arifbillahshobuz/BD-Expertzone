@@ -433,7 +433,7 @@
                             @foreach($adminPosts as $post)
                                 @if($post->category && ($post->category->title === 'China Student visa' || $post->category->title === 'China Medical visa'))
                                     <a class="dropdown-item p-2 hover-bg rounded d-flex align-items-center gap-2"
-                                        href="{{ route('posts.show', $post->slug) }}">
+                                        href="{{ route('posts.show', $post->id) }}">
                                         <span class="material-symbols-outlined text-primary"
                                             style="font-size: 20px;">description</span>
                                         <span class="text-wrap">{!! Str::limit(strip_tags($post->content), 50) !!}</span>
@@ -452,7 +452,7 @@
                             @foreach($adminPosts as $post)
                                 @if($post->category && $post->category->title === 'Government Jobs')
                                     <a class="dropdown-item p-2 hover-bg rounded d-flex align-items-center gap-2"
-                                        href="{{ route('posts.show', $post->slug) }}">
+                                        href="{{ route('posts.show', $post->id) }}">
                                         <span class="material-symbols-outlined text-success"
                                             style="font-size: 20px;">description</span>
                                         <span class="text-wrap">{!! Str::limit(strip_tags($post->content), 50) !!}</span>

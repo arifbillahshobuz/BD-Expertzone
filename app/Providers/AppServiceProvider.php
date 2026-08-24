@@ -78,7 +78,6 @@ class AppServiceProvider extends ServiceProvider
                 ->orderBy('created_at', 'DESC')
                 ->select('id','content','media','slug','user_id','post_category_id','created_at','updated_at')
                 ->get();
-
             $view->with('adminPosts', $adminPosts);
 
             // ✅ সব সময়ের জন্য partners শেয়ার
