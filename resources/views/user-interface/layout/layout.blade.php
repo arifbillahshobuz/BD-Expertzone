@@ -54,8 +54,8 @@
         }
 
         /* --- 3-Column Desktop Layout (Left Sidebar, Middle Feed, Right Messenger) --- */
-        @media (min-width: 932px) {
-            /* Left Navigation Sidebar - Fixed Expanded View for all screens >= 932px */
+        @media (min-width: 992px) {
+            /* Left Navigation Sidebar - Fixed Expanded View for all screens >= 992px */
             aside.sidebar,
             .sidebar,
             .sidebar-default,
@@ -156,8 +156,8 @@
             }
         }
 
-        /* --- Mobile & Tablet Layout (< 932px) --- */
-        @media (max-width: 931.98px) {
+        /* --- Mobile & Tablet Layout (< 992px) --- */
+        @media (max-width: 991.98px) {
             .main-content {
                 margin-left: 0 !important;
                 margin-right: 0 !important;

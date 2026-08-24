@@ -234,7 +234,7 @@
     }
 
     /* Mobile Responsiveness for Sidebar */
-    @media (max-width: 1199px) {
+    @media (max-width: 931px) {
         .right-sidebar-mini {
             display: flex !important;
             /* Use flex for internal layout */
