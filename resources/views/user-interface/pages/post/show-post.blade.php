@@ -1,37 +1,209 @@
 <style>
-    /* Custom styles for post media items to ensure consistent sizing and object-fit */
-    .post-media-item {
-        background-color: #eee;
-        height: 250px;
-        /* Fixed height for consistency */
+    /* Facebook-style Media Grid System */
+    .fb-media-grid {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-wrap: wrap;
+        gap: 2px;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #e4e6eb;
     }
 
-    .post-media-item img,
-    .post-media-item video {
+    [data-bs-theme="dark"] .fb-media-grid {
+        background-color: #3e4042;
+    }
+
+    .fb-media-grid-item {
+        position: relative;
+        overflow: hidden;
+        background-color: #f0f2f5;
+    }
+
+    [data-bs-theme="dark"] .fb-media-grid-item {
+        background-color: #242526;
+    }
+
+    .fb-media-grid-item img,
+    .fb-media-grid-item video {
         width: 100%;
         height: 100%;
-        /* FOR FEED DISPLAY: Use 'cover' to fill the area, cropping if aspect ratio doesn't match */
         object-fit: cover;
         display: block;
+        transition: filter 0.2s ease, transform 0.2s ease;
     }
 
-    .post-overlay-count {
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+    .fb-media-grid-item:hover img,
+    .fb-media-grid-item:hover video {
+        filter: brightness(0.92);
     }
 
-    .post-overlay-count:hover {
-        background-color: rgba(0, 0, 0, 0.85) !important;
+    /* 1 Item Layout - Dynamic Blurred Ambient Backdrop matching image color */
+    .fb-media-grid.grid-1 {
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: transparent;
+    }
+    .fb-media-grid.grid-1 .fb-media-grid-item {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background-color: transparent;
+    }
+    .fb-media-bg-blur {
+        position: absolute;
+        top: -20%;
+        left: -20%;
+        width: 140%;
+        height: 140%;
+        object-fit: cover;
+        filter: blur(50px) brightness(0.75) saturate(1.3);
+        pointer-events: none;
+        z-index: 1;
+        transform: scale(1.2);
+        user-select: none;
+    }
+    .fb-media-main-link {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+    }
+    .fb-media-grid.grid-1 .fb-media-main-img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        max-height: 600px;
+        object-fit: contain;
+        display: block;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        border-radius: 8px;
+        transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .fb-media-grid.grid-1 .fb-media-main-link:hover .fb-media-main-img {
+        filter: brightness(0.96);
+        transform: scale(1.005);
+    }
+
+    /* 2 Items Layout */
+    .fb-media-grid.grid-2 .fb-media-grid-item {
+        width: calc(50% - 1px);
+        height: 340px;
+    }
+
+    /* 3 Items Layout (Left 1 big, Right 2 stacked) */
+    .fb-media-grid.grid-3 {
+        height: 360px;
+    }
+    .fb-media-grid.grid-3 .fb-media-col-left {
+        width: calc(50% - 1px);
+        height: 100%;
+    }
+    .fb-media-grid.grid-3 .fb-media-col-left .fb-media-grid-item {
+        width: 100%;
+        height: 100%;
+    }
+    .fb-media-grid.grid-3 .fb-media-col-right {
+        width: calc(50% - 1px);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .fb-media-grid.grid-3 .fb-media-col-right .fb-media-grid-item {
+        width: 100%;
+        height: calc(50% - 1px);
+    }
+
+    /* 4 Items Layout (2x2 grid) */
+    .fb-media-grid.grid-4 .fb-media-grid-item {
+        width: calc(50% - 1px);
+        height: 200px;
+    }
+
+    /* 5+ Items Layout (Top 2, Bottom 3) */
+    .fb-media-grid.grid-5-plus {
+        height: 380px;
+    }
+    .fb-media-grid.grid-5-plus .fb-media-row-top {
+        display: flex;
+        width: 100%;
+        height: calc(58% - 1px);
+        gap: 2px;
+    }
+    .fb-media-grid.grid-5-plus .fb-media-row-top .fb-media-grid-item {
+        width: calc(50% - 1px);
+        height: 100%;
+    }
+    .fb-media-grid.grid-5-plus .fb-media-row-bottom {
+        display: flex;
+        width: 100%;
+        height: calc(42% - 1px);
+        gap: 2px;
+    }
+    .fb-media-grid.grid-5-plus .fb-media-row-bottom .fb-media-grid-item {
+        width: calc(33.333% - 1.33px);
+        height: 100%;
+    }
+
+    /* Overlay Badge (+N) */
+    .fb-media-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 2.2rem;
+        font-weight: 700;
+        transition: background-color 0.2s ease;
+        z-index: 2;
+        user-select: none;
+    }
+
+    .fb-media-grid-item:hover .fb-media-overlay {
+        background-color: rgba(0, 0, 0, 0.72);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 576px) {
+        .fb-media-grid.grid-1 .fb-media-grid-item {
+            height: 360px;
+            max-height: 420px;
+        }
+        .fb-media-grid.grid-2 .fb-media-grid-item {
+            height: 240px;
+        }
+        .fb-media-grid.grid-3 {
+            height: 260px;
+        }
+        .fb-media-grid.grid-4 .fb-media-grid-item {
+            height: 150px;
+        }
+        .fb-media-grid.grid-5-plus {
+            height: 280px;
+        }
+        .fb-media-overlay {
+            font-size: 1.6rem;
+        }
     }
 
     /* FsLightbox specific styles for full size video/image in lightbox */
-    /* FOR LIGHTBOX: Use 'contain' to show the full frame, with letterboxing if aspect ratio doesn't match */
     .fslightbox-source.fslightbox-video,
     .fslightbox-source.fslightbox-image {
-        /* Apply to both video and image in lightbox */
         object-fit: contain !important;
         width: auto !important;
         height: auto !important;
@@ -576,97 +748,186 @@
                     @php
                         // Assuming $post->media is a JSON string of paths or an array of paths
                         if (is_array($post->media)) {
-                            $mediaFiles = $post->media;
+                            $mediaFiles = array_values($post->media);
                         } else {
-                            $mediaFiles = json_decode($post->media, true) ?: [];
+                            $mediaFiles = array_values(json_decode($post->media, true) ?: []);
                         }
                         $count = count($mediaFiles);
                     @endphp
 
                     @if ($count > 0)
-                        <div class="user-post mt-4">
-                            <div class="row g-1">
-                                {{-- First media item --}}
-                                <div class="{{ $count > 1 ? 'col-md-6' : 'col-12' }}">
-                                    <div class="post-media-item rounded overflow-hidden position-relative"
-                                        style="height: 250px;">
-                                        {{-- CRITICAL FIX: Use asset('storage/' . $path) for correct URL --}}
-                                        @php
-                                            $fileExtension = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
-                                            $isVideo = in_array(strtolower($fileExtension), [
-                                                'mp4',
-                                                'mov',
-                                                'ogg',
-                                                'webm',
-                                                'qt',
-                                            ]);
-                                        @endphp
-                                        <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}"
-                                            data-type="{{ $isVideo ? 'video' : 'image' }}">
+                        <div class="user-post mt-3">
+                            @if ($count == 1)
+                                {{-- 1 Photo / Video --}}
+                                @php
+                                    $ext = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
+                                    $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                @endphp
+                                <div class="fb-media-grid grid-1">
+                                    <div class="fb-media-grid-item">
+                                        @if (!$isVideo)
+                                            {{-- Blurred background matching image color --}}
+                                            <img src="{{ asset($mediaFiles[0]) }}" alt="" class="fb-media-bg-blur" aria-hidden="true" loading="lazy">
+                                        @endif
+                                        <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo ? 'video' : 'image' }}" class="fb-media-main-link">
                                             @if ($isVideo)
-                                                <video controls muted class="d-block w-100 h-100 object-cover" loading="lazy">
-                                                    <source src="{{ asset($mediaFiles[0]) }}"
-                                                        type="video/{{ strtolower($fileExtension) === 'mov' || strtolower($fileExtension) === 'qt' ? 'mp4' : strtolower($fileExtension) }}">
+                                                <video controls muted class="d-block fb-media-main-img" loading="lazy">
+                                                    <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
                                                     Your browser does not support the video tag.
                                                 </video>
                                             @else
-                                                <img src="{{ asset($mediaFiles[0]) }}" alt="post-image"
-                                                    class="d-block w-100 h-100 object-cover" loading="lazy">
+                                                <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block fb-media-main-img" loading="lazy">
                                             @endif
                                         </a>
                                     </div>
                                 </div>
 
-                                {{-- Second media item (if exists) with overlay if more than 2 --}}
-                                @if ($count > 1)
-                                    <div class="col-md-6">
-                                        <div class="post-media-item rounded overflow-hidden position-relative"
-                                            style="height: 250px;">
-                                            {{-- CRITICAL FIX: Use asset('storage/' . $path) for correct URL --}}
-                                            @php
-                                                $fileExtension2 = pathinfo($mediaFiles[1], PATHINFO_EXTENSION);
-                                                $isVideo2 = in_array(strtolower($fileExtension2), [
-                                                    'mp4',
-                                                    'mov',
-                                                    'ogg',
-                                                    'webm',
-                                                    'qt',
-                                                ]);
-                                            @endphp
-                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[1]) }}"
-                                                data-type="{{ $isVideo2 ? 'video' : 'image' }}">
-                                                @if ($isVideo2)
-                                                    <video controls muted class="d-block w-100 h-100 object-cover" loading="lazy">
-                                                        <source src="{{ asset($mediaFiles[1]) }}"
-                                                            type="video/{{ strtolower($fileExtension2) === 'mov' || strtolower($fileExtension2) === 'qt' ? 'mp4' : strtolower($fileExtension2) }}">
-                                                        Your browser does not support the video tag.
+                            @elseif ($count == 2)
+                                {{-- 2 Photos / Videos Side by Side --}}
+                                <div class="fb-media-grid grid-2">
+                                    @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
+                                        @php
+                                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                        @endphp
+                                        <div class="fb-media-grid-item">
+                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                                @if ($isVideo)
+                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
                                                     </video>
                                                 @else
-                                                    <img src="{{ asset($mediaFiles[1]) }}" alt="post-image"
-                                                        class="d-block w-100 h-100 object-cover" loading="lazy">
+                                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
                                                 @endif
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
 
-                                                @if ($count > 2)
-                                                    <div class="post-overlay-count position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75"
-                                                        style="z-index: 1;">
-                                                        <span class="font-size-28">+{{ $count - 2 }}</span>
-                                                    </div>
+                            @elseif ($count == 3)
+                                {{-- 3 Photos / Videos: Left 1 big, Right 2 stacked --}}
+                                <div class="fb-media-grid grid-3">
+                                    @php
+                                        $ext0 = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
+                                        $isVideo0 = in_array(strtolower($ext0), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                    @endphp
+                                    <div class="fb-media-col-left">
+                                        <div class="fb-media-grid-item">
+                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo0 ? 'video' : 'image' }}">
+                                                @if ($isVideo0)
+                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                        <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext0) === 'mov' || strtolower($ext0) === 'qt' ? 'mp4' : strtolower($ext0) }}">
+                                                    </video>
+                                                @else
+                                                    <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
                                                 @endif
                                             </a>
                                         </div>
                                     </div>
-                                @endif
+                                    <div class="fb-media-col-right">
+                                        @foreach (array_slice($mediaFiles, 1, 2) as $index => $file)
+                                            @php
+                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                            @endphp
+                                            <div class="fb-media-grid-item">
+                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                                    @if ($isVideo)
+                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                                        </video>
+                                                    @else
+                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
 
-                                {{-- Hidden links for all other media files for FsLightbox to pick up --}}
-                                @for ($i = 2; $i < $count; $i++)
+                            @elseif ($count == 4)
+                                {{-- 4 Photos / Videos: 2x2 Grid --}}
+                                <div class="fb-media-grid grid-4">
+                                    @foreach (array_slice($mediaFiles, 0, 4) as $index => $file)
+                                        @php
+                                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                        @endphp
+                                        <div class="fb-media-grid-item">
+                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                                @if ($isVideo)
+                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                                    </video>
+                                                @else
+                                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                                @endif
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                            @else
+                                {{-- 5+ Photos / Videos: Top 2 items, Bottom 3 items (5th item has +N overlay) --}}
+                                <div class="fb-media-grid grid-5-plus">
+                                    <div class="fb-media-row-top">
+                                        @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
+                                            @php
+                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                            @endphp
+                                            <div class="fb-media-grid-item">
+                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                                    @if ($isVideo)
+                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                                        </video>
+                                                    @else
+                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="fb-media-row-bottom">
+                                        @foreach (array_slice($mediaFiles, 2, 3) as $index => $file)
+                                            @php
+                                                $realIndex = $index + 2; // 2, 3, 4
+                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                                $isLastVisible = ($realIndex === 4);
+                                                $remainingCount = $count - 5;
+                                            @endphp
+                                            <div class="fb-media-grid-item position-relative">
+                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                                    @if ($isVideo)
+                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                                        </video>
+                                                    @else
+                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                                    @endif
+
+                                                    @if ($isLastVisible && $remainingCount > 0)
+                                                        <div class="fb-media-overlay">
+                                                            +{{ $remainingCount }}
+                                                        </div>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                {{-- Hidden links for extra files (from index 5 onwards) for FsLightbox gallery --}}
+                                @for ($i = 5; $i < $count; $i++)
                                     @php
                                         $extHidden = pathinfo($mediaFiles[$i], PATHINFO_EXTENSION);
                                         $isHiddenVideo = in_array(strtolower($extHidden), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
                                     @endphp
-                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[$i]) }}"
-                                        class="d-none" data-type="{{ $isHiddenVideo ? 'video' : 'image' }}"></a>
+                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[$i]) }}" class="d-none" data-type="{{ $isHiddenVideo ? 'video' : 'image' }}"></a>
                                 @endfor
-                            </div>
+                            @endif
                         </div>
                     @endif
 
