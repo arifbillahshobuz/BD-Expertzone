@@ -166,9 +166,7 @@
             }
 
             .container {
-                max-width: 100% !important;
-                padding-left: 10px !important;
-                padding-right: 10px !important;
+                max-width: 100% !important;             
             }
         }
 
@@ -296,9 +294,13 @@
         }
 
         .row>* {
-            padding-left: 10px !important;
-            padding-right: 10px !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
         }
+        .user-post-data, .post-content, .gap-2 {
+            margin: 0rem 1rem;
+        }
+  
 
         .card-body {
             padding: 15px !important;

@@ -926,10 +926,6 @@ progress {
     --bs-gutter-x: 1rem;
     --bs-gutter-y: 0;
     width: 100%;
-    padding-right: calc(var(--bs-gutter-x) * .5);
-    padding-left: calc(var(--bs-gutter-x) * .5);
-    margin-right: auto;
-    margin-left: auto
 }
 
 @media (min-width:576px) {
@@ -25395,7 +25391,6 @@ body {
 
 .main-content .content-inner {
     min-height: calc(100vh - 6.6rem);
-    padding: 3rem .5rem 0 .5rem
 }
 
 .sidebar~.main-content {

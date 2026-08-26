@@ -960,7 +960,7 @@
                     </div>
 
                     <div class="comment-area mt-4 pt-4 border-top">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap" style="margin: 0 1rem;">
                             <div class="like-block position-relative d-flex align-items-center flex-shrink-0">
                                 <x-reaction-button :reactable="$post" />
                             </div>

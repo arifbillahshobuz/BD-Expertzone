@@ -36,9 +36,9 @@ class AuthenticatedSessionController extends Controller
                 $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
                 $user->assignRole($role);
             }
-            return redirect()->route('admin.dashboard');
+            return redirect()->intended(route('admin.dashboard'));
         }
-        return redirect()->route('home');
+        return redirect()->intended(route('home'));
     }
 
     /**
