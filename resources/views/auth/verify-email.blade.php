@@ -3,7 +3,7 @@
     Verify Page
 @endsection
 @section('auth-content')
-    <div class="col-md-6">
+    <div class="col-md-6" style="background-color:  #313131; height:100vh;">
         <div class="sign-in-from text-center">
          <a href="{{ route('home') }}" class="d-inline-flex align-items-center justify-content-center gap-2">
                 @if(getSetting('app_logo'))
@@ -15,10 +15,10 @@
                             fill="currentColor"></path>
                     </svg>
                 @endif
-                <h2 class="logo-title" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
+                <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
             </a>
-            <p class="mt-3 font-size-16">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}</p>
-            <p class="mt-3 font-size-16">We have sent a verification code to your email.<b> <span style="color: red;">Please check your inbox or spam</span> </b>  and verify your account.</p>
+            <p class="mt-3 font-size-16 text-color-white">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}</p>
+            <p class="mt-3 font-size-16 text-color-white">We have sent a verification code to your email.<b> <span style="color: red;">Please check your inbox or spam</span> </b>  and verify your account.</p>
             <form class="mt-5" method="POST" action="{{ route('verification.send') }}">
                 @csrf
                 <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">Resend Email</button>

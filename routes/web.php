@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\MessageController;
@@ -22,7 +23,7 @@ Route::get('clear', function () {
     \Artisan::call('optimize:clear');
     return "Optimize cache cleared!";
 });
-
+Route::post('/send-otp', [AuthenticationController::class, 'userSendOTP']);
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::post('/search/recent/save', [SearchController::class, 'saveRecent'])->name('search.recent.save');
 Route::post('/search/recent/delete', [SearchController::class, 'deleteRecent'])->name('search.recent.delete');

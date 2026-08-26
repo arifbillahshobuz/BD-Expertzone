@@ -391,9 +391,9 @@
     <!-- Wrapper Start -->
     @include('user-interface.partial.wrapper')
     <!-- Wrapper End-->
-    <!-- header start-->
+    <!-- sidebar start-->
     @include('user-interface.partial.header')
-    <!-- header end -->
+    <!-- sidebar end -->
     <main class="main-content">
         <div class="position-relative">
             <div>

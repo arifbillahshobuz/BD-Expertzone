@@ -23,7 +23,7 @@
         <section class="sign-in-page mim-vh-100 overflow-auto">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-6 overflow-hidden position-relative">
+                    <div class="d-none d-md-block col-6 overflow-hidden position-relative">
                         <div class="bg-primary w-100 h-100 position-absolute top-0 bottom-0 start-0 end-0"></div>
                         <div class="container-inside z-1">
                             <div class="main-circle circle-small"></div>

@@ -17,6 +17,7 @@
 <!-- vanillajs css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
 <!-- Main Css -->
+<link rel="stylesheet" href="{{asset('frontend/')}}/assets/css/style.css">
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/css/socialv.css?v=5.2.1">
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/css/custom.css?v=5.2.1" />
