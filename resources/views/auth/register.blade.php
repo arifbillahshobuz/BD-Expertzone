@@ -18,73 +18,74 @@ Login
             <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
         </a>
         <p class="mt-3 font-size-16 text-color-white">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}, a platform to connect with<br> the {{ getSetting('app_name', env('APP_NAME')) }}</p>
-        <form class="mt-5" method="POST" action="{{ route('register') }}">
-            @csrf
-            <div class=" form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Name</h6>
-                <input type="text" class="form-control mb-0 {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                    placeholder="Full Name" value="{{ old('name') }}" name="name">
-                @if ($errors->has('name'))
-                <span class="text-danger">{{ $errors->first('name') }}</span>
-                @endif
-            </div>
-            <div class=" form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Username</h6>
-                <input type="text" class="form-control mb-0 {{ $errors->has('username') ? 'is-invalid' : '' }}"
-                    placeholder="username" value="{{ old('username') }}" name="username">
-                @if ($errors->has('username'))
-                <span class="text-danger">{{ $errors->first('username') }}</span>
-                @endif
-            </div>
-
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Email Address</h6>
-                <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                    placeholder="Enter You Email" value="{{ old('email') }}" name="email">
-                @if ($errors->has('email'))
-                <span class="text-danger">{{ $errors->first('email') }}</span>
-                @endif
-            </div>
-
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Enter Your Phone</h6>
-                <input type="number" class="form-control mb-0 {{ $errors->has('phone') ? 'is-invalid' : '' }}"
-                    placeholder="Enter Your Phone" value="{{ old('phone') }}" name="phone">
-                @if ($errors->has('phone'))
-                <span class="text-danger">{{ $errors->first('phone') }}</span>
-                @endif
-            </div>
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Designation</h6>
-                <select name="designation_id" id="designation" class="form-select {{ $errors->has('designation_id') ? 'is-invalid' : '' }}">
-                    <option value="">Select Designation</option>
-                    @foreach ($designations as $designation)
-                    <option class="text-color-white" style="background-color: #313131;" value="{{ $designation->id }}" {{ old('designation_id') == $designation->id ? 'selected' : '' }}>
-                        {{ $designation->title }}
-                    </option>
-                    @endforeach
-                </select>
-                @error('designation_id')
-                <div class="invalid-feedback d-block text-danger">
-                    {{ $message }}
+        <div class="card">
+            <form class="mt-5" method="POST" action="{{ route('register') }}">
+                @csrf
+                <div class=" form-group text-start" ml-3>
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Name</h6>
+                    <input type="text" class="form-control mb-0 {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                        placeholder="Full Name" value="{{ old('name') }}" name="name">
+                    @if ($errors->has('name'))
+                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                    @endif
                 </div>
-                @enderror
-            </div>
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Password</h6>
+                <div class=" form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Username</h6>
+                    <input type="text" class="form-control mb-0 {{ $errors->has('username') ? 'is-invalid' : '' }}"
+                        placeholder="username" value="{{ old('username') }}" name="username">
+                    @if ($errors->has('username'))
+                    <span class="text-danger">{{ $errors->first('username') }}</span>
+                    @endif
+                </div>
 
-                <div class="position-relative">
-                    <input
-                        type="password"
-                        id="password"
-                        class="form-control mb-0 pe-5 {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                        placeholder="Password"
-                        name="password">
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Email Address</h6>
+                    <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                        placeholder="Enter You Email" value="{{ old('email') }}" name="email">
+                    @if ($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                    @endif
+                </div>
 
-                    <span
-                        id="togglePassword"
-                        class="position-absolute"
-                        style="
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Enter Your Phone</h6>
+                    <input type="number" class="form-control mb-0 {{ $errors->has('phone') ? 'is-invalid' : '' }}"
+                        placeholder="Enter Your Phone" value="{{ old('phone') }}" name="phone">
+                    @if ($errors->has('phone'))
+                    <span class="text-danger">{{ $errors->first('phone') }}</span>
+                    @endif
+                </div>
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Designation</h6>
+                    <select name="designation_id" id="designation" class="form-select {{ $errors->has('designation_id') ? 'is-invalid' : '' }}">
+                        <option value="">Select Designation</option>
+                        @foreach ($designations as $designation)
+                        <option class=" " style="background-color: #313131;" value="{{ $designation->id }}" {{ old('designation_id') == $designation->id ? 'selected' : '' }}>
+                            {{ $designation->title }}
+                        </option>
+                        @endforeach
+                    </select>
+                    @error('designation_id')
+                    <div class="invalid-feedback d-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Password</h6>
+
+                    <div class="position-relative">
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control mb-0 pe-5 {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                            placeholder="Password"
+                            name="password">
+
+                        <span
+                            id="togglePassword"
+                            class="position-absolute"
+                            style="
                 right: 15px;
                 top: 50%;
                 transform: translateY(-50%);
@@ -92,29 +93,29 @@ Login
                 z-index: 10;
                 font-size: 18px;
             ">👁</span>
+                    </div>
+
+                    @if ($errors->has('password'))
+                    <span class="text-danger">{{ $errors->first('password') }}</span>
+                    @endif
                 </div>
 
-                @if ($errors->has('password'))
-                <span class="text-danger">{{ $errors->first('password') }}</span>
-                @endif
-            </div>
 
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Password Confirmation</h6>
 
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Password Confirmation</h6>
+                    <div class="position-relative">
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            class="form-control mb-0 pe-5 {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}"
+                            placeholder="Password Confirmation"
+                            name="password_confirmation">
 
-                <div class="position-relative">
-                    <input
-                        type="password"
-                        id="password_confirmation"
-                        class="form-control mb-0 pe-5 {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}"
-                        placeholder="Password Confirmation"
-                        name="password_confirmation">
-
-                    <span
-                        id="togglePasswordConfirmation"
-                        class="position-absolute"
-                        style="
+                        <span
+                            id="togglePasswordConfirmation"
+                            class="position-absolute"
+                            style="
                 right: 15px;
                 top: 50%;
                 transform: translateY(-50%);
@@ -122,43 +123,44 @@ Login
                 z-index: 10;
                 font-size: 18px;
             ">👁</span>
+                    </div>
+
+                    @if ($errors->has('password_confirmation'))
+                    <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
+                    @endif
                 </div>
 
-                @if ($errors->has('password_confirmation'))
-                <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
-                @endif
-            </div>
 
+                <script>
+                    document.getElementById('togglePassword').addEventListener('click', function() {
+                        const password = document.getElementById('password');
 
-            <script>
-                document.getElementById('togglePassword').addEventListener('click', function() {
-                    const password = document.getElementById('password');
+                        if (password.type === 'password') {
+                            password.type = 'text';
+                            this.textContent = '🙈';
+                        } else {
+                            password.type = 'password';
+                            this.textContent = '👁';
+                        }
+                    });
 
-                    if (password.type === 'password') {
-                        password.type = 'text';
-                        this.textContent = '🙈';
-                    } else {
-                        password.type = 'password';
-                        this.textContent = '👁';
-                    }
-                });
+                    document.getElementById('togglePasswordConfirmation').addEventListener('click', function() {
+                        const passwordConfirmation = document.getElementById('password_confirmation');
 
-                document.getElementById('togglePasswordConfirmation').addEventListener('click', function() {
-                    const passwordConfirmation = document.getElementById('password_confirmation');
-
-                    if (passwordConfirmation.type === 'password') {
-                        passwordConfirmation.type = 'text';
-                        this.textContent = '🙈';
-                    } else {
-                        passwordConfirmation.type = 'password';
-                        this.textContent = '👁';
-                    }
-                });
-            </script>            
-            <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign
-                up</button>
-            <h6 class="mt-5 text-color-white">Already Have An Account ? <a href="{{ route('login') }}">Login</a></h6>
-        </form>
+                        if (passwordConfirmation.type === 'password') {
+                            passwordConfirmation.type = 'text';
+                            this.textContent = '🙈';
+                        } else {
+                            passwordConfirmation.type = 'password';
+                            this.textContent = '👁';
+                        }
+                    });
+                </script>
+                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign
+                    up</button>
+                <h6 class="mt-5  ">Already Have An Account ? <a href="{{ route('login') }}">Login</a></h6>
+            </form>
+        </div>
     </div>
 </div>
 </div>
