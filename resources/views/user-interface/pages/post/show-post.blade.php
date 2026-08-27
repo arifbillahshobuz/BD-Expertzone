@@ -45,6 +45,7 @@
         overflow: hidden;
         background-color: transparent;
     }
+
     .fb-media-grid.grid-1 .fb-media-grid-item {
         width: 100%;
         position: relative;
@@ -55,6 +56,7 @@
         border-radius: 10px;
         background-color: transparent;
     }
+
     .fb-media-bg-blur {
         position: absolute;
         top: -20%;
@@ -68,6 +70,7 @@
         transform: scale(1.2);
         user-select: none;
     }
+
     .fb-media-main-link {
         position: relative;
         z-index: 2;
@@ -78,6 +81,7 @@
         height: 100%;
         text-decoration: none;
     }
+
     .fb-media-grid.grid-1 .fb-media-main-img {
         width: 100%;
         max-width: 100%;
@@ -89,6 +93,7 @@
         border-radius: 8px;
         transition: transform 0.2s ease, filter 0.2s ease;
     }
+
     .fb-media-grid.grid-1 .fb-media-main-link:hover .fb-media-main-img {
         filter: brightness(0.96);
         transform: scale(1.005);
@@ -104,14 +109,17 @@
     .fb-media-grid.grid-3 {
         height: 360px;
     }
+
     .fb-media-grid.grid-3 .fb-media-col-left {
         width: calc(50% - 1px);
         height: 100%;
     }
+
     .fb-media-grid.grid-3 .fb-media-col-left .fb-media-grid-item {
         width: 100%;
         height: 100%;
     }
+
     .fb-media-grid.grid-3 .fb-media-col-right {
         width: calc(50% - 1px);
         height: 100%;
@@ -119,6 +127,7 @@
         flex-direction: column;
         gap: 2px;
     }
+
     .fb-media-grid.grid-3 .fb-media-col-right .fb-media-grid-item {
         width: 100%;
         height: calc(50% - 1px);
@@ -134,22 +143,26 @@
     .fb-media-grid.grid-5-plus {
         height: 380px;
     }
+
     .fb-media-grid.grid-5-plus .fb-media-row-top {
         display: flex;
         width: 100%;
         height: calc(58% - 1px);
         gap: 2px;
     }
+
     .fb-media-grid.grid-5-plus .fb-media-row-top .fb-media-grid-item {
         width: calc(50% - 1px);
         height: 100%;
     }
+
     .fb-media-grid.grid-5-plus .fb-media-row-bottom {
         display: flex;
         width: 100%;
         height: calc(42% - 1px);
         gap: 2px;
     }
+
     .fb-media-grid.grid-5-plus .fb-media-row-bottom .fb-media-grid-item {
         width: calc(33.333% - 1.33px);
         height: 100%;
@@ -184,18 +197,23 @@
             height: 360px;
             max-height: 420px;
         }
+
         .fb-media-grid.grid-2 .fb-media-grid-item {
             height: 240px;
         }
+
         .fb-media-grid.grid-3 {
             height: 260px;
         }
+
         .fb-media-grid.grid-4 .fb-media-grid-item {
             height: 150px;
         }
+
         .fb-media-grid.grid-5-plus {
             height: 280px;
         }
+
         .fb-media-overlay {
             font-size: 1.6rem;
         }
@@ -558,14 +576,14 @@
                             <div class="me-3 flex-shrik-0">
                                 {{-- Use asset('storage/') for user avatar, with a default fallback --}}
                                 @if($post->user)
-                                    <a
-                                        href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}">
-                                        <img src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                            alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
-                                    </a>
+                                <a
+                                    href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}">
+                                    <img src="{{ asset($post->user->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                        alt="userimg" class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                </a>
                                 @else
-                                    <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
-                                        class="avatar-48 rounded-circle img-fluid" loading="lazy">
+                                <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
+                                    class="avatar-48 rounded-circle img-fluid" loading="lazy">
                                 @endif
                             </div>
 
@@ -575,10 +593,10 @@
                                         {{-- Check if user relationship exists before accessing name --}}
                                         <h6 class="mb-0 d-inline-block">
                                             @if($post->user)
-                                                <a href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}"
-                                                    class="text-body">{{ $post->user->name }}</a>
+                                            <a href="{{ route('user.profile.show', $post->user->username ?? $post->user->id ?? 'unknown') }}"
+                                                class="text-body">{{ $post->user->name }}</a>
                                             @else
-                                                Unknown User
+                                            Unknown User
                                             @endif
                                         </h6>
                                         <span class="d-inline-block text-primary">
@@ -635,102 +653,102 @@
                                                     </div>
                                                 </a>
                                                 @php
-                                                    $authorId = $post->user_id ?? ($post->user->id ?? null);
-                                                    $isFollowing =
-                                                        auth()->check() &&
-                                                        auth()->user()->following->contains($authorId);
-                                                    $isFriend =
-                                                        auth()->check() && auth()->user()->friends->contains($authorId);
-                                                    $pendingRequest =
-                                                        auth()->check() &&
-                                                        auth()
-                                                            ->user()
-                                                            ->friendRequestsSent()
-                                                            ->where('receiver_id', $authorId)
-                                                            ->where('status', 'pending')
-                                                            ->exists();
+                                                $authorId = $post->user_id ?? ($post->user->id ?? null);
+                                                $isFollowing =
+                                                auth()->check() &&
+                                                auth()->user()->following->contains($authorId);
+                                                $isFriend =
+                                                auth()->check() && auth()->user()->friends->contains($authorId);
+                                                $pendingRequest =
+                                                auth()->check() &&
+                                                auth()
+                                                ->user()
+                                                ->friendRequestsSent()
+                                                ->where('receiver_id', $authorId)
+                                                ->where('status', 'pending')
+                                                ->exists();
                                                 @endphp
 
                                                 @if (auth()->check() && auth()->id() !== $authorId)
-                                                    <a class="dropdown-item p-3 follow-toggle-btn" href="#"
-                                                        data-user-id="{{ $authorId }}"
-                                                        data-following="{{ $isFollowing ? '1' : '0' }}">
+                                                <a class="dropdown-item p-3 follow-toggle-btn" href="#"
+                                                    data-user-id="{{ $authorId }}"
+                                                    data-following="{{ $isFollowing ? '1' : '0' }}">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">
+                                                            {{ $isFollowing ? 'person_remove' : 'person_add' }}
+                                                        </span>
+                                                        <div class="data ms-2">
+                                                            <h6>{{ $isFollowing ? 'Unfollow User' : 'Follow User' }}
+                                                            </h6>
+                                                            <p class="mb-0">
+                                                                {{ $isFollowing ? 'Stop seeing posts but stay friends.' : 'See posts from this user.' }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a class="dropdown-item p-3 notification-toggle-btn" href="#"
+                                                    data-user-id="{{ $authorId }}">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">notifications</span>
+                                                        <div class="data ms-2">
+                                                            <h6>Notifications</h6>
+                                                            <p class="mb-0">Turn on notifications for this user's
+                                                                new posts</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                @if (!$isFriend && !$pendingRequest)
+                                                <a class="dropdown-item p-3 send-friend-request-btn" href="#"
+                                                    data-user-id="{{ $authorId }}">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">person_add</span>
+                                                        <div class="data ms-2">
+                                                            <h6>Send Friend Request</h6>
+                                                            <p class="mb-0">Connect with this user as a
+                                                                friend.</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                @elseif ($pendingRequest)
+                                                <a class="dropdown-item p-3 text-muted" href="#">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">hourglass_top</span>
+                                                        <div class="data ms-2">
+                                                            <h6>Friend Request Sent</h6>
+                                                            <p class="mb-0">Waiting for user to accept.</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                @endif
+                                                @endif
+                                                @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
+                                                <a class="dropdown-item p-3 text-primary" href="#"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#edit-post-modal-{{ $post->id ?? '' }}">
+                                                    <div class="d-flex align-items-top">
+                                                        <span class="material-symbols-outlined">edit</span>
+                                                        <div class="data ms-2">
+                                                            <h6>Edit Post</h6>
+                                                            <p class="mb-0">Edit this post</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <form action="{{ route('user.post.destroy', $post) }}" method="POST"
+                                                    class="delete-post-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="dropdown-item p-3 text-danger border-0 bg-transparent text-start w-100">
                                                         <div class="d-flex align-items-top">
-                                                            <span class="material-symbols-outlined">
-                                                                {{ $isFollowing ? 'person_remove' : 'person_add' }}
-                                                            </span>
+                                                            <span class="material-symbols-outlined">delete</span>
                                                             <div class="data ms-2">
-                                                                <h6>{{ $isFollowing ? 'Unfollow User' : 'Follow User' }}
-                                                                </h6>
-                                                                <p class="mb-0">
-                                                                    {{ $isFollowing ? 'Stop seeing posts but stay friends.' : 'See posts from this user.' }}
+                                                                <h6>Delete Post</h6>
+                                                                <p class="mb-0 text-muted">Remove this post permanently
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                    </a>
-                                                    <a class="dropdown-item p-3 notification-toggle-btn" href="#"
-                                                        data-user-id="{{ $authorId }}">
-                                                        <div class="d-flex align-items-top">
-                                                            <span class="material-symbols-outlined">notifications</span>
-                                                            <div class="data ms-2">
-                                                                <h6>Notifications</h6>
-                                                                <p class="mb-0">Turn on notifications for this user's
-                                                                    new posts</p>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                    @if (!$isFriend && !$pendingRequest)
-                                                        <a class="dropdown-item p-3 send-friend-request-btn" href="#"
-                                                            data-user-id="{{ $authorId }}">
-                                                            <div class="d-flex align-items-top">
-                                                                <span class="material-symbols-outlined">person_add</span>
-                                                                <div class="data ms-2">
-                                                                    <h6>Send Friend Request</h6>
-                                                                    <p class="mb-0">Connect with this user as a
-                                                                        friend.</p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    @elseif ($pendingRequest)
-                                                        <a class="dropdown-item p-3 text-muted" href="#">
-                                                            <div class="d-flex align-items-top">
-                                                                <span class="material-symbols-outlined">hourglass_top</span>
-                                                                <div class="data ms-2">
-                                                                    <h6>Friend Request Sent</h6>
-                                                                    <p class="mb-0">Waiting for user to accept.</p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    @endif
-                                                @endif
-                                                @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
-                                                    <a class="dropdown-item p-3 text-primary" href="#"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#edit-post-modal-{{ $post->id ?? '' }}">
-                                                        <div class="d-flex align-items-top">
-                                                            <span class="material-symbols-outlined">edit</span>
-                                                            <div class="data ms-2">
-                                                                <h6>Edit Post</h6>
-                                                                <p class="mb-0">Edit this post</p>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                    <form action="{{ route('user.post.destroy', $post) }}" method="POST"
-                                                        class="delete-post-form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item p-3 text-danger border-0 bg-transparent text-start w-100">
-                                                            <div class="d-flex align-items-top">
-                                                                <span class="material-symbols-outlined">delete</span>
-                                                                <div class="data ms-2">
-                                                                    <h6>Delete Post</h6>
-                                                                    <p class="mb-0 text-muted">Remove this post permanently
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </button>
-                                                    </form>
+                                                    </button>
+                                                </form>
                                                 @endif
                                             </div>
                                         </div>
@@ -746,214 +764,214 @@
                     </div>
 
                     @php
-                        // Assuming $post->media is a JSON string of paths or an array of paths
-                        if (is_array($post->media)) {
-                            $mediaFiles = array_values($post->media);
-                        } else {
-                            $mediaFiles = array_values(json_decode($post->media, true) ?: []);
-                        }
-                        $count = count($mediaFiles);
+                    // Assuming $post->media is a JSON string of paths or an array of paths
+                    if (is_array($post->media)) {
+                    $mediaFiles = array_values($post->media);
+                    } else {
+                    $mediaFiles = array_values(json_decode($post->media, true) ?: []);
+                    }
+                    $count = count($mediaFiles);
                     @endphp
 
                     @if ($count > 0)
-                        <div class="user-post mt-3">
-                            @if ($count == 1)
-                                {{-- 1 Photo / Video --}}
-                                @php
-                                    $ext = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
-                                    $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                @endphp
-                                <div class="fb-media-grid grid-1">
-                                    <div class="fb-media-grid-item">
-                                        @if (!$isVideo)
-                                            {{-- Blurred background matching image color --}}
-                                            <img src="{{ asset($mediaFiles[0]) }}" alt="" class="fb-media-bg-blur" aria-hidden="true" loading="lazy">
-                                        @endif
-                                        <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo ? 'video' : 'image' }}" class="fb-media-main-link">
-                                            @if ($isVideo)
-                                                <video controls muted class="d-block fb-media-main-img" loading="lazy">
-                                                    <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            @else
-                                                <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block fb-media-main-img" loading="lazy">
-                                            @endif
-                                        </a>
-                                    </div>
-                                </div>
-
-                            @elseif ($count == 2)
-                                {{-- 2 Photos / Videos Side by Side --}}
-                                <div class="fb-media-grid grid-2">
-                                    @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
-                                        @php
-                                            $ext = pathinfo($file, PATHINFO_EXTENSION);
-                                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                        @endphp
-                                        <div class="fb-media-grid-item">
-                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
-                                                @if ($isVideo)
-                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                    </video>
-                                                @else
-                                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                @endif
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                            @elseif ($count == 3)
-                                {{-- 3 Photos / Videos: Left 1 big, Right 2 stacked --}}
-                                <div class="fb-media-grid grid-3">
-                                    @php
-                                        $ext0 = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
-                                        $isVideo0 = in_array(strtolower($ext0), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                    @endphp
-                                    <div class="fb-media-col-left">
-                                        <div class="fb-media-grid-item">
-                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo0 ? 'video' : 'image' }}">
-                                                @if ($isVideo0)
-                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                        <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext0) === 'mov' || strtolower($ext0) === 'qt' ? 'mp4' : strtolower($ext0) }}">
-                                                    </video>
-                                                @else
-                                                    <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="fb-media-col-right">
-                                        @foreach (array_slice($mediaFiles, 1, 2) as $index => $file)
-                                            @php
-                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                            @endphp
-                                            <div class="fb-media-grid-item">
-                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
-                                                    @if ($isVideo)
-                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                        </video>
-                                                    @else
-                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                    @endif
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                            @elseif ($count == 4)
-                                {{-- 4 Photos / Videos: 2x2 Grid --}}
-                                <div class="fb-media-grid grid-4">
-                                    @foreach (array_slice($mediaFiles, 0, 4) as $index => $file)
-                                        @php
-                                            $ext = pathinfo($file, PATHINFO_EXTENSION);
-                                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                        @endphp
-                                        <div class="fb-media-grid-item">
-                                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
-                                                @if ($isVideo)
-                                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                    </video>
-                                                @else
-                                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                @endif
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                            @else
-                                {{-- 5+ Photos / Videos: Top 2 items, Bottom 3 items (5th item has +N overlay) --}}
-                                <div class="fb-media-grid grid-5-plus">
-                                    <div class="fb-media-row-top">
-                                        @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
-                                            @php
-                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                            @endphp
-                                            <div class="fb-media-grid-item">
-                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
-                                                    @if ($isVideo)
-                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                        </video>
-                                                    @else
-                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                    @endif
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="fb-media-row-bottom">
-                                        @foreach (array_slice($mediaFiles, 2, 3) as $index => $file)
-                                            @php
-                                                $realIndex = $index + 2; // 2, 3, 4
-                                                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                                $isLastVisible = ($realIndex === 4);
-                                                $remainingCount = $count - 5;
-                                            @endphp
-                                            <div class="fb-media-grid-item position-relative">
-                                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
-                                                    @if ($isVideo)
-                                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
-                                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
-                                                        </video>
-                                                    @else
-                                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
-                                                    @endif
-
-                                                    @if ($isLastVisible && $remainingCount > 0)
-                                                        <div class="fb-media-overlay">
-                                                            +{{ $remainingCount }}
-                                                        </div>
-                                                    @endif
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                {{-- Hidden links for extra files (from index 5 onwards) for FsLightbox gallery --}}
-                                @for ($i = 5; $i < $count; $i++)
-                                    @php
-                                        $extHidden = pathinfo($mediaFiles[$i], PATHINFO_EXTENSION);
-                                        $isHiddenVideo = in_array(strtolower($extHidden), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
-                                    @endphp
-                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[$i]) }}" class="d-none" data-type="{{ $isHiddenVideo ? 'video' : 'image' }}"></a>
-                                @endfor
-                            @endif
+                    <div class="user-post mt-3">
+                        @if ($count == 1)
+                        {{-- 1 Photo / Video --}}
+                        @php
+                        $ext = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
+                        $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                        @endphp
+                        <div class="fb-media-grid grid-1">
+                            <div class="fb-media-grid-item">
+                                @if (!$isVideo)
+                                {{-- Blurred background matching image color --}}
+                                <img src="{{ asset($mediaFiles[0]) }}" alt="" class="fb-media-bg-blur" aria-hidden="true" loading="lazy">
+                                @endif
+                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo ? 'video' : 'image' }}" class="fb-media-main-link">
+                                    @if ($isVideo)
+                                    <video controls muted class="d-block fb-media-main-img" loading="lazy">
+                                        <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    @else
+                                    <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block fb-media-main-img" loading="lazy">
+                                    @endif
+                                </a>
+                            </div>
                         </div>
+
+                        @elseif ($count == 2)
+                        {{-- 2 Photos / Videos Side by Side --}}
+                        <div class="fb-media-grid grid-2">
+                            @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
+                            @php
+                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                            @endphp
+                            <div class="fb-media-grid-item">
+                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                    @if ($isVideo)
+                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                    </video>
+                                    @else
+                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                    @endif
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        @elseif ($count == 3)
+                        {{-- 3 Photos / Videos: Left 1 big, Right 2 stacked --}}
+                        <div class="fb-media-grid grid-3">
+                            @php
+                            $ext0 = pathinfo($mediaFiles[0], PATHINFO_EXTENSION);
+                            $isVideo0 = in_array(strtolower($ext0), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                            @endphp
+                            <div class="fb-media-col-left">
+                                <div class="fb-media-grid-item">
+                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[0]) }}" data-type="{{ $isVideo0 ? 'video' : 'image' }}">
+                                        @if ($isVideo0)
+                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                            <source src="{{ asset($mediaFiles[0]) }}" type="video/{{ strtolower($ext0) === 'mov' || strtolower($ext0) === 'qt' ? 'mp4' : strtolower($ext0) }}">
+                                        </video>
+                                        @else
+                                        <img src="{{ asset($mediaFiles[0]) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                        @endif
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="fb-media-col-right">
+                                @foreach (array_slice($mediaFiles, 1, 2) as $index => $file)
+                                @php
+                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                @endphp
+                                <div class="fb-media-grid-item">
+                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                        @if ($isVideo)
+                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                        </video>
+                                        @else
+                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                        @endif
+                                    </a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        @elseif ($count == 4)
+                        {{-- 4 Photos / Videos: 2x2 Grid --}}
+                        <div class="fb-media-grid grid-4">
+                            @foreach (array_slice($mediaFiles, 0, 4) as $index => $file)
+                            @php
+                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                            $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                            @endphp
+                            <div class="fb-media-grid-item">
+                                <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                    @if ($isVideo)
+                                    <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                        <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                    </video>
+                                    @else
+                                    <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                    @endif
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        @else
+                        {{-- 5+ Photos / Videos: Top 2 items, Bottom 3 items (5th item has +N overlay) --}}
+                        <div class="fb-media-grid grid-5-plus">
+                            <div class="fb-media-row-top">
+                                @foreach (array_slice($mediaFiles, 0, 2) as $index => $file)
+                                @php
+                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                @endphp
+                                <div class="fb-media-grid-item">
+                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                        @if ($isVideo)
+                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                        </video>
+                                        @else
+                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                        @endif
+                                    </a>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="fb-media-row-bottom">
+                                @foreach (array_slice($mediaFiles, 2, 3) as $index => $file)
+                                @php
+                                $realIndex = $index + 2; // 2, 3, 4
+                                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                $isVideo = in_array(strtolower($ext), ['mp4', 'mov', 'ogg', 'webm', 'qt']);
+                                $isLastVisible = ($realIndex === 4);
+                                $remainingCount = $count - 5;
+                                @endphp
+                                <div class="fb-media-grid-item position-relative">
+                                    <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($file) }}" data-type="{{ $isVideo ? 'video' : 'image' }}">
+                                        @if ($isVideo)
+                                        <video controls muted class="d-block w-100 h-100" loading="lazy">
+                                            <source src="{{ asset($file) }}" type="video/{{ strtolower($ext) === 'mov' || strtolower($ext) === 'qt' ? 'mp4' : strtolower($ext) }}">
+                                        </video>
+                                        @else
+                                        <img src="{{ asset($file) }}" alt="post-image" class="d-block w-100 h-100" loading="lazy">
+                                        @endif
+
+                                        @if ($isLastVisible && $remainingCount > 0)
+                                        <div class="fb-media-overlay">
+                                            +{{ $remainingCount }}
+                                        </div>
+                                        @endif
+                                    </a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        {{-- Hidden links for extra files (from index 5 onwards) for FsLightbox gallery --}}
+                        @for ($i = 5; $i < $count; $i++)
+                            @php
+                            $extHidden=pathinfo($mediaFiles[$i], PATHINFO_EXTENSION);
+                            $isHiddenVideo=in_array(strtolower($extHidden), ['mp4', 'mov' , 'ogg' , 'webm' , 'qt' ]);
+                            @endphp
+                            <a data-fslightbox="gallery-{{ $post->id }}" href="{{ asset($mediaFiles[$i]) }}" class="d-none" data-type="{{ $isHiddenVideo ? 'video' : 'image' }}"></a>
+                            @endfor
+                            @endif
+                    </div>
                     @endif
 
                     <div class="post-meta-likes mt-4">
                         <div class="d-flex align-items-center gap-2 flex-wrap">
                             <ul class="list-inline m-0 p-0 post-user-liked-list">
                                 @foreach ($post->reactions->take(4) as $reaction)
-                                    <li>
-                                        {{-- Use asset('storage/') for reaction user avatar, with default fallback --}}
-                                        <img src="{{ asset('/' . ($reaction->user->avatar ?? 'frontend/assets/images/user/1.jpg')) }}"
-                                            class="rounded-circle img-fluid userimg" loading="lazy">
-                                    </li>
+                                <li>
+                                    {{-- Use asset('storage/') for reaction user avatar, with default fallback --}}
+                                    <img src="{{ asset('/' . ($reaction->user->avatar ?? 'frontend/assets/images/user/1.jpg')) }}"
+                                        class="rounded-circle img-fluid userimg" loading="lazy">
+                                </li>
                                 @endforeach
                             </ul>
                             <div class="d-inline-flex align-items-center gap-1">
                                 @if ($post->reactions_count > 0)
-                                    {{-- Check if first reaction user exists before accessing name --}}
-                                    <h6 class="m-0 font-size-14">
-                                        {{ $post->reactions->first()->user->name ?? 'Someone' }}
-                                    </h6>
-                                    @if ($post->reactions_count > 1)
-                                        <span class="text-capitalize font-size-14 fw-medium" data-bs-toggle="modal"
-                                            data-bs-target="#likemodal{{ $post->id }}">
-                                            and {{ $post->reactions_count - 1 }} others liked this
-                                        </span>
-                                    @endif
+                                {{-- Check if first reaction user exists before accessing name --}}
+                                <h6 class="m-0 font-size-14">
+                                    {{ $post->reactions->first()->user->name ?? 'Someone' }}
+                                </h6>
+                                @if ($post->reactions_count > 1)
+                                <span class="text-capitalize font-size-14 fw-medium" data-bs-toggle="modal"
+                                    data-bs-target="#likemodal{{ $post->id }}">
+                                    and {{ $post->reactions_count - 1 }} others liked this
+                                </span>
+                                @endif
                                 @endif
                             </div>
                         </div>
@@ -992,7 +1010,7 @@
                             <ul class="list-inline m-0 p-0 comment-list" id="comment-list-{{ $post->id }}"
                                 x-ref="commentList">
                                 @foreach ($post->comments->where('parent_id', null) as $comment)
-                                    {!! view('user-interface.pages.post.partials.single_comment', compact('comment'))->render() !!}
+                                {!! view('user-interface.pages.post.partials.single_comment', compact('comment'))->render() !!}
                                 @endforeach
                             </ul>
                             <div class="d-flex flex-column align-items-center justify-content-center gap-1 mt-2">
@@ -1009,21 +1027,19 @@
                                     <span>Hide comments</span>
                                 </button>
                             </div>
-
-
-                            <div class="add-comment-form-block mt-3 pt-3 border-top">
+                            <!-- <div class="add-comment-form-block mt-3 pt-3 border-top">
                                 <div class="d-flex align-items-start gap-2">
                                     <div class="flex-shrink-0">
                                         @auth
-                                            <a
-                                                href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
-                                                <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
-                                                    alt="userimg" class="avatar-40 rounded-circle object-cover"
-                                                    loading="lazy">
-                                            </a>
+                                        <a
+                                            href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
+                                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                alt="userimg" class="avatar-40 rounded-circle object-cover"
+                                                loading="lazy">
+                                        </a>
                                         @else
-                                            <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
-                                                class="avatar-40 rounded-circle object-cover" loading="lazy">
+                                        <img src="{{ asset('frontend/assets/images/user/1.jpg') }}" alt="userimg"
+                                            class="avatar-40 rounded-circle object-cover" loading="lazy">
                                         @endauth
                                     </div>
                                     <div class="flex-grow-1">
@@ -1037,63 +1053,178 @@
                                             post</small>
                                     </div>
                                 </div>
+                            </div> -->
+                            <div class="add-comment-form-block mt-3 pt-3 border-top">
+                                <div class="d-flex align-items-start gap-2">
+
+                                    <div class="flex-shrink-0">
+                                        @auth
+                                        <a href="{{ route('user.profile.show', auth()->user()->username ?? auth()->id() ?? 'unknown') }}">
+                                            <img src="{{ asset(auth()->user()->avatar ?? 'frontend/assets/images/user/1.jpg') }}"
+                                                alt="userimg"
+                                                class="avatar-40 rounded-circle object-cover"
+                                                loading="lazy">
+                                        </a>
+                                        @else
+                                        <img src="{{ asset('frontend/assets/images/user/1.jpg') }}"
+                                            alt="userimg"
+                                            class="avatar-40 rounded-circle object-cover"
+                                            loading="lazy">
+                                        @endauth
+                                    </div>
+
+                                    <div class="flex-grow-1">
+
+                                        <form class="main-comment-form position-relative"
+                                            action="{{ route('posts.comments.store', $post) }}"
+                                            method="POST">
+
+                                            @csrf
+
+                                            <input type="text"
+                                                name="content"
+                                                class="form-control add-comment-input"
+                                                placeholder="Write a comment..."
+                                                autocomplete="off"
+                                                required>
+
+                                            <button type="submit"
+                                                class="comment-send-btn"
+                                                aria-label="Send comment">
+
+                                                <svg width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+
+                                                    <path d="M22 2L11 13"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+
+                                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+
+                                                </svg>
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <style>
+            .main-comment-form {
+                width: 100%;
+            }
+
+            .add-comment-input {
+                height: 42px;
+                padding-right: 50px !important;
+                border-radius: 22px;
+            }
+
+            .comment-send-btn {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+
+                width: 34px;
+                height: 34px;
+
+                padding: 0;
+                margin: 0;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border: none;
+                background: transparent;
+
+                color: #1877f2;
+
+                cursor: pointer;
+                z-index: 5;
+            }
+
+            .comment-send-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .comment-send-btn:hover {
+                color: #0d65d9;
+            }
+
+            .comment-send-btn:active {
+                transform: translateY(-50%) scale(0.9);
+            }
+        </style>
         @if (auth()->id() === ($post->user_id ?? ($post->user->id ?? null)))
-            {{-- Edit Post Modal: unique per post --}}
-            <div class="modal fade" id="edit-post-modal-{{ $post->id }}" tabindex="-1"
-                aria-labelledby="editPostModalLabel-{{ $post->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <form class="edit-post-form" data-post-id="{{ $post->id }}"
-                            action="{{ route('user.post.update', $post) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editPostModalLabel-{{ $post->id }}">Edit Post</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        {{-- Edit Post Modal: unique per post --}}
+        <div class="modal fade" id="edit-post-modal-{{ $post->id }}" tabindex="-1"
+            aria-labelledby="editPostModalLabel-{{ $post->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form class="edit-post-form" data-post-id="{{ $post->id }}"
+                        action="{{ route('user.post.update', $post) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPostModalLabel-{{ $post->id }}">Edit Post</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="edit-post-content-{{ $post->id }}"
+                                    class="form-label font-size-16 fw-semibold">Content</label>
+                                <textarea class="form-control" id="edit-post-content-{{ $post->id }}" name="content"
+                                    rows="4" placeholder="What's on your mind?">{{ $post->content }}</textarea>
                             </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="edit-post-content-{{ $post->id }}"
-                                        class="form-label font-size-16 fw-semibold">Content</label>
-                                    <textarea class="form-control" id="edit-post-content-{{ $post->id }}" name="content"
-                                        rows="4" placeholder="What's on your mind?">{{ $post->content }}</textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label font-size-16 fw-semibold d-block">Update Media</label>
-                                    <div class="edit-media-preview-container d-flex gap-2 flex-wrap mb-2">
-                                        {{-- Existing media previews could go here if we wanted to allow deleting individual
+                            <div class="mb-3">
+                                <label class="form-label font-size-16 fw-semibold d-block">Update Media</label>
+                                <div class="edit-media-preview-container d-flex gap-2 flex-wrap mb-2">
+                                    {{-- Existing media previews could go here if we wanted to allow deleting individual
                                         ones --}}
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="file" name="media[]" class="form-control"
-                                            id="edit-post-media-{{ $post->id }}" multiple accept="image/*,video/*">
-                                        <label class="input-group-text btn btn-outline-secondary"
-                                            for="edit-post-media-{{ $post->id }}">
-                                            <span class="material-symbols-outlined font-size-18">add_photo_alternate</span>
-                                        </label>
-                                    </div>
-                                    <small class="text-muted mt-1 d-block">Uploading new media will replace existing
-                                        ones.</small>
                                 </div>
+                                <div class="input-group">
+                                    <input type="file" name="media[]" class="form-control"
+                                        id="edit-post-media-{{ $post->id }}" multiple accept="image/*,video/*">
+                                    <label class="input-group-text btn btn-outline-secondary"
+                                        for="edit-post-media-{{ $post->id }}">
+                                        <span class="material-symbols-outlined font-size-18">add_photo_alternate</span>
+                                    </label>
+                                </div>
+                                <small class="text-muted mt-1 d-block">Uploading new media will replace existing
+                                    ones.</small>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#edit-post-modal-{{ $post->id }}">Cancel</button>
-                                <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
-                                    <span class="material-symbols-outlined font-size-20">save</span>
-                                    Update Post
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#edit-post-modal-{{ $post->id }}">Cancel</button>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                                <span class="material-symbols-outlined font-size-20">save</span>
+                                Update Post
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
         @endif
 
         {{-- Share Modal --}}
@@ -1170,23 +1301,23 @@
 
         <script>
             // Copy link handler for this post
-            $(document).on('click', '.copy-link-btn', function () {
+            $(document).on('click', '.copy-link-btn', function() {
                 var targetId = $(this).data('target');
                 var input = document.getElementById(targetId);
                 input.select();
                 input.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(input.value).then(function () {
+                navigator.clipboard.writeText(input.value).then(function() {
                     var btn = $('[data-target="' + targetId + '"]');
                     btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
-                    setTimeout(function () {
+                    setTimeout(function() {
                         btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
                     }, 2000);
-                }).catch(function () {
+                }).catch(function() {
                     // Fallback for browsers that don't support clipboard API
                     document.execCommand('copy');
                     var btn = $('[data-target="' + targetId + '"]');
                     btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">check</span> Copied!');
-                    setTimeout(function () {
+                    setTimeout(function() {
                         btn.html('<span class="material-symbols-outlined" style="font-size:18px;vertical-align:-4px">content_copy</span> Copy');
                     }, 2000);
                 });
@@ -1195,7 +1326,7 @@
 
         <script>
             // AJAX handler for edit post form
-            $(document).off('submit', '.edit-post-form').on('submit', '.edit-post-form', function (e) {
+            $(document).off('submit', '.edit-post-form').on('submit', '.edit-post-form', function(e) {
                 e.preventDefault();
                 var form = $(this);
                 var postId = form.data('post-id');
@@ -1220,7 +1351,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success || response.status === 'success') {
                             // Update post content in DOM
                             var postCard = $('#post-' + postId);
@@ -1319,7 +1450,7 @@
                             form.find('button[type="submit"]').prop('disabled', false).html('<span class="material-symbols-outlined font-size-20">save</span> Update Post');
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         form.find('button[type="submit"]').prop('disabled', false).html('<span class="material-symbols-outlined font-size-20">save</span> Update Post');
                         let errorMsg = 'An error occurred while updating your post.';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -1328,11 +1459,11 @@
                             try {
                                 const json = JSON.parse(xhr.responseText);
                                 if (json.message) errorMsg = json.message;
-                            } catch (e) { }
+                            } catch (e) {}
                         }
                         alert(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         form.find('button[type="submit"]').prop('disabled', false);
                     }
                 });
@@ -1349,7 +1480,7 @@
 <!-- Your AJAX/jQuery and AlpineJS code in a regular script block -->
 <script>
     // AlpineJS component definition
-    window.commentComponent = function (postId) {
+    window.commentComponent = function(postId) {
         return {
             addComment(data) {
                 // Prevent duplicates
@@ -1501,14 +1632,14 @@
         }
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         function updateCommentButtons($commentList, showCount) {
             var $comments = $commentList.children('li');
             var $showMoreBtn = $commentList.parent().find('.show-more-comments-btn');
             var $showLessBtn = $commentList.parent().find('.show-less-comments-btn');
             if ($comments.length > showCount) {
                 let hiddenCount = 0;
-                $comments.each(function (i, el) {
+                $comments.each(function(i, el) {
                     if (i < showCount) $(el).show();
                     else {
                         $(el).hide();
@@ -1523,7 +1654,7 @@
                 $showLessBtn.addClass('d-none');
             }
         }
-        $(document).off('click', '.show-more-comments-btn').on('click', '.show-more-comments-btn', function () {
+        $(document).off('click', '.show-more-comments-btn').on('click', '.show-more-comments-btn', function() {
             var postId = $(this).data('post-id');
             var $commentList = $('#comment-list-' + postId);
             var $comments = $commentList.children('li');
@@ -1531,15 +1662,15 @@
             $(this).addClass('d-none');
             $commentList.parent().find('.show-less-comments-btn').removeClass('d-none');
         });
-        $(document).off('click', '.show-less-comments-btn').on('click', '.show-less-comments-btn', function () {
+        $(document).off('click', '.show-less-comments-btn').on('click', '.show-less-comments-btn', function() {
             var postId = $(this).data('post-id');
             var $commentList = $('#comment-list-' + postId);
             updateCommentButtons($commentList, 2);
         });
-        $('.comment-list').each(function () {
+        $('.comment-list').each(function() {
             updateCommentButtons($(this), 2);
         });
-        $(document).off('click', '.delete-comment-btn').on('click', '.delete-comment-btn', function (e) {
+        $(document).off('click', '.delete-comment-btn').on('click', '.delete-comment-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
             var commentId = $(this).data('id');
@@ -1570,9 +1701,9 @@
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content') ||
                                 window.Laravel
-                                    .csrfToken
+                                .csrfToken
                         },
-                        success: function (response) {
+                        success: function(response) {
                             if (response.success) {
                                 // Show success message
                                 Swal.fire({
@@ -1587,20 +1718,20 @@
                                 $comment.find('.comment-item').remove();
                                 $("form.reply-form[data-comment-id='" + commentId +
                                     "']").closest(
-                                        '.add-comment-form-block').remove();
+                                    '.add-comment-form-block').remove();
                                 $comment.remove();
                                 var $countSpan = $comment.closest('.comment-area')
                                     .find(
                                         '.comment-count-' + $comment.closest(
                                             '.comment-area').data(
-                                                'post-id'));
+                                            'post-id'));
                                 if ($countSpan.length) {
                                     let currentCount = parseInt($countSpan
                                         .text()) || 1;
                                     let newCount = Math.max(currentCount - 1, 0);
                                     $countSpan.text(newCount + ' Comment' + (
                                         newCount !== 1 ? 's' :
-                                            ''));
+                                        ''));
                                 }
                             } else {
                                 Swal.fire({
@@ -1612,7 +1743,7 @@
                                 });
                             }
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             Swal.fire({
                                 title: 'Error!',
                                 text: 'Failed to delete comment. Please try again.',
@@ -1625,7 +1756,7 @@
             });
         });
 
-        $(document).off('click', '.edit-comment-btn').on('click', '.edit-comment-btn', function (e) {
+        $(document).off('click', '.edit-comment-btn').on('click', '.edit-comment-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
@@ -1677,7 +1808,7 @@
                             _method: 'PUT',
                             content: newContent
                         },
-                        success: function (response) {
+                        success: function(response) {
                             if (response.success) {
                                 var $commentItem = $btn.closest('.comment-item');
                                 $commentItem.find('.fb-comment-text').first().text(response.content);
@@ -1688,7 +1819,7 @@
                                 }
                             }
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             Swal.fire('Error', 'Could not update comment.', 'error');
                         }
                     });
@@ -1698,7 +1829,7 @@
 
 
 
-        $(document).off('click', '.hide-comment-btn').on('click', '.hide-comment-btn', function (e) {
+        $(document).off('click', '.hide-comment-btn').on('click', '.hide-comment-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
             var commentId = $(this).data('id');
@@ -1709,9 +1840,9 @@
                     _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel
                         .csrfToken
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
-                        $('#comment-' + commentId).fadeOut(200, function () {
+                        $('#comment-' + commentId).fadeOut(200, function() {
                             $(this).remove();
                         });
                         var $comment = $('#comment-' + commentId);
@@ -1728,7 +1859,7 @@
                         alert(response.message || 'Failed to hide comment.');
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Failed to hide comment.');
                 }
             });
@@ -1738,12 +1869,12 @@
             refreshFsLightbox();
         }
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
         // AJAX form submission handler with debug log
         // Unbind first to prevent multiple bindings if this view is included multiple times
-        $(document).off('submit', '.reply-form, .main-comment-form').on('submit', '.reply-form, .main-comment-form', function (e) {
+        $(document).off('submit', '.reply-form, .main-comment-form').on('submit', '.reply-form, .main-comment-form', function(e) {
             e.preventDefault();
             let form = $(this);
             let input = form.find('input[name="content"]');
@@ -1758,19 +1889,19 @@
                 url: form.attr('action'),
                 method: 'POST',
                 data: form.serialize(),
-                success: function (response) {
+                success: function(response) {
                     input.val('');
                     if (response.comment) {
                         const event = new CustomEvent(
                             `comment-posted-${response.comment.post_id}`, {
-                            detail: {
-                                comment: response.comment
-                            }
-                        });
+                                detail: {
+                                    comment: response.comment
+                                }
+                            });
                         window.dispatchEvent(event);
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     console.error('AJAX Error:', xhr.responseText);
                     let errorMsg = 'An error occurred while posting your comment.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -1779,7 +1910,7 @@
                         try {
                             const json = JSON.parse(xhr.responseText);
                             if (json.message) errorMsg = json.message;
-                        } catch (e) { }
+                        } catch (e) {}
                     }
                     let errorBlock = form.closest('.add-comment-form-block').find(
                         '.comment-error-message');
@@ -1792,7 +1923,7 @@
                     errorBlock.text(errorMsg).show();
                     setTimeout(() => errorBlock.fadeOut(), 5000);
                 },
-                complete: function () {
+                complete: function() {
                     form.find('button[type="submit"]').prop('disabled', false);
                 }
             });
@@ -1801,7 +1932,7 @@
     });
 </script>
 <script>
-    $(document).off('click', '.follow-toggle-btn').on('click', '.follow-toggle-btn', function (e) {
+    $(document).off('click', '.follow-toggle-btn').on('click', '.follow-toggle-btn', function(e) {
         e.preventDefault();
         var btn = $(this);
         var userId = btn.data('user-id');
@@ -1813,7 +1944,7 @@
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
             },
-            success: function (response) {
+            success: function(response) {
                 btn.data('following', isFollowing ? 0 : 1);
                 btn.find('.material-symbols-outlined').text(isFollowing ? 'person_add' :
                     'person_remove');
@@ -1826,13 +1957,13 @@
                         'Followed!'));
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 alert('Action failed. Please try again.');
             }
         });
     });
 
-    $(document).off('click', '.notification-toggle-btn').on('click', '.notification-toggle-btn', function (e) {
+    $(document).off('click', '.notification-toggle-btn').on('click', '.notification-toggle-btn', function(e) {
         e.preventDefault();
         var btn = $(this);
         var userId = btn.data('user-id');
@@ -1842,19 +1973,19 @@
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
             },
-            success: function (response) {
+            success: function(response) {
                 if (window.ToastMagic) {
                     ToastMagic.success(response.message || 'Notification preference updated!');
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 alert('Failed to update notification preference.');
             }
         });
     });
 
     // Friend Request functionality
-    $(document).off('click', '.send-friend-request-btn').on('click', '.send-friend-request-btn', function (e) {
+    $(document).off('click', '.send-friend-request-btn').on('click', '.send-friend-request-btn', function(e) {
         e.preventDefault();
         var btn = $(this);
         var userId = btn.data('user-id');
@@ -1868,7 +1999,7 @@
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     // Update the button to show "Friend Request Sent" state
                     btn.removeClass('send-friend-request-btn').addClass('text-muted');
@@ -1885,7 +2016,7 @@
                     alert(response.error || 'Failed to send friend request.');
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 // Re-enable button on error
                 btn.removeClass('disabled').css('pointer-events', 'auto');
                 let errorMsg = 'Failed to send friend request.';
@@ -1897,7 +2028,7 @@
         });
     });
 
-    $(document).off('click', '.accept-friend-request-btn').on('click', '.accept-friend-request-btn', function (e) {
+    $(document).off('click', '.accept-friend-request-btn').on('click', '.accept-friend-request-btn', function(e) {
         e.preventDefault();
         var btn = $(this);
         var requestId = btn.data('request-id');
@@ -1908,10 +2039,10 @@
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     // Remove the friend request from the UI
-                    btn.closest('.friend-request-item').fadeOut(300, function () {
+                    btn.closest('.friend-request-item').fadeOut(300, function() {
                         $(this).remove();
                     });
 
@@ -1922,7 +2053,7 @@
                     alert(response.error || 'Failed to accept friend request.');
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 let errorMsg = 'Failed to accept friend request.';
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMsg = xhr.responseJSON.error;
@@ -1932,7 +2063,7 @@
         });
     });
 
-    $(document).off('click', '.decline-friend-request-btn').on('click', '.decline-friend-request-btn', function (e) {
+    $(document).off('click', '.decline-friend-request-btn').on('click', '.decline-friend-request-btn', function(e) {
         e.preventDefault();
         var btn = $(this);
         var requestId = btn.data('request-id');
@@ -1943,10 +2074,10 @@
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content') || window.Laravel.csrfToken
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     // Remove the friend request from the UI
-                    btn.closest('.friend-request-item').fadeOut(300, function () {
+                    btn.closest('.friend-request-item').fadeOut(300, function() {
                         $(this).remove();
                     });
 
@@ -1957,7 +2088,7 @@
                     alert(response.error || 'Failed to decline friend request.');
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 let errorMsg = 'Failed to decline friend request.';
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMsg = xhr.responseJSON.error;
@@ -1968,7 +2099,7 @@
     });
 
     // SweetAlert2 handler for post delete
-    $(document).off('submit', '.delete-post-form').on('submit', '.delete-post-form', function (e) {
+    $(document).off('submit', '.delete-post-form').on('submit', '.delete-post-form', function(e) {
         e.preventDefault();
         var form = $(this);
 
