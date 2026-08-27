@@ -24,7 +24,7 @@ Login
                 <div class="form-group text-start">
                     <h6 class="form-label fw-bold " style="margin-left:10px">Email Address</h6>
                     <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                        placeholder="Your Full Name" value="{{ old('email') }}" name="email">
+                        placeholder="Your Full Email" value="{{ old('email') }}" name="email">
                     @if ($errors->has('email'))
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                     @endif
@@ -55,17 +55,7 @@ Login
                             this.textContent = '👁';
                         }
                     });
-                </script>
-
-                <!-- <div class="form-group text-start">
-                <h6 class="form-label fw-bold ">Password</h6>
-                <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                    placeholder="Enter Your Password" name="password">
-                @if ($errors->has('password'))
-                <span class="text-danger">{{ $errors->first('password') }}</span>
-                @endif
-            </div> -->
-
+                </script>  
                 <div class="d-flex align-items-center justify-content-between">
                     {{-- <div class="form-check d-inline-block m-0">--}}
                     {{-- <input type="checkbox" class="form-check-input" name="remember">--}}

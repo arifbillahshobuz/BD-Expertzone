@@ -17,23 +17,25 @@ Forget password
             @endif
             <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
         </a>
-        <p class="mt-3 font-size-16 text-color-white">Welcome to {{env("APP_NAME")}}, a platform to connect with<br /> the {{env("APP_NAME")}}</p>
-        <div class="card">
-        <form class="mt-5" method="POST" action="{{ route('password.email') }}">
-            @csrf
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold" style="margin-left:10px">Enter Email Address</h6>
-                <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                    placeholder="Enter Your Email" value="{{ old('email') }}" name="email">
-                @if ($errors->has('email'))
-                <span class="text-danger">{{ $errors->first('email') }}</span>
-                @endif
-            </div>
+        <p class="mt-3 font-size-16 text-color-white">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}</p>
+        <p class="mt-3 font-size-16 text-color-white">We have sent a verification link to your email.<b> <span style="color: red;">Please check your inbox or spam</span> </b> and verify your account.</p>
 
-            <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 ">Email Password Reset
-                Link</button>
-            <h6 class="mt-5 mb-5" style="margin-left:10px">Don't Reset Password ? <a href="{{ route('login') }}">Login</a></h6>
-        </form>
+        <div class="card">
+            <form class="mt-5" method="POST" action="{{ route('password.email') }}">
+                @csrf
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold" style="margin-left:10px">Enter Email Address</h6>
+                    <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                        placeholder="Enter Your Email" value="{{ old('email') }}" name="email">
+                    @if ($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                    @endif
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 ">Email Password Reset
+                    Link</button>
+                <h6 class="mt-5 mb-5" style="margin-left:10px">Don't Reset Password ? <a href="{{ route('login') }}">Login</a></h6>
+            </form>
         </div>
 
     </div>

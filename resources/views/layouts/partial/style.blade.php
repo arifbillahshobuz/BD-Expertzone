@@ -13,7 +13,7 @@
 <!-- flatpickr css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/flatpickr/dist/flatpickr.min.css" />
 <!-- Sweetlaert2 css -->
-<link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/sweetalert2/dist/sweetalert2.min.css" />
+<link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/sweetalert2/dist/sweetalert2.min.js" />
 <!-- vanillajs css -->
 <link rel="stylesheet" href="{{asset('frontend/')}}/assets/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
 <!-- Main Css -->

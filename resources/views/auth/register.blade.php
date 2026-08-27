@@ -18,6 +18,7 @@ Login
             <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
         </a>
         <p class="mt-3 font-size-16 text-color-white">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}, a platform to connect with<br> the {{ getSetting('app_name', env('APP_NAME')) }}</p>
+
         <div class="card">
             <form class="mt-5" method="POST" action="{{ route('register') }}">
                 @csrf
