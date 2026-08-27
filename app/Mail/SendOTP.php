@@ -17,9 +17,12 @@ class SendOTP extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $otp;
+    public $name;
+    public function __construct($otp, $name = null)
     {
-        //
+        $this->otp = $otp;
+        $this->name = $name;
     }
 
     /**
@@ -38,7 +41,7 @@ class SendOTP extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.sendOtp',
         );
     }
 

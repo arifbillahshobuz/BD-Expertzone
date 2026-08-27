@@ -156,9 +156,8 @@ Login
                         }
                     });
                 </script>
-                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign
-                    up</button>
-                <h6 class="mt-5  ">Already Have An Account ? <a href="{{ route('login') }}">Login</a></h6>
+                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">sign up</button>
+                <h6 class="mt-5 mb-5">Already Have An Account ? <a href="{{ route('login') }}">Login</a></h6>
             </form>
         </div>
     </div>

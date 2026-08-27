@@ -12,6 +12,7 @@ use App\Http\Controllers\Frontend\CommentController;
 use App\Http\Controllers\Frontend\ReactionController;
 use App\Http\Controllers\Frontend\UserPostController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Frontend\UserProfileController;
 use App\Http\Controllers\Frontend\FriendController;
 use App\Http\Controllers\Frontend\SearchController;
@@ -23,7 +24,9 @@ Route::get('clear', function () {
     \Artisan::call('optimize:clear');
     return "Optimize cache cleared!";
 });
+
 Route::post('/send-otp', [AuthenticationController::class, 'userSendOTP']);
+
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::post('/search/recent/save', [SearchController::class, 'saveRecent'])->name('search.recent.save');
 Route::post('/search/recent/delete', [SearchController::class, 'deleteRecent'])->name('search.recent.delete');

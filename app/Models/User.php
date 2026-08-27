@@ -127,6 +127,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'designation_id',
+        'otp',
+        'email_verified_at'
     ];
 
     /**

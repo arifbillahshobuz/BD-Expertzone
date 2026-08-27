@@ -10,8 +10,14 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Frontend\PostCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 
+Route::controller(AuthenticationController::class)->group(function () {
+    Route::post('/verify-otp', 'userVerifyOTP')->name('password.verify');
+    Route::get('/resend-otp', 'resendOtp')->name('resend.otp');
+    Route::post('/reset-password', 'userResetPassword');
+});
 // Admin routes
 Route::middleware(['auth', 'admin.access'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard-view');

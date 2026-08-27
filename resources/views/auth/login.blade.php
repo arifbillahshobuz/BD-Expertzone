@@ -18,46 +18,47 @@ Login
             <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
         </a>
         <p class="mt-3 font-size-16 text-color-white">Welcome to {{ getSetting('app_name', env('APP_NAME')) }}, a platform to connect with <br />{{ getSetting('app_name', env('APP_NAME')) }}</p>
-        <form class="mt-5" method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Email Address</h6>
-                <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                    placeholder="Your Full Name" value="{{ old('email') }}" name="email">
-                @if ($errors->has('email'))
-                <span class="text-danger">{{ $errors->first('email') }}</span>
-                @endif
-            </div>
-
-            <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Password</h6>
-
-                <div class="position-relative">
-                    <input type="password" id="password" class="form-control mb-0 pe-5 {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="Enter Your Password" name="password">
-                    <span id="togglePassword" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 10; font-size: 18px; ">👁</span>
+        <div class="card">
+            <form class="mt-5" method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold " style="margin-left:10px">Email Address</h6>
+                    <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                        placeholder="Your Full Name" value="{{ old('email') }}" name="email">
+                    @if ($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                    @endif
                 </div>
 
-                @if ($errors->has('password'))
-                <span class="text-danger">{{ $errors->first('password') }}</span>
-                @endif
-            </div>
+                <div class="form-group text-start">
+                    <h6 class="form-label fw-bold " style="margin-left:10px">Password</h6>
 
-            <script>
-                document.getElementById('togglePassword').addEventListener('click', function() {
-                    const password = document.getElementById('password');
+                    <div class="position-relative">
+                        <input type="password" id="password" class="form-control mb-0 pe-5 {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="Enter Your Password" name="password">
+                        <span id="togglePassword" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 10; font-size: 18px; ">👁</span>
+                    </div>
 
-                    if (password.type === 'password') {
-                        password.type = 'text';
-                        this.textContent = '🙈';
-                    } else {
-                        password.type = 'password';
-                        this.textContent = '👁';
-                    }
-                });
-            </script>
+                    @if ($errors->has('password'))
+                    <span class="text-danger">{{ $errors->first('password') }}</span>
+                    @endif
+                </div>
 
-            <!-- <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Password</h6>
+                <script>
+                    document.getElementById('togglePassword').addEventListener('click', function() {
+                        const password = document.getElementById('password');
+
+                        if (password.type === 'password') {
+                            password.type = 'text';
+                            this.textContent = '🙈';
+                        } else {
+                            password.type = 'password';
+                            this.textContent = '👁';
+                        }
+                    });
+                </script>
+
+                <!-- <div class="form-group text-start">
+                <h6 class="form-label fw-bold ">Password</h6>
                 <input type="password" class="form-control mb-0 {{ $errors->has('password') ? 'is-invalid' : '' }}"
                     placeholder="Enter Your Password" name="password">
                 @if ($errors->has('password'))
@@ -65,17 +66,18 @@ Login
                 @endif
             </div> -->
 
-            <div class="d-flex align-items-center justify-content-between">
-                {{-- <div class="form-check d-inline-block m-0">--}}
-                {{-- <input type="checkbox" class="form-check-input" name="remember">--}}
-                {{-- <h6 class="form-check-label fw-bold">Remember Me</h6>--}}
-                {{-- </div>--}}
-                <a href="{{ route('password.request') }}" class="font-italic text-color-white">Forgot Password?</a>
-            </div>
-            <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 text-color-white">sign
-                in</button>
-            <h6 class="mt-5 text-color-white">Don't Have An Account ? <a href="{{ route('register') }}">Sign Up</a></h6>
-        </form>
+                <div class="d-flex align-items-center justify-content-between">
+                    {{-- <div class="form-check d-inline-block m-0">--}}
+                    {{-- <input type="checkbox" class="form-check-input" name="remember">--}}
+                    {{-- <h6 class="form-check-label fw-bold">Remember Me</h6>--}}
+                    {{-- </div>--}}
+                    <a href="{{ route('password.request') }}" class="font-italic " style="margin-left:10px">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 ">sign
+                    in</button>
+                <h6 class="mt-5 m-5">Don't Have An Account ? <a href="{{ route('register') }}">Sign Up</a></h6>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

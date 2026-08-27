@@ -18,10 +18,11 @@ Forget password
             <h2 class="logo-title text-color-white" data-setting="app_name">{{ getSetting('app_name', env('APP_NAME')) }}</h2>
         </a>
         <p class="mt-3 font-size-16 text-color-white">Welcome to {{env("APP_NAME")}}, a platform to connect with<br /> the {{env("APP_NAME")}}</p>
+        <div class="card">
         <form class="mt-5" method="POST" action="{{ route('password.email') }}">
             @csrf
             <div class="form-group text-start">
-                <h6 class="form-label fw-bold text-color-white">Enter Email Address</h6>
+                <h6 class="form-label fw-bold" style="margin-left:10px">Enter Email Address</h6>
                 <input type="email" class="form-control mb-0 {{ $errors->has('email') ? 'is-invalid' : '' }}"
                     placeholder="Enter Your Email" value="{{ old('email') }}" name="email">
                 @if ($errors->has('email'))
@@ -29,10 +30,12 @@ Forget password
                 @endif
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 text-color-white">Email Password Reset
+            <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100 ">Email Password Reset
                 Link</button>
-            <h6 class="mt-5 text-color-white">Don't Reset Password ? <a href="{{ route('login') }}">Login</a></h6>
+            <h6 class="mt-5 mb-5" style="margin-left:10px">Don't Reset Password ? <a href="{{ route('login') }}">Login</a></h6>
         </form>
+        </div>
+
     </div>
 </div>
 @endsection

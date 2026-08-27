@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
+    Route::controller(RegisteredUserController::class)->group(function () {
+        Route::post('/verify-otp', 'userVerifyOTP')->name('verify.password');
+        Route::post('/reset-password', 'userResetPassword');
+        Route::post('/register', 'store');
+    });
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
